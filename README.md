@@ -97,6 +97,21 @@ Type hinting is applied as strictly as possible to take advantage of FastAPI/Pyd
 
 Using SQLAlchemy in async mode.
 
+### Dependency injection
+
+Using the following pattern for fully typed depency injection
+
+```python
+@lru_cache
+def get_settings() -> Settings:
+    return Settings()
+
+AppSettings = Annotated[Settings, Depends(get_settings)]
+
+
+settings = get_settings()
+```
+
 ---
 
 ## Frontend
