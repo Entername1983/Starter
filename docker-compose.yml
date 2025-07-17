@@ -1,0 +1,98 @@
+# Docker Compose file for TryUI development
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: tryui-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: tryui
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tryui-network
+
+  # FastAPI Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: tryui-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - ./backend:/app
+      - backend_cache:/app/.cache
+    networks:
+      - tryui-network
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development
+    container_name: tryui-frontend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:8000
+      - VITE_API_BASE_URL=http://localhost:8000/api
+      - VITE_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-your-google-client-id}
+      - VITE_GOOGLE_REDIRECT_URI=http://localhost:3000/auth/callback
+    ports:
+      - "3000:3000"
+      - "5173:5173" # Vite dev server
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+      - frontend_cache:/app/.cache
+    networks:
+      - tryui-network
+    command: npm run dev -- --host 0.0.0.0
+
+  # Redis (Optional - for caching and sessions)
+  redis:
+    image: redis:7-alpine
+    container_name: tryui-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - tryui-network
+    command: redis-server --appendonly yes
+
+volumes:
+  postgres_data:
+    driver: local
+  backend_cache:
+    driver: local
+  frontend_node_modules:
+    driver: local
+  frontend_cache:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  tryui-network:
+    driver: bridge
+    name: tryui-network

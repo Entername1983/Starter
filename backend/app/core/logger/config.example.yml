@@ -1,0 +1,26 @@
+version: 1
+disable_existing_loggers: False
+
+formatters:
+  json_formatter:
+    (): pythonjsonlogger.jsonlogger.JsonFormatter
+    format: "%(asctime)s %(name)s %(levelname)s %(message)s"
+    rename_fields:
+      levelname: level
+      asctime: time
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    formatter: json_formatter
+    level: INFO
+
+loggers:
+  my_app:
+    handlers: [console]
+    level: DEBUG
+    propagate: False
+
+root:
+  handlers: [console]
+  level: WARNING

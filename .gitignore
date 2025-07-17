@@ -1,0 +1,20 @@
+## General
+.env
+.vscode
+SETUP_STATUS.md
+
+## Backend
+backend/.ruff_cache
+backend/logs/*
+backend/.python-version
+backend/errors.log
+backend/__pycache__
+backend/.claude
+backend/.venv
+backend/.env
+backend/__pycache__/
+
+## Frontend
+frontend/.env
+frontend/node_modules
+frontend/.claude
