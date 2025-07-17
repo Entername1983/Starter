@@ -15,8 +15,6 @@ load_dotenv()
 
 env = os.getenv("ENVIRONMENT", "development")
 
-print(env)
-
 config = SettingsConfigDict(
     env_file=".env",
     toml_file="pyproject.toml",
@@ -146,6 +144,3 @@ class Settings(BaseSettings):
     db: Db = Db()  # type: ignore
     redis: Redis = Redis()  # type: ignore
     s3: S3 = S3()
-
-
-settings = Settings()

@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import (
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.pool import ConnectionPoolEntry, PoolProxiedConnection
 
-logger = logging.getLogger("App")
+logger = logging.getLogger("app.db")
 settings = get_settings()
 
 echo_enabled = settings.app.environment == "development"

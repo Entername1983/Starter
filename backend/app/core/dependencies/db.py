@@ -1,9 +1,9 @@
 from typing import Annotated, AsyncGenerator, Generator
 
+from app.core.setup.setup_db import async_session, session
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
-from startup.setup_db import async_session, session
 
 
 async def get_db_async() -> AsyncGenerator[AsyncSession, None]:
@@ -14,7 +14,7 @@ async def get_db_async() -> AsyncGenerator[AsyncSession, None]:
             await a_session.close()
 
 
-def db_sync() -> Generator[Session, None, None]:
+def get_db() -> Generator[Session, None, None]:
     db = session()
     try:
         yield db

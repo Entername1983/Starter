@@ -24,3 +24,6 @@ with open(CONFIG_PATH, "r") as f:
 
 
 logger = logging.getLogger("app")
+
+logger.error("Logging setup complete")
+logger.info(f"Using config: {CONFIG_TO_USE}")

@@ -1,10 +1,9 @@
 from app.core.logger.logger import logger
-from fastapi import FastAPI
-
-app = FastAPI(swagger_ui_parameters={"syntaxHighlight": {"theme": "obsidian"}})
-
+from app.core.setup.setup_app import create_app
 
 logger.info("---------FastAPI application started--------")
+
+app = create_app()
 
 
 @app.get("/")
