@@ -11,12 +11,12 @@ A starter template using FastAPI and React
 3. [Getting Started](#getting-started)
 4. [Backend](#backend)
 
-- [Startup](#Startup)
-- [Tooling](#Tooling)
-- [Config](#config)
-- [Logging](#logging)
-- [Types](#Types)
-- [ORM](#ORM)
+   - [Startup](#Startup)
+   - [Tooling](#Tooling)
+   - [Config](#config)
+   - [Logging](#logging)
+   - [Types](#Types)
+   - [ORM](#ORM)
 
 5. [Frontend](#frontend)
 6. [Reverse Proxy](#reverse-proxy)
