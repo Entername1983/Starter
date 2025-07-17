@@ -22,6 +22,8 @@ A starter template using FastAPI and React
 6. [Reverse Proxy](#reverse-proxy)
 7. [Database](#database)
 8. [Cache](#cache)
+9. [Auth](#auth)
+10. [Telemetry](#telemetry)
 
 ---
 
@@ -99,7 +101,7 @@ Using SQLAlchemy in async mode.
 
 ### Dependency injection
 
-Using the following pattern for fully typed depency injection
+Using the following pattern for fully typed depency injection.
 
 ```python
 @lru_cache
@@ -129,3 +131,18 @@ PostgreSQL is used for persistent storage. Database initialization and migration
 ## Cache
 
 Redis is used for caching frequently accessed data. Configuration can be found in `cache/`.
+
+## Auth
+
+Using OAuth with bearer token stored as a http only cookie with expiration + refresh tokens.
+
+Currently supporting:
+
+- Google Auth
+
+## Telemetry
+
+Using the following:
+
+- Sentry
+- Posthog
