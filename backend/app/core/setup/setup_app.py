@@ -1,7 +1,7 @@
 import logging
 import pprint
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator
+from typing import Any, AsyncGenerator, Dict
 
 from app.core.dependencies.settings import get_settings
 from app.core.setup.ascii_art import BY_KEM, PLANET, WARNING_BANNER
@@ -40,7 +40,18 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
 
 
 def create_app() -> FastAPI:  # noqa: C901
-    app = FastAPI(generate_unique_id_function=custom_generate_unique_id, lifespan=lifespan)
+    app_config: Dict[str, Any] = {
+        "generate_unique_id_function": custom_generate_unique_id,
+        "lifespan": lifespan,
+        "debug": settings.app.debug,
+        "title": settings.app.name,
+        "description": settings.app.description,
+        "version": settings.app.version,
+    }
+    if settings.app.environment != "development":
+        app_config["openapi_url"] = app_config["docs_url"] = app_config["redoc_url"] = None
+
+    app = FastAPI(**app_config)
     print(PLANET)
     print(BY_KEM)
 
