@@ -1,0 +1,25 @@
+Metadata-Version: 2.4
+Name: backend
+Version: 0.1.0
+Summary: Add your description here
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+Requires-Dist: alembic>=1.16.4
+Requires-Dist: asyncpg>=0.30.0
+Requires-Dist: fastapi[standard]>=0.116.1
+Requires-Dist: posthog>=6.1.1
+Requires-Dist: pydantic-settings>=2.10.1
+Requires-Dist: python-json-logger>=3.3.0
+Requires-Dist: pyyaml>=6.0.2
+Requires-Dist: ruff>=0.12.3
+Requires-Dist: sqlalchemy>=2.0.41
+
+### RUN DEV
+
+# FastAPI dev main.py
+
+### DOCS
+
+# OpenAPI docs at http://localhost:8000/docs
+
+# Redoc at http://localhost:8000/redoc

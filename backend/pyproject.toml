@@ -1,7 +1,5 @@
 
 
-
-
 [project]
 name = "backend"
 version = "0.1.0"
@@ -19,4 +17,28 @@ dependencies = [
     "ruff>=0.12.3",
     "sqlalchemy>=2.0.41",
 ]
+
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project.scripts]
+hello = "scripts.hello:main"
+
+[tool.setuptools]
+packages = ["scripts"]
+
+[tool.poe]
+executor.type = "uv"
+
+[tool.poe.tasks]
+dev = "uvicorn main:app --reload --host 0.0.0.0 --port 8000"
+lint = "ruff check ."
+## uv run poe migrate --msg="add user table"
+migrate = { cmd = "alembic revision --autogenerate -m $msg", help = "Generate a new Alembic migration with a message", env = { msg = "" } }
+
+
+
 
