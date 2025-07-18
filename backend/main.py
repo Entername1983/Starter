@@ -1,6 +1,8 @@
-from app.core.logger.logger import logger
+import logging
+
 from app.core.setup.setup_app import create_app
 
+logger = logging.getLogger("app")
 logger.info("---------FastAPI application started--------")
 
 app = create_app()

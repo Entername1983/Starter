@@ -21,9 +21,3 @@ CONFIG_PATH = CURRENT_DIR / CONFIG_TO_USE
 with open(CONFIG_PATH, "r") as f:
     config = yaml.safe_load(f.read())
     logging.config.dictConfig(config)
-
-
-logger = logging.getLogger("app")
-
-logger.error("Logging setup complete")
-logger.info(f"Using config: {CONFIG_TO_USE}")
