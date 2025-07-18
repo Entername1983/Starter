@@ -1,7 +1,7 @@
 import logging
 
 from app.core.dependencies.settings import get_settings
-from sqlalchemy import create_engine, event
+from sqlalchemy import MetaData, create_engine, event
 from sqlalchemy.engine.interfaces import DBAPIConnection
 from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
@@ -9,6 +9,15 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.pool import ConnectionPoolEntry, PoolProxiedConnection
+
+POSTGRES_INDEXES_NAMING_CONVENTION = {
+    "ix": "%(column_0_label)s_idx",
+    "uq": "%(table_name)s_%(column_0_name)s_key",
+    "ck": "%(table_name)s_%(constraint_name)s_check",
+    "fk": "%(table_name)s_%(column_0_name)s_fkey",
+    "pk": "%(table_name)s_pkey",
+}
+metadata = MetaData(naming_convention=POSTGRES_INDEXES_NAMING_CONVENTION)
 
 logger = logging.getLogger("app.db")
 settings = get_settings()
@@ -57,4 +66,4 @@ def receive_checkin(dbapi_connection: DBAPIConnection, connection_record: Connec
     logger.debug("Checked in connection %s", id(dbapi_connection))
 
 
-Base = declarative_base()
+Base = declarative_base(metadata=metadata)
