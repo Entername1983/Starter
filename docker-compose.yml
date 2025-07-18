@@ -4,12 +4,12 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:15-alpine
-    container_name: tryui-postgres
+    container_name: ${DB_NAME}-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: tryui
+      POSTGRES_USER: ${POSTGRES_USER?Variable not set}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD?Variable not set}
+      POSTGRES_DB: ${POSTGRES_DB?Variable not set}
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -21,7 +21,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - tryui-network
+      - network-1
 
   # FastAPI Backend
   backend:
@@ -37,7 +37,8 @@ services:
       - ./backend:/app
       - backend_cache:/app/.cache
     networks:
-      - tryui-network
+      - network-1
+
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
   # React Frontend
@@ -64,7 +65,7 @@ services:
       - frontend_node_modules:/app/node_modules
       - frontend_cache:/app/.cache
     networks:
-      - tryui-network
+      - network-1
     command: npm run dev -- --host 0.0.0.0
 
   # Redis (Optional - for caching and sessions)
@@ -77,7 +78,7 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - tryui-network
+      - network-1
     command: redis-server --appendonly yes
 
 volumes:
@@ -93,6 +94,6 @@ volumes:
     driver: local
 
 networks:
-  tryui-network:
+  network-1:
     driver: bridge
-    name: tryui-network
+    name: network-1

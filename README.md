@@ -17,6 +17,7 @@ A starter template using FastAPI and React
    - [Logging](#logging)
    - [Types](#Types)
    - [ORM](#ORM)
+   - [DB](#DB)
 
 5. [Frontend](#frontend)
 6. [Reverse Proxy](#reverse-proxy)
@@ -113,6 +114,10 @@ AppSettings = Annotated[Settings, Depends(get_settings)]
 
 settings = get_settings()
 ```
+
+### DB
+
+- Using Alembic to manage migrations
 
 ---
 
