@@ -136,6 +136,12 @@ class S3(BSettings):
     s3_bucket: str = "default"
 
 
+class Security(BSettings):
+    access_token_cookie_name: str = "access_token"
+    jwt_algorithm: str = "HS256"
+    token_secret_key: str = "default"
+
+
 class Settings(BaseSettings):
     app: App = App()  # type: ignore
     auth: Auth = Auth()  # type: ignore
@@ -144,3 +150,4 @@ class Settings(BaseSettings):
     db: Db = Db()  # type: ignore
     redis: Redis = Redis()  # type: ignore
     s3: S3 = S3()
+    security: Security = Security()

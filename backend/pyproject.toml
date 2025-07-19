@@ -11,6 +11,7 @@ dependencies = [
     "posthog>=6.1.1",
     "psycopg2-binary>=2.9.10",
     "pydantic-settings>=2.10.1",
+    "pyjwt>=2.10.1",
     "python-json-logger>=3.3.0",
     "pyyaml>=6.0.2",
     "ruff>=0.12.3",
@@ -35,7 +36,7 @@ executor.type = "uv"
 [tool.poe.tasks]
 dev = "uvicorn main:app --reload --host 0.0.0.0 --port 8000"
 lint = "ruff check ."
-## uv run poe migrate --msg="add user table"
+## uv run poe migrate "add user table"
 migrate = { cmd = "alembic --config pyproject.toml revision --autogenerate -m $msg", help = "Generate a new Alembic migration with a message", env = { msg = "" } }
 
 
@@ -45,31 +46,7 @@ script_location = "%(here)s/alembic"
 
 file_template = "%%(year)d_%%(month).2d_%%(day).2d_%%(hour).2d%%(minute).2d-%%(rev)s_%%(slug)s"
 
-
-[tool.alembic.logging]
-version = 1
-disable_existing_loggers = false
-
-[tool.alembic.logging.formatters.generic]
-format = "%(levelname)-5.5s [%(name)s] %(message)s"
-datefmt = "%H:%M:%S"
-
-[tool.alembic.logging.handlers.console]
-class = "logging.StreamHandler"
-level = "NOTSET"
-formatter = "generic"
-stream = "ext://sys.stderr"
-
-[tool.alembic.logging.loggers.root]
-level = "WARNING"
-handlers = ["console"]
-
-[tool.alembic.logging.loggers.sqlalchemy]
-level = "WARNING"
-handlers = []
-qualname = "sqlalchemy.engine"
-
-[tool.alembic.logging.loggers.alembic]
-level = "INFO"
-handlers = []
-qualname = "alembic"
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1",
+]

@@ -10,13 +10,8 @@ class BaseModel(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     created_at: Mapped[dt.datetime] = mapped_column(
-        DateTime,
-        default=lambda: dt.datetime.now(),
+        DateTime, default=lambda: dt.datetime.now(), nullable=False
     )
     updated_at: Mapped[dt.datetime] = mapped_column(
-        DateTime,
-        default=lambda: dt.datetime.now(),
+        DateTime, default=lambda: dt.datetime.now(), nullable=False
     )
-
-    def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} id={self.id}>"

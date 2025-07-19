@@ -18,6 +18,7 @@ A starter template using FastAPI and React
    - [Types](#Types)
    - [ORM](#ORM)
    - [DB](#DB)
+   - [Testing](#Testing)
 
 5. [Frontend](#frontend)
 6. [Reverse Proxy](#reverse-proxy)
@@ -120,6 +121,10 @@ settings = get_settings()
 
 - Using Alembic to manage migrations
 - Alembic config in pyproject.toml: https://alembic.sqlalchemy.org/en/latest/tutorial.html#using-pep-621
+
+### Testing
+
+- Using pytest
 
 ---
 
