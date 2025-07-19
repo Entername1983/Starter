@@ -13,6 +13,7 @@ backend/.claude
 backend/.venv
 backend/.env
 backend/__pycache__/
+backend/backend.egg-info/*
 *.pyc
 
 ## Frontend

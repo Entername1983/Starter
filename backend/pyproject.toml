@@ -1,5 +1,3 @@
-
-
 [project]
 name = "backend"
 version = "0.1.0"
@@ -11,6 +9,7 @@ dependencies = [
     "asyncpg>=0.30.0",
     "fastapi[standard]>=0.116.1",
     "posthog>=6.1.1",
+    "psycopg2-binary>=2.9.10",
     "pydantic-settings>=2.10.1",
     "python-json-logger>=3.3.0",
     "pyyaml>=6.0.2",
@@ -37,7 +36,7 @@ executor.type = "uv"
 dev = "uvicorn main:app --reload --host 0.0.0.0 --port 8000"
 lint = "ruff check ."
 ## uv run poe migrate --msg="add user table"
-migrate = { cmd = "alembic revision --autogenerate -m $msg", help = "Generate a new Alembic migration with a message", env = { msg = "" } }
+migrate = { cmd = "alembic --config pyproject.toml revision --autogenerate -m $msg", help = "Generate a new Alembic migration with a message", env = { msg = "" } }
 
 
 [tool.alembic]
@@ -47,68 +46,30 @@ script_location = "%(here)s/alembic"
 file_template = "%%(year)d_%%(month).2d_%%(day).2d_%%(hour).2d%%(minute).2d-%%(rev)s_%%(slug)s"
 
 
+[tool.alembic.logging]
+version = 1
+disable_existing_loggers = false
 
+[tool.alembic.logging.formatters.generic]
+format = "%(levelname)-5.5s [%(name)s] %(message)s"
+datefmt = "%H:%M:%S"
 
+[tool.alembic.logging.handlers.console]
+class = "logging.StreamHandler"
+level = "NOTSET"
+formatter = "generic"
+stream = "ext://sys.stderr"
 
-# additional paths to be prepended to sys.path. defaults to the current working directory.
-prepend_sys_path = [
-    "."
-]
+[tool.alembic.logging.loggers.root]
+level = "WARNING"
+handlers = ["console"]
 
-# timezone to use when rendering the date within the migration file
-# as well as the filename.
-# If specified, requires the python>=3.9 or backports.zoneinfo library and tzdata library.
-# Any required deps can installed by adding `alembic[tz]` to the pip requirements
-# string value is passed to ZoneInfo()
-# leave blank for localtime
-# timezone =
+[tool.alembic.logging.loggers.sqlalchemy]
+level = "WARNING"
+handlers = []
+qualname = "sqlalchemy.engine"
 
-# max length of characters to apply to the
-# "slug" field
-# truncate_slug_length = 40
-
-# set to 'true' to run the environment during
-# the 'revision' command, regardless of autogenerate
-# revision_environment = false
-
-# set to 'true' to allow .pyc and .pyo files without
-# a source .py file to be detected as revisions in the
-# versions/ directory
-# sourceless = false
-
-# version location specification; This defaults
-# to <script_location>/versions.  When using multiple version
-# directories, initial revisions must be specified with --version-path.
-# version_locations = [
-#    "%(here)s/alembic/versions",
-#    "%(here)s/foo/bar"
-# ]
-
-# set to 'true' to search source files recursively
-# in each "version_locations" directory
-# new in Alembic version 1.10
-# recursive_version_locations = false
-
-# the output encoding used when revision files
-# are written from script.py.mako
-# output_encoding = "utf-8"
-
-
-# This section defines scripts or Python functions that are run
-# on newly generated revision scripts.  See the documentation for further
-# detail and examples
-# [[tool.alembic.post_write_hooks]]
-# format using "black" - use the console_scripts runner,
-# against the "black" entrypoint
-# name = "black"
-# type = "console_scripts"
-# entrypoint = "black"
-# options = "-l 79 REVISION_SCRIPT_FILENAME"
-#
-# [[tool.alembic.post_write_hooks]]
-# lint with attempts to fix using "ruff" - use the exec runner,
-# execute a binary
-# name = "ruff"
-# type = "exec"
-# executable = "%(here)s/.venv/bin/ruff"
-# options = "check --fix REVISION_SCRIPT_FILENAME"
+[tool.alembic.logging.loggers.alembic]
+level = "INFO"
+handlers = []
+qualname = "alembic"

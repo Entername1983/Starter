@@ -91,9 +91,9 @@ class Telemetry(BSettings):
 
 
 class Db(BSettings):
-    db_name: str
-    db_user: str
-    db_password: str
+    POSTGRES_DB: str
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
     db_host: str = "localhost"
     db_port: int = 5432
     engine_options: dict[str, int] = {
@@ -108,12 +108,12 @@ class Db(BSettings):
     @computed_field
     @property
     def async_pg_db_uri(self) -> str:
-        return f"postgresql+asyncpg://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}"
+        return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.db_host}:{self.db_port}/{self.POSTGRES_DB}"
 
     @computed_field
     @property
     def pg_db_uri(self) -> str:
-        return f"postgresql://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}"
+        return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.db_host}:{self.db_port}/{self.POSTGRES_DB}"
 
 
 class Redis(BSettings):

@@ -1,4 +1,11 @@
-from logging.config import fileConfig
+import logging
+import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+
+# from logging.config import fileConfig
 
 from alembic import context
 from app.core.dependencies.settings import get_settings
@@ -7,15 +14,23 @@ from sqlalchemy import engine_from_config, pool
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
+# Using pyproject.toml for configuration
+# https://alembic.sqlalchemy.org/en/latest/tutorial.html#using-pep-621
 config = context.config
 settings = get_settings()
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
-if config.config_file_name is not None:
-    fileConfig(config.config_file_name)
+# if config.config_file_name is not None:
+#     fileConfig(config.config_file_name)
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)-5.5s [%(name)s] %(message)s",
+)
 
 config.set_main_option("sqlalchemy.url", settings.db.pg_db_uri)  # Or via env vars
-
+print(f"Using database URL: {settings.db.pg_db_uri}")
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel

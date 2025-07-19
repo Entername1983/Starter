@@ -75,6 +75,7 @@ The backend is built with FastAPI and provides RESTful endpoints for the applica
 
 - Package manager: UV
 - Linter: Ruff
+- Task runner: Poethepoet
 
 ### Config
 
@@ -118,6 +119,7 @@ settings = get_settings()
 ### DB
 
 - Using Alembic to manage migrations
+- Alembic config in pyproject.toml: https://alembic.sqlalchemy.org/en/latest/tutorial.html#using-pep-621
 
 ---
 

@@ -38,10 +38,10 @@ post_hog_host: https://eu.posthog.com
 monitoring_enabled: false
 
 # ───── Database Settings ─────
-db_name: mydatabase
-db_user: dbuser
-db_host: localhost
-db_port: 5432
+# POSTGRES_DB: mydb
+# POSTGRES_USER: admin
+# db_host: localhost
+# db_port: 5432
 expire_on_commit: false
 auto_commit: false
 auto_flush: false
