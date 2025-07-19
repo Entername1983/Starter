@@ -22,5 +22,5 @@ def get_db() -> Generator[Session, None, None]:
         db.close()
 
 
-GetDb = Annotated[AsyncSession, Depends(get_db_async)]
-GetSyncDb = Annotated[Session, Depends(get_db)]
+GetDbAsync = Annotated[AsyncSession, Depends(get_db_async)]
+GetDb = Annotated[Session, Depends(get_db)]

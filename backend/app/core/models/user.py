@@ -1,6 +1,11 @@
+from typing import TYPE_CHECKING
+
 from app.core.models.base import BaseModel
 from sqlalchemy import Boolean, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+if TYPE_CHECKING:
+    from app.core.models.user_settings import UserSettings
 
 
 class User(BaseModel):
@@ -13,3 +18,6 @@ class User(BaseModel):
     external_id: Mapped[str] = mapped_column(String, unique=True, nullable=True)
     external_id_type: Mapped[str] = mapped_column(String, nullable=True)
     disabled: Mapped[bool] = mapped_column(Boolean, default=False)
+    settings: Mapped["UserSettings"] = relationship(
+        back_populates="user", uselist=False, cascade="all, delete-orphan"
+    )

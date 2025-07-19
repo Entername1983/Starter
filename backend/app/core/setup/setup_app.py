@@ -5,16 +5,13 @@ from typing import Any, AsyncGenerator, Dict
 
 from app.core.dependencies.settings import get_settings
 from app.core.setup.ascii_art import BY_KEM, PLANET, WARNING_BANNER
+from app.core.setup.setup_routes import setup_routes
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
 
 settings = get_settings()
 
 logger = logging.getLogger("app")
-
-
-def setup_routes(app: FastAPI) -> None:
-    """Setup all API routes from routers."""
 
 
 def custom_generate_unique_id(route: APIRoute) -> str:

@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Annotated, Any
 
 import jwt
 from app.dependencies import get_db_async, get_settings
@@ -72,3 +72,6 @@ async def get_current_user(
             detail="User not found",
         )
     return user
+
+
+CurrentUser = Annotated[User, Depends(get_current_user)]
