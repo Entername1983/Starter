@@ -2,24 +2,6 @@
 
 services:
   # PostgreSQL Database
-  postgres:
-    image: postgres:17-alpine
-    container_name: mydb-postgres
-    restart: unless-stopped
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - network-1
-    env_file:
-      - ./backend/.env
 
   # FastAPI Backend
   backend:
@@ -67,17 +49,42 @@ services:
     command: npm run dev -- --host 0.0.0.0
 
   # Redis (Optional - for caching and sessions)
-  redis:
-    image: redis:7-alpine
-    container_name: tryui-redis
-    restart: unless-stopped
+  redis-starter:
+    container_name: redis-starter
+    image: redis/redis-stack-server:latest
     ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
+      - "6378:6378"
+    command: # list form is the safest
+      - redis-server
+      - --port
+      - "6378"
+      - --requirepass
+      - "${REDIS_PASSWORD}"
+      - --loadmodule
+      - /opt/redis-stack/lib/redisearch.so
+      - --loadmodule
+      - /opt/redis-stack/lib/rejson.so
     networks:
       - network-1
-    command: redis-server --appendonly yes
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: mydb-postgres
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - network-1
+    env_file:
+      - ./backend/.env
 
 volumes:
   postgres_data:
