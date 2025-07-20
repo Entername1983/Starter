@@ -5,6 +5,11 @@ from typing import Any, AsyncGenerator, Dict
 
 from app.core.dependencies.settings import get_settings
 from app.core.setup.ascii_art import BY_KEM, PLANET, WARNING_BANNER
+from app.core.setup.setup_db import setup_async_sessionmaker, setup_sessionmaker
+from app.core.setup.setup_redis import (
+    setup_redis_async_pool,
+    setup_redis_pool,
+)
 from app.core.setup.setup_routes import setup_routes
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
@@ -23,8 +28,14 @@ def custom_generate_unique_id(route: APIRoute) -> str:
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator:
     logger.info("Starting application lifespan")
-    # app.state.redis_client = await setup_redis_client()
-    # app.state.sync_redis_client = setup_sync_redis_client()
+
+    app.state.db_async_engine, app.state.async_session_maker = setup_async_sessionmaker()
+    app.state.db_engine, app.state.session_maker = setup_sessionmaker()
+
+    # app.state.redis_client = setup_redis_client()
+    # app.state.redis_async_client = setup_async_redis_client()
+    app.state.redis_async_pool = setup_redis_async_pool()
+    app.state.redis_pool = setup_redis_pool()
     # app.state.posthog = setup_post_hog()
     yield
     # await app.state.redis_client.close()

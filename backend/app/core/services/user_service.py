@@ -21,3 +21,20 @@ class UserService:
             select(User).filter_by(id=user_id).options(selectinload(User.settings))
         )
         return result.scalars().first()
+
+    @staticmethod
+    async def create_user(
+        email: str, first_name: str, last_name: str, username: str, db: AsyncSession
+    ) -> User:
+        new_user = User(email=email, first_name=first_name, last_name=last_name, username=username)
+        db.add(new_user)
+        await db.commit()
+        await db.refresh(new_user)
+        return new_user
+
+    @staticmethod
+    async def update_user(user: User, db: AsyncSession) -> User:
+        db.add(user)
+        await db.commit()
+        await db.refresh(user)
+        return user

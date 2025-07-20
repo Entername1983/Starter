@@ -104,6 +104,7 @@ class Db(BSettings):
     expire_on_commit: bool = False
     auto_commit: bool = False
     auto_flush: bool = False
+    echo_enabled: bool = False
 
     @computed_field
     @property

@@ -1,21 +1,37 @@
 from typing import Annotated, AsyncGenerator, Generator
 
-from app.core.setup.setup_db import async_session, session
-from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import Session
+from fastapi import Depends, Request
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
+from sqlalchemy.orm import Session, sessionmaker
 
 
-async def get_db_async() -> AsyncGenerator[AsyncSession, None]:
-    async with async_session() as a_session:
-        try:
-            yield a_session
-        finally:
-            await a_session.close()
+def get_async_sessionmaker(request: Request) -> async_sessionmaker[AsyncSession]:
+    return request.app.state.async_session_maker
 
 
-def get_db() -> Generator[Session, None, None]:
-    db = session()
+def get_sync_sessionmaker(request: Request) -> sessionmaker[Session]:
+    return request.app.state.session_maker
+
+
+# def get_async_engine(request: Request) -> AsyncEngine:
+#     return request.app.state.async_engine
+
+
+# def get_engine(request: Request) -> Engine:
+#     return request.app.state.sync_engine
+
+
+async def get_db_async(
+    maker: async_sessionmaker[AsyncSession] = Depends(get_async_sessionmaker),
+) -> AsyncGenerator[AsyncSession, None]:
+    async with maker() as session:
+        yield session
+
+
+def get_db(
+    maker: sessionmaker[Session] = Depends(get_sync_sessionmaker),
+) -> Generator[Session, None, None]:
+    db = maker()
     try:
         yield db
     finally:
