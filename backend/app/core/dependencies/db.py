@@ -13,29 +13,18 @@ def get_sync_sessionmaker(request: Request) -> sessionmaker[Session]:
     return request.app.state.session_maker
 
 
-# def get_async_engine(request: Request) -> AsyncEngine:
-#     return request.app.state.async_engine
-
-
-# def get_engine(request: Request) -> Engine:
-#     return request.app.state.sync_engine
-
-
 async def get_db_async(
     maker: async_sessionmaker[AsyncSession] = Depends(get_async_sessionmaker),
 ) -> AsyncGenerator[AsyncSession, None]:
-    async with maker() as session:
-        yield session
+    async with maker() as async_session:
+        yield async_session
 
 
 def get_db(
     maker: sessionmaker[Session] = Depends(get_sync_sessionmaker),
 ) -> Generator[Session, None, None]:
-    db = maker()
-    try:
-        yield db
-    finally:
-        db.close()
+    with maker() as session:
+        yield session
 
 
 GetDbAsync = Annotated[AsyncSession, Depends(get_db_async)]
