@@ -22,7 +22,7 @@ def custom_generate_unique_id(route: APIRoute) -> str:
     return f"{route.name}"
 
 
-## TODO: Add types + redis client + posthog + redis pool
+## TODO: Add posthog
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     logger.info("Starting application lifespan")

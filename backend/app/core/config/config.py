@@ -57,6 +57,17 @@ class App(BSettings):
     secret_key: str
 
 
+class GoogleAuth(BSettings):
+    client_id: str
+    client_secret: str = Field(validation_alias="google_client_secret")
+    project_id: str
+    auth_provider_x509_cert_url: str
+    redirect_uris: list[str]
+    auth_uri: str
+    token_uri: str
+    javascript_origins: str
+
+
 class Auth(BSettings):
     access_token_expire_minutes: int = 1440
     algorithm: str = "HS256"
@@ -69,8 +80,16 @@ class Auth(BSettings):
     secure: bool = True
     domain: str = "localhost"
     secret_key: str | None = None
-    google_auth_client_id: str
-    google_auth_secret: str
+    # google_auth_client_id: str
+    # google_auth_secret: str
+    # google_auth_callback_redirect_slug: str
+    # google_auth_client_secret: str = Field(validation_alias="google_client_secret")
+    # google_auth_project_id: str
+    # google_auth_provider_x509_cert_url: str
+    # google_auth_redirect_uris: list[str]
+    # google_auth_auth_uri: str
+    # google_auth_token_uri: str
+    # google_auth_javascript_origins: str
 
 
 class Cors(BSettings):

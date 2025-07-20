@@ -1,3 +1,5 @@
+import json
+import logging
 from typing import Annotated
 
 from app.core.dependencies.db import GetDbAsync
@@ -10,7 +12,6 @@ from starlette.status import HTTP_401_UNAUTHORIZED
 
 settings = get_settings()
 
-import logging
 
 logger = logging.getLogger("app")
 
@@ -44,7 +45,9 @@ async def get_current_user(
 
     cached_user = await r_client.json().get(f"user_{user_id}")  # type:ignore - Having to ignore this the Redis package does not seperate the get method out for async - should not be an issue at runtime
     if cached_user:
-        logger.info("Retrieved user", extra={**cached_user})
+        cached_user_dict = json.loads(cached_user)
+
+        logger.info("Retrieved user", extra={**cached_user_dict})
         return User(**cached_user)
     user = await UserService.get_user_by_id(int(user_id), db)
     if not user:
