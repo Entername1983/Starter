@@ -7,6 +7,7 @@ from fastapi import Depends
 
 @lru_cache
 def get_settings() -> Settings:
+    """Returning app settings"""
     return Settings()
 
 

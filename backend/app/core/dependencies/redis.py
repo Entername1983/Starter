@@ -1,3 +1,4 @@
+import logging
 from typing import Annotated, AsyncGenerator, Generator
 
 import redis.asyncio as RedisAsync
@@ -10,6 +11,9 @@ from redis.asyncio import Redis as AsyncRedis
 from redis.connection import ConnectionPool
 
 settings = get_settings()
+
+
+logger = logging.getLogger("app")
 
 
 def get_redis_async_pool(request: Request) -> RedisAsync.ConnectionPool:

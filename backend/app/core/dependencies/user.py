@@ -1,13 +1,18 @@
 from typing import Annotated
 
-from app.dependencies import get_db_async, get_settings
-from app.models import User
+from app.core.dependencies.db import GetDbAsync
+from app.core.dependencies.redis import RedisAsyncDep
+from app.dependencies import get_settings
+from app.models import User, UserSettings
 from app.services import AuthService, UserService
 from fastapi import Depends, HTTPException, Request, status
-from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import HTTP_401_UNAUTHORIZED
 
 settings = get_settings()
+
+import logging
+
+logger = logging.getLogger("app")
 
 
 async def parse_jwt_data(request: Request) -> str:
@@ -29,13 +34,18 @@ async def parse_jwt_data(request: Request) -> str:
 
 ##TODO: Add redis cache and check
 async def get_current_user(
-    user_id: str = Depends(parse_jwt_data), db: AsyncSession = Depends(get_db_async)
+    db: GetDbAsync, r_client: RedisAsyncDep, user_id: str = Depends(parse_jwt_data)
 ) -> User:
     ## First check if user is cached in Redis
-    """Get the current user from the database using the user ID from the JWT token.
+    """Get the current user from the cache/database using the user ID from the JWT token.
     Raises:
         HTTPException: If the user is not found or the JWT is invalid.
     """
+
+    cached_user = await r_client.json().get(f"user_{user_id}")  # type:ignore - Having to ignore this the Redis package does not seperate the get method out for async - should not be an issue at runtime
+    if cached_user:
+        logger.info("Retrieved user", extra={**cached_user})
+        return User(**cached_user)
     user = await UserService.get_user_by_id(int(user_id), db)
     if not user:
         raise HTTPException(
@@ -45,14 +55,23 @@ async def get_current_user(
     return user
 
 
+CurrentUser = Annotated[User, Depends(get_current_user)]
+
+
 async def get_current_user_with_settings(
-    user_id: str = Depends(parse_jwt_data), db: AsyncSession = Depends(get_db_async)
+    user: CurrentUser,
+    db: GetDbAsync,
+    r_client: RedisAsyncDep,
 ) -> User:
     """Get the current user with settings loaded from the database using the user ID from the JWT token.
     Raises:
         HTTPException: If the user is not found or the JWT is invalid.
     """
-    user = await UserService.get_user_with_settings_by_id(int(user_id), db)
+
+    cached_settings = await r_client.json().get(f"user_settings_{user.id}")  # type:ignore - Having to ignore this the Redis package does not seperate the get method out for async - should not be an issue at runtime
+    if cached_settings:
+        return UserSettings(**cached_settings)
+    user = await UserService.get_user_with_settings_by_id(int(user.id), db)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -61,5 +80,4 @@ async def get_current_user_with_settings(
     return user
 
 
-CurrentUser = Annotated[User, Depends(get_current_user)]
 CurrentUserWithSettings = Annotated[User, Depends(get_current_user_with_settings)]

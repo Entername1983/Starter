@@ -1,9 +1,9 @@
-import logging
 import pprint
 from contextlib import asynccontextmanager
 from typing import Any, AsyncGenerator, Dict
 
 from app.core.dependencies.settings import get_settings
+from app.core.logger.logger import logger
 from app.core.setup.ascii_art import BY_KEM, PLANET, WARNING_BANNER
 from app.core.setup.setup_db import setup_async_sessionmaker, setup_sessionmaker
 from app.core.setup.setup_redis import (
@@ -16,8 +16,6 @@ from fastapi.routing import APIRoute
 
 settings = get_settings()
 
-logger = logging.getLogger("app")
-
 
 def custom_generate_unique_id(route: APIRoute) -> str:
     """USE for SDK generation"""
@@ -26,25 +24,21 @@ def custom_generate_unique_id(route: APIRoute) -> str:
 
 ## TODO: Add types + redis client + posthog + redis pool
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator:
+async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     logger.info("Starting application lifespan")
 
     app.state.db_async_engine, app.state.async_session_maker = setup_async_sessionmaker()
     app.state.db_engine, app.state.session_maker = setup_sessionmaker()
 
-    # app.state.redis_client = setup_redis_client()
-    # app.state.redis_async_client = setup_async_redis_client()
     app.state.redis_async_pool = setup_redis_async_pool()
     app.state.redis_pool = setup_redis_pool()
     # app.state.posthog = setup_post_hog()
     yield
-    # await app.state.redis_client.close()
-    # app.state.sync_redis_client.close()
 
-    # app.state.redis_pool = setup_redis_pool()
-    # print("Redis pool created")
-    # yield
-    # await app.state.redis_pool.aclose()
+    app.state.db_engine.dispose()
+    await app.state.db_async_engine.dispose()
+    await app.state.redis_async_pool.disconnect()
+    app.state.redis_pool.close()
 
 
 def create_app() -> FastAPI:  # noqa: C901
@@ -67,7 +61,6 @@ def create_app() -> FastAPI:  # noqa: C901
     # setup_payment_logger()
     # setup_middleware(app)
     setup_routes(app)
-    # logger.info(settings.model_dump_json(indent=2))
     if settings.app.environment == "development":
         pprint.pprint(settings.model_dump())
         print(WARNING_BANNER)
