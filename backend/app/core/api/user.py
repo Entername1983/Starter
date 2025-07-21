@@ -1,5 +1,6 @@
+from app.core.auth.google_auth import RegisterRedirectUrl
 from app.core.dependencies.auth import GetGoogleAuth
-from app.core.dependencies.settings import get_settings
+from app.core.dependencies.settings import AppSettings, get_settings
 from app.core.services.user_service import UserService
 from app.dependencies import CurrentUser, GetDbAsync
 from fastapi import APIRouter, Request, Response
@@ -76,17 +77,23 @@ async def auth_callback(
     request: Request,
     google_auth: GetGoogleAuth,
     db: GetDbAsync,
+    settings: AppSettings,
     scope: str | None = None,
 ):
     credentials = await google_auth.exchange_code_for_token(code)
     user_info = await google_auth.request_google_user_info(credentials.token)
     new_user = google_auth.turn_google_oauth_info_into_object(user_info)
-    user = await UserService.get_user_by_external_id(
-        db, int(new_user.o_auth_id), new_user.auth_provider
-    )
+    user = await UserService.get_user_by_external_id(db, new_user.o_auth_id, new_user.auth_provider)
     if user:
         return {"Status": "User is registered"}
     ## Implement redirect to registration page
-    return {"Status": "User not yet registered"}
+    data = new_user.model_dump()
+    data["access_token"] = credentials.token
+    data["original_page"] = state
+    data["settings"] = {"settings": "empty"}
+    redirect_url_object = RegisterRedirectUrl.model_validate(data)
+    redirect_str = google_auth.construct_redirect_url(redirect_url_object, settings)
+    return RedirectResponse(url=redirect_str)
+
     # await UserService.create_user(db, user.email, user.first_name, user.last_name, user.username)
     # return

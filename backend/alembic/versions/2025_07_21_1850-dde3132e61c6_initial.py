@@ -1,8 +1,8 @@
 """initial
 
-Revision ID: af966cac9bf7
+Revision ID: dde3132e61c6
 Revises: 
-Create Date: 2025-07-21 16:52:39.679029
+Create Date: 2025-07-21 18:50:37.695527
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'af966cac9bf7'
+revision: str = 'dde3132e61c6'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -26,15 +26,15 @@ def upgrade() -> None:
     sa.Column('first_name', sa.String(), nullable=False),
     sa.Column('last_name', sa.String(), nullable=False),
     sa.Column('username', sa.String(), nullable=False),
-    sa.Column('external_id', sa.String(), nullable=True),
-    sa.Column('external_id_type', sa.String(), nullable=True),
+    sa.Column('external_user_id', sa.String(), nullable=True),
+    sa.Column('auth_provider', sa.String(), nullable=True),
     sa.Column('disabled', sa.Boolean(), nullable=False),
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id', name=op.f('users_pkey')),
     sa.UniqueConstraint('email', name=op.f('users_email_key')),
-    sa.UniqueConstraint('external_id', name=op.f('users_external_id_key')),
+    sa.UniqueConstraint('external_user_id', name=op.f('users_external_user_id_key')),
     sa.UniqueConstraint('username', name=op.f('users_username_key'))
     )
     op.create_table('user_settings',

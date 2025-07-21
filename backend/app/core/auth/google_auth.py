@@ -1,10 +1,12 @@
 import json
 from enum import Enum
 from pathlib import Path
-from typing import cast
+from typing import Any, cast
+from urllib.parse import urlencode
 
 import google_auth_oauthlib.flow
 import httpx
+from app.core.dependencies.settings import AppSettings
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 from pydantic import BaseModel
@@ -30,7 +32,7 @@ class GoogleAuthWebClientConfig(BaseModel):
     web: GoogleAuthClientConfig
 
 
-class AuthProvider(str, Enum):
+class AuthProviderEnum(str, Enum):
     google = "google"
     discord = "discord"
     microsoft = "microsoft"
@@ -43,7 +45,13 @@ class OAuthUserInfoSchema(BaseModel):
     given_name: str | None
     family_name: str | None
     picture_url: str | None
-    auth_provider: AuthProvider
+    auth_provider: AuthProviderEnum
+
+
+class RegisterRedirectUrl(OAuthUserInfoSchema):
+    access_token: str
+    original_page: str
+    settings: dict[str, Any]
 
 
 GOOGLE_AUTH_SCOPES = [
@@ -54,7 +62,8 @@ GOOGLE_AUTH_SCOPES = [
     "openid",
 ]
 
-GOOGLE_REDIRECT_URI = "http://localhost:8000/user/auth/callback"
+# GOOGLE_REDIRECT_URI = "http://localhost:8000/user/auth/callback"
+GOOGLE_AUTH_REQ_API = "https://www.googleapis.com/oauth2/v2/userinfo"
 
 
 class GoogleAuth:
@@ -62,22 +71,22 @@ class GoogleAuth:
         self,
         client_secret_path: Path = GOOGLE_SECRET_FILE,
         scopes: list[str] = GOOGLE_AUTH_SCOPES,
-        redirect_uri: str = GOOGLE_REDIRECT_URI,
+        # redirect_uri: str = GOOGLE_REDIRECT_URI,
     ):
         self.scopes = scopes
-        self.redirect_uri = redirect_uri
+        self.redirect_uri = None
 
-        # Load and validate config
         with open(client_secret_path, "r") as f:
             config = json.load(f)
-            GoogleAuthWebClientConfig.model_validate(config)
+            validated = GoogleAuthWebClientConfig.model_validate(config)
 
-        # Initialize the Flow instance
+            self.redirect_uri = validated.web.redirect_uris[0]
+
         self.flow: Flow = google_auth_oauthlib.flow.Flow.from_client_config(  # type:ignore
             config,
             scopes=scopes,
         )
-        self.flow.redirect_uri = redirect_uri  # type:ignore
+        self.flow.redirect_uri = self.redirect_uri  # type:ignore
 
     async def get_auth_url(self) -> str:
         auth_url, _ = self.flow.authorization_url(  # type:ignore
@@ -96,11 +105,10 @@ class GoogleAuth:
         print(access_token)
         async with httpx.AsyncClient() as client:
             raw_bytes = await client.get(
-                "https://www.googleapis.com/oauth2/v2/userinfo",
+                GOOGLE_AUTH_REQ_API,
                 headers={"Authorization": f"Bearer {access_token}"},
             )
-        json_str = raw_bytes.content.decode("utf-8")
-        return json.loads(json_str)
+        return json.loads(raw_bytes.content.decode("utf-8"))
 
     @staticmethod
     def turn_google_oauth_info_into_object(
@@ -113,5 +121,10 @@ class GoogleAuth:
             given_name=google_auth_content.get("given_name"),
             family_name=google_auth_content.get("family_name"),
             picture_url=google_auth_content.get("picture"),
-            auth_provider=AuthProvider.google,
+            auth_provider=AuthProviderEnum.google,
         )
+
+    @staticmethod
+    def construct_redirect_url(data: RegisterRedirectUrl, settings: AppSettings) -> str:
+        query_string = urlencode(data.model_dump())
+        return f"{settings.app.frontend_url}/register?{query_string}"

@@ -14,9 +14,7 @@ class UserSettings(BaseModel):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
-    user: Mapped["User"] = relationship(
-        back_populates="settings", uselist=False, cascade="all, delete-orphan"
-    )
+    user: Mapped["User"] = relationship(back_populates="settings", uselist=False)
     notifications_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
 
     __table_args__ = (UniqueConstraint("user_id"),)
