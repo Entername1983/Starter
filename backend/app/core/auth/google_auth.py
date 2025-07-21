@@ -1,16 +1,16 @@
 import json
+from enum import Enum
 from pathlib import Path
+from typing import cast
 
 import google_auth_oauthlib.flow
+import httpx
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import Flow
 from pydantic import BaseModel
 
-# Required, call the from_client_secrets_file method to retrieve the client ID from a
-# client_secret.json file. The client ID (from that file) and access scopes are required. (You can
-# also use the from_client_config method, which passes the client configuration as it originally
-# appeared in a client secrets file but doesn't access the file itself.)
 CURRENT_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
-print(CURRENT_DIR)
 FILENAME = "google_auth_secret_file.json"
 GOOGLE_SECRET_FILE = CURRENT_DIR / "secrets" / FILENAME
 
@@ -30,49 +30,88 @@ class GoogleAuthWebClientConfig(BaseModel):
     web: GoogleAuthClientConfig
 
 
+class AuthProvider(str, Enum):
+    google = "google"
+    discord = "discord"
+    microsoft = "microsoft"
+
+
+class OAuthUserInfoSchema(BaseModel):
+    o_auth_id: str
+    email: str
+    name: str
+    given_name: str | None
+    family_name: str | None
+    picture_url: str | None
+    auth_provider: AuthProvider
+
+
 GOOGLE_AUTH_SCOPES = [
+    "https://www.googleapis.com/auth/userinfo.profile",
+    "https://www.googleapis.com/auth/userinfo.email",
     "https://www.googleapis.com/auth/drive.metadata.readonly",
     "https://www.googleapis.com/auth/calendar.readonly",
+    "openid",
 ]
 
-
-## TODO: consolidate where config + secrets are loaded from
-def get_google_auth_url() -> str:
-    ## Scopes listed here: https://developers.google.com/identity/protocols/oauth2/scopes
-    with open(GOOGLE_SECRET_FILE, "r") as f:
-        config = json.loads(f.read())
-        GoogleAuthWebClientConfig.model_validate(config)
-    flow = google_auth_oauthlib.flow.Flow.from_client_config(  # type: ignore
-        config,
-        scopes=GOOGLE_AUTH_SCOPES,
-    )
-    flow.redirect_uri = "http://localhost:8000/auth/callback"
-
-    auth_url, _ = flow.authorization_url(  # type:ignore
-        access_type="offline", included_granted_scopes="true", prompt="consent"
-    )
-    if not isinstance(auth_url, str):
-        raise Exception("Missing google auth url")
-    return auth_url
+GOOGLE_REDIRECT_URI = "http://localhost:8000/user/auth/callback"
 
 
-# # Required, indicate where the API server will redirect the user after the user completes
-# # the authorization flow. The redirect URI is required. The value must exactly
-# # match one of the authorized redirect URIs for the OAuth 2.0 client, which you
-# # configured in the API Console. If this value doesn't match an authorized URI,
-# # you will get a 'redirect_uri_mismatch' error.
-# flow.redirect_uri = settings.auth
+class GoogleAuth:
+    def __init__(
+        self,
+        client_secret_path: Path = GOOGLE_SECRET_FILE,
+        scopes: list[str] = GOOGLE_AUTH_SCOPES,
+        redirect_uri: str = GOOGLE_REDIRECT_URI,
+    ):
+        self.scopes = scopes
+        self.redirect_uri = redirect_uri
 
-# # Generate URL for request to Google's OAuth 2.0 server.
-# # Use kwargs to set optional request parameters.
-# authorization_url, state = flow.authorization_url(
-#     # Recommended, enable offline access so that you can refresh an access token without
-#     # re-prompting the user for permission. Recommended for web server apps.
-#     access_type='offline',
-#     # Optional, enable incremental authorization. Recommended as a best practice.
-#     include_granted_scopes='true',
-#     # Optional, if your application knows which user is trying to authenticate, it can use this
-#     # parameter to provide a hint to the Google Authentication Server.
-#     login_hint='hint@example.com',
-#     # Optional, set prompt to 'consent' will prompt the user for consent
-#     prompt='consent')
+        # Load and validate config
+        with open(client_secret_path, "r") as f:
+            config = json.load(f)
+            GoogleAuthWebClientConfig.model_validate(config)
+
+        # Initialize the Flow instance
+        self.flow: Flow = google_auth_oauthlib.flow.Flow.from_client_config(  # type:ignore
+            config,
+            scopes=scopes,
+        )
+        self.flow.redirect_uri = redirect_uri  # type:ignore
+
+    async def get_auth_url(self) -> str:
+        auth_url, _ = self.flow.authorization_url(  # type:ignore
+            access_type="offline", included_granted_scopes="true", prompt="consent"
+        )
+        if not isinstance(auth_url, str):
+            raise Exception("Missing google auth url")
+        return auth_url
+
+    async def exchange_code_for_token(self, code: str) -> Credentials:
+        self.flow.fetch_token(code=code)  # type:ignore
+        credentials = cast(Credentials, self.flow.credentials)  # type:ignore
+        return credentials
+
+    async def request_google_user_info(self, access_token: str) -> dict[str, str]:
+        print(access_token)
+        async with httpx.AsyncClient() as client:
+            raw_bytes = await client.get(
+                "https://www.googleapis.com/oauth2/v2/userinfo",
+                headers={"Authorization": f"Bearer {access_token}"},
+            )
+        json_str = raw_bytes.content.decode("utf-8")
+        return json.loads(json_str)
+
+    @staticmethod
+    def turn_google_oauth_info_into_object(
+        google_auth_content: dict[str, str],
+    ) -> OAuthUserInfoSchema:
+        return OAuthUserInfoSchema(
+            o_auth_id=google_auth_content["id"],
+            email=google_auth_content["email"],
+            name=google_auth_content["name"],
+            given_name=google_auth_content.get("given_name"),
+            family_name=google_auth_content.get("family_name"),
+            picture_url=google_auth_content.get("picture"),
+            auth_provider=AuthProvider.google,
+        )

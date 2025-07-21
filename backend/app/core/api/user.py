@@ -1,7 +1,8 @@
-from app.core.auth.google_auth import get_google_auth_url
+from app.core.dependencies.auth import GetGoogleAuth
 from app.core.dependencies.settings import get_settings
+from app.core.services.user_service import UserService
 from app.dependencies import CurrentUser, GetDbAsync
-from fastapi import APIRouter, Response
+from fastapi import APIRouter, Request, Response
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 
@@ -57,15 +58,35 @@ settings = get_settings()
 
 
 @router.get("/auth/google_sign_in/", tags=["user"])
-async def sign_in_with_google():
-    auth_url = get_google_auth_url()
+async def sign_in_with_google(google_auth: GetGoogleAuth):
+    auth_url = await google_auth.get_auth_url()
     return RedirectResponse(url=auth_url)
 
 
-# @router.get("/google_callback")
-# async def google_callback(
-#     code: str,
-#     state: str,
-#     response: Response,
-#     db: GetDbAsync,
-#     settings: AppSettings):
+class CallbackQueryParams(BaseModel):
+    access_token: str
+    expires_at: int
+    scope: list[str]
+
+
+@router.get("/auth/callback")
+async def auth_callback(
+    state: str,
+    code: str,
+    request: Request,
+    google_auth: GetGoogleAuth,
+    db: GetDbAsync,
+    scope: str | None = None,
+):
+    credentials = await google_auth.exchange_code_for_token(code)
+    user_info = await google_auth.request_google_user_info(credentials.token)
+    new_user = google_auth.turn_google_oauth_info_into_object(user_info)
+    user = await UserService.get_user_by_external_id(
+        db, int(new_user.o_auth_id), new_user.auth_provider
+    )
+    if user:
+        return {"Status": "User is registered"}
+    ## Implement redirect to registration page
+    return {"Status": "User not yet registered"}
+    # await UserService.create_user(db, user.email, user.first_name, user.last_name, user.username)
+    # return

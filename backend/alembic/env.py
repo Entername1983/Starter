@@ -4,13 +4,20 @@ import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-
-# from logging.config import fileConfig
+from pathlib import Path
 
 from alembic import context
+
+# from logging.config import fileConfig
 from app.core.dependencies.settings import get_settings
-from app.core.setup.setup_db import Base
+from app.models import Base
 from sqlalchemy import engine_from_config, pool
+
+ini_path = Path(context.config.config_file_name)
+
+# project_root is its parent directory
+project_root = ini_path.resolve().parent
+sys.path.insert(0, project_root)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -30,13 +37,16 @@ logging.basicConfig(
 )
 
 config.set_main_option("sqlalchemy.url", settings.db.pg_db_uri)  # Or via env vars
-print(f"Using database URL: {settings.db.pg_db_uri}")
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
-
+print(f"TARGET_METADATA{target_metadata}")
+print(">>> ENV: sys.path[0] =", sys.path[0])
+print(">>> ENV: Base module:", Base.__module__)
+print(">>> ENV: Base file:", Base.__dict__.get("__file__", "(built-in)"))
+print(">>> ENV: tables keys:", list(Base.metadata.tables.keys()))
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")

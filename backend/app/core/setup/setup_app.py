@@ -2,6 +2,7 @@ import pprint
 from contextlib import asynccontextmanager
 from typing import Any, AsyncGenerator, Dict
 
+from app.core.auth.google_auth import GoogleAuth
 from app.core.dependencies.settings import get_settings
 from app.core.logger.logger import logger
 from app.core.setup.ascii_art import BY_KEM, PLANET, WARNING_BANNER
@@ -29,7 +30,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
 
     app.state.db_async_engine, app.state.async_session_maker = setup_async_sessionmaker()
     app.state.db_engine, app.state.session_maker = setup_sessionmaker()
-
+    app.state.google_auth = GoogleAuth()
     app.state.redis_async_pool = setup_redis_async_pool()
     app.state.redis_pool = setup_redis_pool()
     # app.state.posthog = setup_post_hog()
