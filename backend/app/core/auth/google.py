@@ -1,57 +1,24 @@
 import json
-from enum import Enum
 from pathlib import Path
-from typing import Any, cast
+from typing import cast
 from urllib.parse import urlencode
 
 import google_auth_oauthlib.flow
 import httpx
-from app.core.dependencies.settings import AppSettings
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
-from pydantic import BaseModel
+
+from app.core.auth.schemas import (
+    AuthProviderEnum,
+    GoogleAuthWebClientConfig,
+    OAuthUserInfoSchema,
+    RegisterRedirectUrl,
+)
 
 CURRENT_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
 FILENAME = "google_auth_secret_file.json"
 GOOGLE_SECRET_FILE = CURRENT_DIR / "secrets" / FILENAME
-
-
-class GoogleAuthClientConfig(BaseModel):
-    client_id: str
-    project_id: str
-    auth_provider_x509_cert_url: str
-    client_secret: str
-    redirect_uris: list[str]
-    auth_uri: str
-    token_uri: str
-    javascript_origins: list[str]
-
-
-class GoogleAuthWebClientConfig(BaseModel):
-    web: GoogleAuthClientConfig
-
-
-class AuthProviderEnum(str, Enum):
-    google = "google"
-    discord = "discord"
-    microsoft = "microsoft"
-
-
-class OAuthUserInfoSchema(BaseModel):
-    o_auth_id: str
-    email: str
-    name: str
-    given_name: str | None
-    family_name: str | None
-    picture_url: str | None
-    auth_provider: AuthProviderEnum
-
-
-class RegisterRedirectUrl(OAuthUserInfoSchema):
-    access_token: str
-    original_page: str
-    settings: dict[str, Any]
 
 
 GOOGLE_AUTH_SCOPES = [
@@ -71,7 +38,6 @@ class GoogleAuth:
         self,
         client_secret_path: Path = GOOGLE_SECRET_FILE,
         scopes: list[str] = GOOGLE_AUTH_SCOPES,
-        # redirect_uri: str = GOOGLE_REDIRECT_URI,
     ):
         self.scopes = scopes
         self.redirect_uri = None
@@ -125,6 +91,6 @@ class GoogleAuth:
         )
 
     @staticmethod
-    def construct_redirect_url(data: RegisterRedirectUrl, settings: AppSettings) -> str:
+    def construct_redirect_url(data: RegisterRedirectUrl, url: str, slug: str) -> str:
         query_string = urlencode(data.model_dump())
-        return f"{settings.app.frontend_url}/register?{query_string}"
+        return f"{url}/{slug}?{query_string}"

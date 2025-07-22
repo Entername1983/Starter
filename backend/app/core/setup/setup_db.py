@@ -1,6 +1,5 @@
 from typing import Tuple
 
-from app.core.dependencies.settings import get_settings
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.engine import Engine
 from sqlalchemy.ext.asyncio import (
@@ -10,6 +9,8 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 from sqlalchemy.orm import Session, declarative_base, sessionmaker
+
+from app.core.dependencies.settings import get_settings
 
 POSTGRES_INDEXES_NAMING_CONVENTION = {
     "ix": "%(column_0_label)s_idx",

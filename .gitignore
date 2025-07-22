@@ -21,3 +21,11 @@ backend/secrets
 frontend/.env
 frontend/node_modules
 frontend/.claude
+frontend/..DS_Store
+frontend/.dist
+frontend/.dist-ssr
+frontend/.*.local
+frontend/.count.txt
+frontend/..env
+frontend/..nitro
+frontend/..tanstack

@@ -6,12 +6,13 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from pathlib import Path
 
+from sqlalchemy import engine_from_config, pool
+
 from alembic import context
 
 # from logging.config import fileConfig
 from app.core.dependencies.settings import get_settings
 from app.models import Base
-from sqlalchemy import engine_from_config, pool
 
 ini_path = Path(context.config.config_file_name)
 

@@ -1,17 +1,34 @@
+import { ContextWrapper } from '@contexts/ContextWrapper'
+import { store } from '@store/store'
+import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import ReactDOM from 'react-dom/client'
+import { Provider } from 'react-redux'
 
-import App from './App.tsx'
+import { routeTree } from './routeTree.gen'
 
-import './index.css'
+// Create a new router instance
+const router = createRouter({ routeTree })
 
-const container = document.getElementById('root')
-if (container) {
-  createRoot(container).render(
+// Register the router instance for type safety
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
+
+// Render the app
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const rootElement = document.getElementById('root')!
+if (!rootElement.innerHTML) {
+  const root = ReactDOM.createRoot(rootElement)
+  root.render(
     <StrictMode>
-      <App />
+      <Provider store={store}>
+        <ContextWrapper>
+          <RouterProvider router={router} />
+        </ContextWrapper>
+      </Provider>
     </StrictMode>
   )
-} else {
-  throw new Error('Root container not found')
 }

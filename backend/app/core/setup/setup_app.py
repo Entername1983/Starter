@@ -2,7 +2,10 @@ import pprint
 from contextlib import asynccontextmanager
 from typing import Any, AsyncGenerator, Dict
 
-from app.core.auth.google_auth import GoogleAuth
+from fastapi import FastAPI
+from fastapi.routing import APIRoute
+
+from app.core.auth.google import GoogleAuth
 from app.core.dependencies.settings import get_settings
 from app.core.logger.logger import logger
 from app.core.setup.ascii_art import BY_KEM, PLANET, WARNING_BANNER
@@ -12,8 +15,6 @@ from app.core.setup.setup_redis import (
     setup_redis_pool,
 )
 from app.core.setup.setup_routes import setup_routes
-from fastapi import FastAPI
-from fastapi.routing import APIRoute
 
 settings = get_settings()
 

@@ -2,13 +2,15 @@ import json
 import logging
 from typing import Annotated
 
-from app.core.dependencies.db import GetDbAsync
-from app.core.dependencies.redis import RedisAsyncDep
-from app.dependencies import get_settings
-from app.models import User, UserSettings
-from app.services import AuthService, UserService
 from fastapi import Depends, HTTPException, Request, status
 from starlette.status import HTTP_401_UNAUTHORIZED
+
+from app.core.auth.auth import AuthHelpers
+from app.core.dependencies.db import GetDbAsync
+from app.core.dependencies.redis import RedisAsyncDep
+from app.core.dependencies.settings import get_settings
+from app.models import User, UserSettings
+from app.services import UserService
 
 settings = get_settings()
 
@@ -30,7 +32,7 @@ async def parse_jwt_data(request: Request) -> str:
     encoded_token: str = (
         token_data.split(" ")[1] if token_data.startswith("Bearer ") else token_data
     )
-    return await AuthService.decode_jwt_token(encoded_token)
+    return await AuthHelpers.decode_jwt_token(encoded_token)
 
 
 ##TODO: Add redis cache and check

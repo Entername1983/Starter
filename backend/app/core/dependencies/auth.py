@@ -1,7 +1,7 @@
 from functools import lru_cache
 from typing import Annotated
 
-from app.core.auth.google_auth import GoogleAuth
+from app.core.auth.google import GoogleAuth
 from fastapi import Depends, Request
 
 

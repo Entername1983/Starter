@@ -1,4 +1,4 @@
-from app.core.auth.google_auth import RegisterRedirectUrl
+from app.core.auth.auth import AuthHelpers
 from app.core.dependencies.auth import GetGoogleAuth
 from app.core.dependencies.settings import AppSettings, get_settings
 from app.core.services.user_service import UserService
@@ -70,7 +70,9 @@ class CallbackQueryParams(BaseModel):
     scope: list[str]
 
 
-@router.get("/auth/callback")
+@router.get(
+    "/auth/callback",
+)
 async def auth_callback(
     state: str,
     code: str,
@@ -79,21 +81,25 @@ async def auth_callback(
     db: GetDbAsync,
     settings: AppSettings,
     scope: str | None = None,
-):
+) -> RedirectResponse:
     credentials = await google_auth.exchange_code_for_token(code)
     user_info = await google_auth.request_google_user_info(credentials.token)
     new_user = google_auth.turn_google_oauth_info_into_object(user_info)
     user = await UserService.get_user_by_external_id(db, new_user.o_auth_id, new_user.auth_provider)
     if user:
-        return {"Status": "User is registered"}
-    ## Implement redirect to registration page
-    data = new_user.model_dump()
-    data["access_token"] = credentials.token
-    data["original_page"] = state
-    data["settings"] = {"settings": "empty"}
-    redirect_url_object = RegisterRedirectUrl.model_validate(data)
-    redirect_str = google_auth.construct_redirect_url(redirect_url_object, settings)
-    return RedirectResponse(url=redirect_str)
-
-    # await UserService.create_user(db, user.email, user.first_name, user.last_name, user.username)
-    # return
+        return AuthHelpers.login_redirect_response(
+            user=user,
+            credentials=credentials,
+            user_settings={"None": "None"},
+            state=state,
+            google_auth=google_auth,
+            app_settings=settings,
+        )
+    return AuthHelpers.registration_redirect_response(
+        new_user=new_user,
+        credentials=credentials,
+        user_settings={"None": "None"},
+        state=state,
+        google_auth=google_auth,
+        app_settings=settings,
+    )

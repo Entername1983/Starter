@@ -8,18 +8,11 @@ dependencies = [
     "alembic>=1.16.4",
     "asyncpg>=0.30.0",
     "fastapi[standard]>=0.116.1",
-    "google-api-python-client>=2.176.0",
-    "google-auth>=2.40.3",
-    "google-auth-httplib2>=0.2.0",
-    "google-auth-oauthlib>=1.2.2",
-    "google-auth-stubs>=0.3.0",
     "posthog>=6.1.1",
     "psycopg2-binary>=2.9.10",
     "pydantic-settings>=2.10.1",
-    "pyjwt>=2.10.1",
     "python-json-logger>=3.3.0",
     "pyyaml>=6.0.2",
-    "redis>=6.2.0",
     "ruff>=0.12.3",
     "sqlalchemy>=2.0.41",
 ]
@@ -51,8 +44,3 @@ migrate = { cmd = "alembic --config pyproject.toml revision --autogenerate -m $m
 script_location = "%(here)s/alembic"
 
 file_template = "%%(year)d_%%(month).2d_%%(day).2d_%%(hour).2d%%(minute).2d-%%(rev)s_%%(slug)s"
-
-[dependency-groups]
-dev = [
-    "pytest>=8.4.1",
-]

@@ -2,13 +2,14 @@ import logging
 from typing import Annotated, AsyncGenerator, Generator
 
 import redis.asyncio as RedisAsync
-from app.dependencies import get_settings
 from fastapi import Depends, Request
 from redis import Redis
 from redis.asyncio import ConnectionPool as AsyncConnectionPool
 from redis.asyncio import Redis as ARedis
 from redis.asyncio import Redis as AsyncRedis
 from redis.connection import ConnectionPool
+
+from app.dependencies import get_settings
 
 settings = get_settings()
 

@@ -19,8 +19,11 @@ A starter template using FastAPI and React
    - [ORM](#ORM)
    - [DB](#DB)
    - [Testing](#Testing)
+   - [Auth](#Auth)
 
 5. [Frontend](#frontend)
+   - [Routing](#routing)
+   - [Forms](#forms)
 6. [Reverse Proxy](#reverse-proxy)
 7. [Database](#database)
 8. [Cache](#cache)
@@ -126,11 +129,21 @@ settings = get_settings()
 
 - Using pytest
 
----
+### Auth
+
+## Using OAuth with google auth + internal auth.
 
 ## Frontend
 
 A React-based single-page application (SPA) located in the `frontend/` directory. See `frontend/README.md` for setup and development instructions.
+
+### Forms
+
+Using react-hook-form https://react-hook-form.com/
+
+### React router
+
+Using Tanstack router https://tanstack.com/router/
 
 ## Reverse Proxy
 

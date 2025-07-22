@@ -1,8 +1,9 @@
-from app.core.auth.google_auth import AuthProviderEnum
-from app.models import User, UserSettings
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
+
+from app.core.auth.google import AuthProviderEnum
+from app.models import User, UserSettings
 
 
 class UserService:

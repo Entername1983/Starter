@@ -80,6 +80,7 @@ dependencies = [
     { name = "google-auth-httplib2" },
     { name = "google-auth-oauthlib" },
     { name = "google-auth-stubs" },
+    { name = "httptools" },
     { name = "posthog" },
     { name = "psycopg2-binary" },
     { name = "pydantic-settings" },
@@ -89,6 +90,7 @@ dependencies = [
     { name = "redis" },
     { name = "ruff" },
     { name = "sqlalchemy" },
+    { name = "uvloop" },
 ]
 
 [package.dev-dependencies]
@@ -106,6 +108,7 @@ requires-dist = [
     { name = "google-auth-httplib2", specifier = ">=0.2.0" },
     { name = "google-auth-oauthlib", specifier = ">=1.2.2" },
     { name = "google-auth-stubs", specifier = ">=0.3.0" },
+    { name = "httptools", specifier = ">=0.6.4" },
     { name = "posthog", specifier = ">=6.1.1" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
     { name = "pydantic-settings", specifier = ">=2.10.1" },
@@ -115,6 +118,7 @@ requires-dist = [
     { name = "redis", specifier = ">=6.2.0" },
     { name = "ruff", specifier = ">=0.12.3" },
     { name = "sqlalchemy", specifier = ">=2.0.41" },
+    { name = "uvloop", specifier = ">=0.21.0" },
 ]
 
 [package.metadata.requires-dev]

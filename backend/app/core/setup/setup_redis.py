@@ -1,7 +1,8 @@
 import redis.asyncio as RedisAsync
-from app.dependencies import get_settings
 from redis import Redis
 from redis.connection import ConnectionPool
+
+from app.dependencies import get_settings
 
 settings = get_settings()
 

@@ -1,7 +1,3 @@
-import DesignerApp from '@components/DesignerApp'
-import ContextWrapper from '@contexts/ContextWrapper'
-import AuthCallback from '@pages/AuthCallback'
-import DesignsPage from '@pages/DesignsPage'
 import { store } from '@store/store'
 import type React from 'react'
 import { Provider } from 'react-redux'
