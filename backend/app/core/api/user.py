@@ -1,44 +1,19 @@
-from app.core.auth.auth import AuthHelpers
-from app.core.dependencies.auth import GetGoogleAuth
-from app.core.dependencies.settings import AppSettings, get_settings
-from app.core.services.user_service import UserService
-from app.dependencies import CurrentUser, GetDbAsync
 from fastapi import APIRouter, Request, Response
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
+
+from app.core.auth.auth import AuthHelpers
+from app.core.dependencies.auth import GetGoogleAuth
+from app.core.dependencies.settings import AppSettings, get_settings
+from app.core.schemas import UserSchema
+from app.core.schemas.user import LogoutResponse, UserDataResponse
+from app.core.services.user_service import UserService
+from app.dependencies import CurrentUser, GetDbAsync
 
 router = APIRouter(
     prefix="/user",
     tags=["user"],
 )
-
-
-class BaseSchema(BaseModel):
-    id: int
-    created_at: str
-    updated_at: str
-
-
-class UserSchema(BaseSchema):
-    email: str
-    first_name: str
-    last_name: str
-    username: str
-    external_id: str | None
-    external_id_type: str | None
-    disabled: bool
-
-
-class UserDataResponse(BaseModel):
-    status: str
-    loggedIn: bool
-    user: UserSchema
-    message: str | None
-
-
-class LogoutResponse(BaseModel):
-    status: str
-    message: str
 
 
 @router.get("/auth/status/", response_model=UserDataResponse, tags=["user"])

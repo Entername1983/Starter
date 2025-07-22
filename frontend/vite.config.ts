@@ -32,6 +32,7 @@ export default defineConfig({
       '@assets': path.resolve(__dirname, './src/assets'),
       '@client': path.resolve(__dirname, './src/client'),
       '@contexts': path.resolve(__dirname, './src/contexts'),
+      '@api': path.resolve(__dirname, './src/api'),
     },
   },
   test: {

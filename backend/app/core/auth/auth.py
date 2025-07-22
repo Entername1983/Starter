@@ -2,16 +2,15 @@ import datetime as dt
 from typing import Any, Optional
 
 import jwt
+from app.core.auth.google import OAuthUserInfoSchema
+from app.core.dependencies.auth import GetGoogleAuth
+from app.core.dependencies.settings import AppSettings, get_settings
+from app.core.models.user import User
+from app.core.schemas import RegisterRedirectUrl
 from fastapi import HTTPException, status
 from fastapi.responses import RedirectResponse
 from google.oauth2.credentials import Credentials
 from pydantic import BaseModel
-
-from app.core.auth.google import OAuthUserInfoSchema
-from app.core.auth.schemas import RegisterRedirectUrl
-from app.core.dependencies.auth import GetGoogleAuth
-from app.core.dependencies.settings import AppSettings, get_settings
-from app.core.models.user import User
 
 settings = get_settings()
 
