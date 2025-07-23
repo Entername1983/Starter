@@ -78,14 +78,15 @@ class AuthHelpers:
         google_auth: GetGoogleAuth,
         app_settings: AppSettings,
     ) -> RedirectResponse:
-        data = new_user.model_dump()
-        data["access_token"] = credentials.token
-        data["original_page"] = state
+        data = new_user.model_dump(by_alias=True)
+        data["accessToken"] = credentials.token
+        data["originalPage"] = state
         data["settings"] = {"settings": "empty"}
-        redirect_url_object = RegisterRedirectUrl.model_validate(data)
+        redirect_url_object = RegisterRedirectUrl.model_validate(data, by_alias=True)
         redirect_str = google_auth.construct_redirect_url(
             redirect_url_object, app_settings.app.frontend_url, "register"
         )
+        print(redirect_str)
         return RedirectResponse(url=redirect_str)
 
     @staticmethod

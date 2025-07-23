@@ -1,10 +1,9 @@
 from enum import Enum
 from typing import Any
 
-from pydantic.main import BaseModel
 from pydantic.networks import EmailStr
 
-from app.core.schemas.base import BaseSchema
+from app.core.schemas.base import BaseConfig, BaseSchema
 
 
 class AuthProviderEnum(str, Enum):
@@ -13,7 +12,7 @@ class AuthProviderEnum(str, Enum):
     microsoft = "microsoft"
 
 
-class UserSettingsSchema(BaseModel):
+class UserSettingsSchema(BaseConfig):
     id: int
     user_id: int
     notifications_enabled: bool
@@ -30,19 +29,19 @@ class UserSchema(BaseSchema):
     settings: UserSettingsSchema | None
 
 
-class UserDataResponse(BaseModel):
+class UserDataResponse(BaseConfig):
     status: str
     loggedIn: bool
     user: UserSchema
     message: str | None
 
 
-class LogoutResponse(BaseModel):
+class LogoutResponse(BaseConfig):
     status: str
     message: str
 
 
-class GoogleAuthClientConfig(BaseModel):
+class GoogleAuthClientConfig(BaseConfig):
     client_id: str
     project_id: str
     auth_provider_x509_cert_url: str
@@ -54,11 +53,11 @@ class GoogleAuthClientConfig(BaseModel):
     javascript_origins: list[str]
 
 
-class GoogleAuthWebClientConfig(BaseModel):
+class GoogleAuthWebClientConfig(BaseConfig):
     web: GoogleAuthClientConfig
 
 
-class OAuthUserInfoSchema(BaseModel):
+class OAuthUserInfoSchema(BaseConfig):
     o_auth_id: str
     email: str
     name: str

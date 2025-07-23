@@ -8,8 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate-api": "openapi-ts",
-    "generate-api2": "openapi --input http://localhost:8000/openapi.json --output ./src/client",
+    "generate-api": "npx @rtk-query/codegen-openapi openapi-config.ts",
     "type-check": "tsc --noEmit",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -19,14 +18,18 @@
   "dependencies": {
     "@headlessui/react": "^2.2.4",
     "@hey-api/client-fetch": "^0.13.1",
+    "@mantine/core": "^8.2.1",
+    "@mantine/hooks": "^8.2.1",
     "@reduxjs/toolkit": "^2.8.2",
     "@tailwindcss/postcss": "^4.1.11",
     "@tailwindcss/vite": "^4.1.11",
     "@tanstack/react-router": "^1.129.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-hook-form": "^7.60.0",
     "react-icons": "^5.5.0",
-    "react-redux": "^9.2.0"
+    "react-redux": "^9.2.0",
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",

@@ -10,6 +10,7 @@ from app.core.dependencies.settings import get_settings
 from app.core.logger.logger import logger
 from app.core.setup.ascii_art import BY_KEM, PLANET, WARNING_BANNER
 from app.core.setup.setup_db import setup_async_sessionmaker, setup_sessionmaker
+from app.core.setup.setup_middleware import setup_middlewares
 from app.core.setup.setup_redis import (
     setup_redis_async_pool,
     setup_redis_pool,
@@ -61,7 +62,7 @@ def create_app() -> FastAPI:  # noqa: C901
 
     logger.info("STARTING APP...")
     # setup_payment_logger()
-    # setup_middleware(app)
+    setup_middlewares(app)
     setup_routes(app)
     if settings.app.environment == "development":
         pprint.pprint(settings.model_dump())

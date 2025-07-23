@@ -1,4 +1,6 @@
 import { ContextWrapper } from '@contexts/ContextWrapper'
+import { MantineProvider } from '@mantine/core'
+import '@mantine/core/styles.css'
 import { store } from '@store/store'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { StrictMode } from 'react'
@@ -24,11 +26,13 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
-      <Provider store={store}>
-        <ContextWrapper>
-          <RouterProvider router={router} />
-        </ContextWrapper>
-      </Provider>
+      <MantineProvider>
+        <Provider store={store}>
+          <ContextWrapper>
+            <RouterProvider router={router} />
+          </ContextWrapper>
+        </Provider>
+      </MantineProvider>
     </StrictMode>
   )
 }

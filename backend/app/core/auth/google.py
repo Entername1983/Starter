@@ -92,5 +92,5 @@ class GoogleAuth:
 
     @staticmethod
     def construct_redirect_url(data: RegisterRedirectUrl, url: str, slug: str) -> str:
-        query_string = urlencode(data.model_dump())
+        query_string = urlencode(data.model_dump(by_alias=True))
         return f"{url}/{slug}?{query_string}"
