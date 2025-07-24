@@ -8,6 +8,7 @@ const config: ConfigFile = {
   exportName: 'enhancedApi',
   hooks: true,
   tag: true,
+  useEnumType: false,
 }
 
 export default config

@@ -2,6 +2,8 @@ import { ContextWrapper } from '@contexts/ContextWrapper'
 import { MantineProvider } from '@mantine/core'
 import '@mantine/core/styles.css'
 import { store } from '@store/store'
+
+import './index.css'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
