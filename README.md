@@ -1,4 +1,4 @@
-# Project Title
+# Starter Template
 
 A starter template using FastAPI and React
 
