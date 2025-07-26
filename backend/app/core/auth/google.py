@@ -5,15 +5,14 @@ from urllib.parse import urlencode
 
 import google_auth_oauthlib.flow
 import httpx
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import Flow
-
 from app.core.schemas.user import (
     AuthProviderEnum,
     GoogleAuthWebClientConfig,
     OAuthUserInfoSchema,
     RegisterRedirectUrl,
 )
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import Flow
 
 CURRENT_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
@@ -54,9 +53,12 @@ class GoogleAuth:
         )
         self.flow.redirect_uri = self.redirect_uri  # type:ignore
 
-    async def get_auth_url(self) -> str:
-        auth_url, _ = self.flow.authorization_url(  # type:ignore
-            access_type="offline", included_granted_scopes="true", prompt="consent"
+    async def get_auth_url(self, extra: dict) -> str:
+        auth_url, _ = self.flow.authorization_url(
+            state=extra,  # type:ignore
+            access_type="offline",
+            included_granted_scopes="true",
+            prompt="consent",
         )
         if not isinstance(auth_url, str):
             raise Exception("Missing google auth url")

@@ -1,15 +1,8 @@
-from enum import Enum
 from typing import Any
 
-from pydantic.networks import EmailStr
-
 from app.core.schemas.base import BaseConfig, BaseSchema
-
-
-class AuthProviderEnum(str, Enum):
-    google = "google"
-    discord = "discord"
-    microsoft = "microsoft"
+from app.core.schemas.enums import AuthProviderEnum
+from pydantic.networks import EmailStr
 
 
 class UserSettingsSchema(BaseConfig):

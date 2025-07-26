@@ -1,9 +1,8 @@
 from typing import TYPE_CHECKING
 
+from app.core.models.base import BaseModel
 from sqlalchemy import Boolean, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
-from app.core.models.base import BaseModel
 
 if TYPE_CHECKING:
     from app.core.models.user_settings import UserSettings
@@ -22,3 +21,4 @@ class User(BaseModel):
     settings: Mapped["UserSettings"] = relationship(
         back_populates="user", uselist=False, cascade="all, delete-orphan"
     )
+    picture_url: Mapped[str] = mapped_column(String, nullable=True)

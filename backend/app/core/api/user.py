@@ -1,14 +1,14 @@
-from fastapi import APIRouter, Request, Response
-from fastapi.responses import RedirectResponse
-from pydantic import BaseModel
-
 from app.core.auth.auth import AuthHelpers
 from app.core.dependencies.auth import GetGoogleAuth
 from app.core.dependencies.settings import AppSettings, get_settings
 from app.core.schemas import UserSchema
+from app.core.schemas.requests import SignUpRequest
 from app.core.schemas.user import LogoutResponse, UserDataResponse
 from app.core.services.user_service import UserService
 from app.dependencies import CurrentUser, GetDbAsync
+from fastapi import APIRouter, Request, Response
+from fastapi.responses import RedirectResponse
+from pydantic import BaseModel
 
 router = APIRouter(
     prefix="/user",
@@ -33,9 +33,15 @@ async def logout_user(user: CurrentUser, response: Response):
 settings = get_settings()
 
 
+# TODO: Find a better name than extra for the additional state passed in
 @router.get("/auth/google_sign_in/", tags=["user"])
-async def sign_in_with_google(google_auth: GetGoogleAuth):
-    auth_url = await google_auth.get_auth_url()
+async def sign_in_with_google(
+    google_auth: GetGoogleAuth,
+    request: Request,
+):
+    params: dict[str, str] = dict(request.query_params)
+    print(params)
+    auth_url = await google_auth.get_auth_url(params)
     return RedirectResponse(url=auth_url)
 
 
@@ -59,6 +65,7 @@ async def auth_callback(
 ) -> RedirectResponse:
     credentials = await google_auth.exchange_code_for_token(code)
     user_info = await google_auth.request_google_user_info(credentials.token)
+    print(user_info)
     new_user = google_auth.turn_google_oauth_info_into_object(user_info)
     user = await UserService.get_user_by_external_id(db, new_user.o_auth_id, new_user.auth_provider)
     if user:
@@ -78,3 +85,12 @@ async def auth_callback(
         google_auth=google_auth,
         app_settings=settings,
     )
+
+
+@router.post("/auth/register")
+async def register(
+    request: SignUpRequest,
+    settings: AppSettings,
+    db: GetDbAsync,
+):
+    return {"registered"}
