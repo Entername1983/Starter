@@ -7,16 +7,16 @@ const authProviders = ['google', 'discord', 'microsoft', 'internal'] as const
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const registerSearchParams = z.object({
-  oAuthId: z.number(), // "112573635607727602810"
-  email: z.email(), // "kevin.e.mccarthy1983@gmail.com"
-  name: z.string(), // "Kevin McCarthy"
-  givenName: z.string(), // "Kevin"
-  familyName: z.string(), // "McCarthy"
-  pictureUrl: z.url(), // "https://lh3.googleusercontent.com/…"
-  authProvider: z.enum(authProviders), // AuthProviderEnum.google
-  accessToken: z.string(), // your OAuth token
-  originalPage: z.string(), // e.g. "VDejrw6iFfzw4qehcFjrkPKCGyWfsA"
-  settings: z.string(), // decode & parse your `{ 'settings': 'empty' }`
+  oAuthId: z.number(),
+  email: z.email(),
+  name: z.string(),
+  givenName: z.string(),
+  familyName: z.string(),
+  pictureUrl: z.url(),
+  authProvider: z.enum(authProviders),
+  accessToken: z.string(),
+  originalPage: z.string(),
+  settings: z.string(),
 })
 export type TRegisterParams = z.infer<typeof registerSearchParams>
 

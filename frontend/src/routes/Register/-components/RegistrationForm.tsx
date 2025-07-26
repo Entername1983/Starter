@@ -103,21 +103,23 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
           error={errors.username}
           includeErrorSpace={true}
         />
-        <InputField
-          {...register('password', {
-            required: 'Password is required',
-            minLength: { value: 8, message: 'At least 8 characters' },
-            maxLength: MAX_LENGTH,
-            pattern: {
-              value: REGEX_PW_PATTERN,
-              message:
-                'Password must include at least one uppercase letter, one lowercase letter, one number and one special character',
-            },
-          })}
-          label={'Password'}
-          error={errors.password}
-          includeErrorSpace={true}
-        />
+        {defaults.authProvider === 'internal' && (
+          <InputField
+            {...register('password', {
+              required: 'Password is required',
+              minLength: { value: 8, message: 'At least 8 characters' },
+              maxLength: MAX_LENGTH,
+              pattern: {
+                value: REGEX_PW_PATTERN,
+                message:
+                  'Password must include at least one uppercase letter, one lowercase letter, one number and one special character',
+              },
+            })}
+            label={'Password'}
+            error={errors.password}
+            includeErrorSpace={true}
+          />
+        )}
       </div>
       <div>
         {locationOptions[0] ? (
