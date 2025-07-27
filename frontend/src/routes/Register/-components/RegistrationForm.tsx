@@ -1,3 +1,4 @@
+import { useRegisterMutation, type AuthProviderEnum } from '@api/api.gen'
 import { Checkbox } from '@components/Inputs/Checkbox'
 import { Dropdown } from '@components/Inputs/Dropdown'
 import { InputField } from '@components/Inputs/Input'
@@ -10,17 +11,17 @@ interface IFormInput {
   givenName: string
   familyName: string
   email: string
-  pictureUrl: string
-  authProvider: string
+  pictureUrl?: string
+  authProvider: AuthProviderEnum
   oAuthId: string
-  accessToken: string
-  orginalPage: string
-  settings: string
+  accessToken?: string
+  originalPage: string
+  settings: string | null
   newsletter: boolean
   terms: boolean
   location: string
   username: string
-  password: string
+  password?: string
 }
 
 interface IRegistrationFormProps {
@@ -41,11 +42,29 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
       email: defaults.email,
     },
   })
-  const onSubmit = (data: IFormInput): void => {
-    console.log(data)
-    console.log(errors)
-  }
 
+  const [registerUser, { isLoading, isError, error }] = useRegisterMutation()
+
+  const onSubmit = (form: IFormInput): void => {
+    console.log(form)
+    console.log(errors)
+    const signUpRequest = {
+      email: form.email,
+      username: form.username,
+      givenName: form.givenName,
+      familyName: form.familyName || null,
+      authProvider: defaults.authProvider,
+      accessToken: form.accessToken ?? null,
+      pictureUrl: form.pictureUrl ?? null,
+      terms: form.terms,
+      newsletter: form.newsletter,
+      originalPage: form.originalPage,
+      settings: form.settings,
+    }
+
+    void registerUser({ signUpRequest })
+  }
+  const passwordRequired = defaults.authProvider === 'internal'
   const newsletter = { ...register('newsletter') }
   const location = { ...register('location') }
   const terms = { ...register('terms') }
@@ -106,7 +125,10 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
         {defaults.authProvider === 'internal' && (
           <InputField
             {...register('password', {
-              required: 'Password is required',
+              required: {
+                value: passwordRequired,
+                message: 'Password is required',
+              },
               minLength: { value: 8, message: 'At least 8 characters' },
               maxLength: MAX_LENGTH,
               pattern: {

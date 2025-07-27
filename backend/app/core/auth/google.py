@@ -19,7 +19,7 @@ CURRENT_DIR = Path(__file__).resolve().parent.parent.parent.parent
 FILENAME = "google_auth_secret_file.json"
 GOOGLE_SECRET_FILE = CURRENT_DIR / "secrets" / FILENAME
 
-
+# TODO: moves scopes to a config file
 GOOGLE_AUTH_SCOPES = [
     "https://www.googleapis.com/auth/userinfo.profile",
     "https://www.googleapis.com/auth/userinfo.email",

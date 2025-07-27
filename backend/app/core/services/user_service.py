@@ -1,9 +1,8 @@
+from app.core.auth.google import AuthProviderEnum
+from app.models import User, UserSettings
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
-
-from app.core.auth.google import AuthProviderEnum
-from app.models import User, UserSettings
 
 
 class UserService:
@@ -39,11 +38,22 @@ class UserService:
     async def create_user(
         db: AsyncSession,
         email: str,
-        first_name: str,
-        last_name: str,
         username: str,
+        auth_provider: str,
+        first_name: str | None = None,
+        last_name: str | None = None,
+        external_id: str | None = None,
+        password: str | None = None,
     ) -> User:
-        new_user = User(email=email, first_name=first_name, last_name=last_name, username=username)
+        new_user = User(
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            username=username,
+            auth_provider=auth_provider,
+            external_user_id=external_id,
+            # password=password,
+        )
         db.add(new_user)
         await db.commit()
         await db.refresh(new_user)

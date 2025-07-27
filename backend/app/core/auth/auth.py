@@ -10,6 +10,7 @@ from app.core.schemas import RegisterRedirectUrl
 from fastapi import HTTPException, status
 from fastapi.responses import RedirectResponse
 from google.oauth2.credentials import Credentials
+from passlib.context import CryptContext
 from pydantic import BaseModel
 
 settings = get_settings()
@@ -17,6 +18,9 @@ settings = get_settings()
 
 class TokenPayload(BaseModel):
     sub: str
+
+
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 
 class AuthHelpers:
@@ -121,3 +125,11 @@ class AuthHelpers:
             path="/",
         )
         return response
+
+    @staticmethod
+    def hash_password(password: str) -> str:
+        return pwd_context.hash(password)
+
+    @staticmethod
+    def verify_password(plain_password: str, hashed_password: str) -> bool:
+        return pwd_context.verify(plain_password, hashed_password)

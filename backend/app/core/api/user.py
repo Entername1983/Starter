@@ -6,6 +6,7 @@ from app.core.schemas.requests import SignUpRequest
 from app.core.schemas.user import LogoutResponse, UserDataResponse
 from app.core.services.user_service import UserService
 from app.dependencies import CurrentUser, GetDbAsync
+from app.models import User
 from fastapi import APIRouter, Request, Response
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
@@ -93,4 +94,46 @@ async def register(
     settings: AppSettings,
     db: GetDbAsync,
 ):
+    print(request.model_dump)
+    ## Receive the registration info from the frontend
+    ## Can either be internal, in which case a password will be supplied.  Needs to be encrypted and stored in db
+    ## if not internal, no password, just store the user with external_id + auth provider in db
+    ## return the user details, a JWT token attached to a cookie in a redirect response
+    if request.auth_provider == "internal":
+        ## register internal user
+        pass
+
+    else:
+        new_user: User = await UserService.create_user(
+            db,
+            request.email,
+            request.username,
+            request.auth_provider,
+            request.given_name,
+            request.family_name,
+            request.external_id,
+            request.password,
+        )
+    access_token = AuthHelpers.create_access_token(
+        data={"sub": str(new_user.id)}, settings=settings
+    )
+
+    ## stringify user to add to url as query param
+    user_dict = {"test": "hi"}
+
+    stringified_user = str(user_dict)
+    redirect_url = f"{settings.app.frontend_url}{request.original_page}?{stringified_user}"
+    response = RedirectResponse(redirect_url)
+    print(redirect_url)
+    # response.set_cookie(
+    #     key="access_token",
+    #     value=f"Bearer {access_token}",
+    #     httponly=settings.auth.http_only,
+    #     max_age=settings.auth.cookie_max_age,
+    #     samesite=settings.auth.same_site,
+    #     secure=True,
+    #     domain=settings.auth.domain,
+    #     path="/",
+    # )
+
     return {"registered"}
