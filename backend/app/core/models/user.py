@@ -22,3 +22,4 @@ class User(BaseModel):
         back_populates="user", uselist=False, cascade="all, delete-orphan"
     )
     picture_url: Mapped[str] = mapped_column(String, nullable=True)
+    password: Mapped[str] = mapped_column(String, nullable=True)

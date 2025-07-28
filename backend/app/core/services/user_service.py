@@ -52,7 +52,7 @@ class UserService:
             username=username,
             auth_provider=auth_provider,
             external_user_id=external_id,
-            # password=password,
+            password=password,
         )
         db.add(new_user)
         await db.commit()

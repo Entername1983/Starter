@@ -2,6 +2,7 @@ import { useRegisterMutation, type AuthProviderEnum } from '@api/api.gen'
 import { Checkbox } from '@components/Inputs/Checkbox'
 import { Dropdown } from '@components/Inputs/Dropdown'
 import { InputField } from '@components/Inputs/Input'
+import { useNavigate } from '@tanstack/react-router'
 import type React from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -42,28 +43,7 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
       email: defaults.email,
     },
   })
-
-  const [registerUser, { isLoading, isError, error }] = useRegisterMutation()
-
-  const onSubmit = (form: IFormInput): void => {
-    console.log(form)
-    console.log(errors)
-    const signUpRequest = {
-      email: form.email,
-      username: form.username,
-      givenName: form.givenName,
-      familyName: form.familyName || null,
-      authProvider: defaults.authProvider,
-      accessToken: form.accessToken ?? null,
-      pictureUrl: form.pictureUrl ?? null,
-      terms: form.terms,
-      newsletter: form.newsletter,
-      originalPage: form.originalPage,
-      settings: form.settings,
-    }
-
-    void registerUser({ signUpRequest })
-  }
+  const navigate = useNavigate()
   const passwordRequired = defaults.authProvider === 'internal'
   const newsletter = { ...register('newsletter') }
   const location = { ...register('location') }
@@ -79,8 +59,54 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
     /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,16}$/gm
   const REGEX_USERNAME_PATTERN = /^[a-z0-9](?:[a-z0-9._-]{1,}[a-z0-9])?$/gm
   const REGEX_NAME_PATTERN = /^[A-Za-zÀ-ÖØ-öø-ÿ]+([ '-.][A-Za-zÀ-ÖØ-öø-ÿ]+)*$/gm
+
+  const [registerUser, { data, isLoading, isError, error }] =
+    useRegisterMutation()
+
+  const onSubmit = handleSubmit(async data => {
+    console.log('defaults', defaults)
+    const payload = {
+      // these come from your registered inputs:
+      given_name: data.givenName,
+      family_name: data.familyName,
+      username: data.username,
+      password: data.password,
+
+      newsletter: data.newsletter,
+      terms: data.terms,
+      location: data.location,
+
+      // these come straight from the defaults you already have:
+      email: defaults.email,
+      auth_provider: defaults.authProvider,
+      o_auth_id: defaults.oAuthId,
+      access_token: defaults.accessToken,
+      original_page: defaults.originalPage,
+      settings: defaults.settings,
+      pictureUrl: defaults.pictureUrl,
+    }
+
+    console.log('payload', payload)
+
+    const API = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+    const res = await fetch(`${API}/user/auth/register`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      redirect: 'manual',
+    })
+
+    if (res.status === 307 || res.status === 302) {
+      const location = res.headers.get('Location')
+      if (location) return navigate({ to: location })
+    }
+
+    // handle JSON errors here…
+  })
+
   return (
-    <form className='p-2' onSubmit={e => void handleSubmit(onSubmit)(e)}>
+    <form className='p-2' onSubmit={onSubmit} noValidate>
       <div className='max-w-[200px] flex gap-2'>
         <InputField
           {...register('givenName', {

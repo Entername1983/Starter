@@ -98,7 +98,7 @@ async def register(
     ## Receive the registration info from the frontend
     ## Can either be internal, in which case a password will be supplied.  Needs to be encrypted and stored in db
     ## if not internal, no password, just store the user with external_id + auth provider in db
-    ## return the user details, a JWT token attached to a cookie in a redirect response
+    ## return a token attached to a cookie in a redirect response
     if request.auth_provider == "internal":
         ## register internal user
         pass
@@ -119,21 +119,22 @@ async def register(
     )
 
     ## stringify user to add to url as query param
-    user_dict = {"test": "hi"}
-
+    user_dict = "test"
+    originalPage = request.original_page if request.original_page is not None else "/"
     stringified_user = str(user_dict)
-    redirect_url = f"{settings.app.frontend_url}{request.original_page}?{stringified_user}"
-    response = RedirectResponse(redirect_url)
-    print(redirect_url)
-    # response.set_cookie(
-    #     key="access_token",
-    #     value=f"Bearer {access_token}",
-    #     httponly=settings.auth.http_only,
-    #     max_age=settings.auth.cookie_max_age,
-    #     samesite=settings.auth.same_site,
-    #     secure=True,
-    #     domain=settings.auth.domain,
-    #     path="/",
-    # )
+    redirect_url = f"{settings.app.frontend_url}/?{stringified_user}"
+    response = RedirectResponse(url=redirect_url)
 
-    return {"registered"}
+    print(redirect_url)
+    response.set_cookie(
+        key="access_token",
+        value=f"Bearer {access_token}",
+        httponly=settings.auth.http_only,
+        max_age=settings.auth.cookie_max_age,
+        samesite=settings.auth.same_site,
+        secure=settings.app.environment == "production",
+        domain=settings.auth.domain,
+        path="/",
+    )
+
+    return response

@@ -69,6 +69,14 @@ project-root/
 
 ---
 
+## Development mode
+
+1. Access dev db container
+
+```bash
+psql -h localhost -p 5432 -U admin -d mydb
+```
+
 ## Backend
 
 The backend is built with FastAPI and provides RESTful endpoints for the application.
