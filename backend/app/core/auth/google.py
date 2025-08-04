@@ -60,6 +60,7 @@ class GoogleAuth:
             included_granted_scopes="true",
             prompt="consent",
         )
+        print("Auth url", auth_url)
         if not isinstance(auth_url, str):
             raise Exception("Missing google auth url")
         return auth_url

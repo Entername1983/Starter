@@ -59,13 +59,13 @@ services:
       - --port
       - "6378"
       - --requirepass
-      - "${REDIS_PASSWORD}"
+      - "supersecret"
       - --loadmodule
       - /opt/redis-stack/lib/redisearch.so
       - --loadmodule
       - /opt/redis-stack/lib/rejson.so
-    networks:
-      - network-1
+    # networks:
+    #   - network-1
 
   postgres:
     image: postgres:17-alpine

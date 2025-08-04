@@ -49,7 +49,7 @@ auto_flush: false
 
 # ───── Redis Settings ─────
 redis_host: localhost
-redis_port: "6379"
+redis_port: "6378"
 redis_max_connections: 20
 redis_socket_connection_timeout: 10
 redis_socket_timeout: 10

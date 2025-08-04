@@ -1,9 +1,12 @@
+import ast
 import datetime as dt
+import secrets
 from typing import Any, Optional
 
 import jwt
 from app.core.auth.google import OAuthUserInfoSchema
 from app.core.dependencies.auth import GetGoogleAuth
+from app.core.dependencies.redis import AsyncRedis
 from app.core.dependencies.settings import AppSettings, get_settings
 from app.core.models.user import User
 from app.core.schemas import RegisterRedirectUrl
@@ -54,6 +57,26 @@ class AuthHelpers:
             ) from e
 
     @staticmethod
+    def create_session_id() -> str:
+        return secrets.token_urlsafe(16)
+
+    @staticmethod
+    async def create_oauth_state(session_id: str, r_client: AsyncRedis) -> str:
+        state = secrets.token_urlsafe(32)
+        await r_client.set(f"oauth:state:{state}", session_id, ex=600)
+        return state
+
+    @staticmethod
+    async def verify_oauth_state(session_id: str, session_token: str, r_client: AsyncRedis):
+        ## use the session id to look it up in redis
+        raw_session_id = await r_client.get(f"oauth:state:{session_token}")
+        retrieved_session_id = raw_session_id.decode("utf-8")
+        if session_id != retrieved_session_id:
+            raise Exception("session_id does not match")
+        await r_client.delete(f"oauth:state:{session_token}")
+        return
+
+    @staticmethod
     def create_access_token(
         data: dict,
         settings: AppSettings,
@@ -83,8 +106,11 @@ class AuthHelpers:
         app_settings: AppSettings,
     ) -> RedirectResponse:
         data = new_user.model_dump(by_alias=True)
+        print("State", state)
+        original_page = ast.literal_eval(state)["originalPage"]
+
         data["accessToken"] = credentials.token
-        data["originalPage"] = state
+        data["originalPage"] = original_page
         data["settings"] = {"settings": "empty"}
         redirect_url_object = RegisterRedirectUrl.model_validate(data, by_alias=True)
         redirect_str = google_auth.construct_redirect_url(

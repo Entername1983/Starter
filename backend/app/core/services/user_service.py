@@ -1,4 +1,5 @@
-from app.core.auth.google import AuthProviderEnum
+from app.core.schemas import UserSchema
+from app.core.schemas.enums import AuthProviderEnum
 from app.models import User, UserSettings
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -6,6 +7,28 @@ from sqlalchemy.orm import selectinload
 
 
 class UserService:
+    @staticmethod
+    def turn_user_model_to_pydantic_schema(user: User) -> UserSchema:
+        if user.auth_provider not in [e.value for e in AuthProviderEnum]:
+            raise ValueError(f"Invalid auth provider: {user.auth_provider}")
+        auth_provider = AuthProviderEnum(user.auth_provider)
+        print(f"created_at type: {type(user.created_at)}, value: {user.created_at}")
+        print(f"updated_at type: {type(user.updated_at)}, value: {user.updated_at}")
+        return UserSchema(
+            id=user.id,
+            created_at=user.created_at,
+            updated_at=user.updated_at,
+            email=user.email,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            external_user_id=user.external_user_id,
+            auth_provider=auth_provider,
+            disabled=user.disabled,
+            picture_url=user.picture_url,
+            settings=None,
+            username=user.username,
+        )
+
     @staticmethod
     async def get_user_by_id(user_id: int, db: AsyncSession) -> User | None:
         result = await db.execute(select(User).filter_by(id=user_id))

@@ -66,24 +66,21 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
   const onSubmit = handleSubmit(async data => {
     console.log('defaults', defaults)
     const payload = {
-      // these come from your registered inputs:
       given_name: data.givenName,
       family_name: data.familyName,
       username: data.username,
       password: data.password,
-
       newsletter: data.newsletter,
       terms: data.terms,
       location: data.location,
-
-      // these come straight from the defaults you already have:
       email: defaults.email,
       auth_provider: defaults.authProvider,
-      o_auth_id: defaults.oAuthId,
+      o_auth_id: defaults.oAuthId.toString(),
       access_token: defaults.accessToken,
       original_page: defaults.originalPage,
       settings: defaults.settings,
       pictureUrl: defaults.pictureUrl,
+      // o_auth_state: defaults.oAuthState,
     }
 
     console.log('payload', payload)
@@ -97,9 +94,28 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
       redirect: 'manual',
     })
 
-    if (res.status === 307 || res.status === 302) {
-      const location = res.headers.get('Location')
-      if (location) return navigate({ to: location })
+    // "redirectUrl": "/",
+    // "user": {
+    //     "id": 96,
+    //     "createdAt": "2025-08-04T20:22:26.527284",
+    //     "updatedAt": "2025-08-04T20:22:26.527291",
+    //     "email": "kevin.e.mccarthy1983@gmail.com",
+    //     "firstName": "Kevin",
+    //     "lastName": "McCarthy",
+    //     "username": "qfqfqefqefeq",
+    //     "externalUserId": "112573635607727600000",
+    //     "authProvider": "google",
+    //     "disabled": false,
+    //     "settings": null,
+    //     "pictureUrl": null
+    // }
+    console.log('entered status ')
+    const json_response = await res.json()
+
+    const redirectTo = json_response.redirectUrl
+    if (redirectTo) {
+      // This is a real navigation, not an AJAX fetch.
+      void navigate({ to: redirectTo })
     }
 
     // handle JSON errors here…
@@ -193,7 +209,7 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
           includeErrorSpace={true}
         />
       </div>
-      <input type='submit' />
+      <input className='cursor-pointer' type='submit' />
     </form>
   )
 }

@@ -16,10 +16,11 @@ class UserSchema(BaseSchema):
     first_name: str
     last_name: str | None
     username: str
-    external_user_id: str
-    auth_provider: AuthProviderEnum
+    external_user_id: str | None
+    auth_provider: AuthProviderEnum | None
     disabled: bool
     settings: UserSettingsSchema | None
+    picture_url: str | None
 
 
 class UserDataResponse(BaseConfig):

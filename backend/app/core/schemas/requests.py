@@ -9,7 +9,7 @@ class SignUpRequest(BaseConfig):
     password: str | None = None
     given_name: str | None = None
     family_name: str | None = None
-    external_id: str | None = None
+    o_auth_id: str | None = None
     auth_provider: AuthProviderEnum
     access_token: str | None = None
     picture_url: str | None = None

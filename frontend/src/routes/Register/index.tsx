@@ -17,6 +17,7 @@ export const registerSearchParams = z.object({
   accessToken: z.string(),
   originalPage: z.string(),
   settings: z.string(),
+  // oAuthState: z.string(),
 })
 export type TRegisterParams = z.infer<typeof registerSearchParams>
 
