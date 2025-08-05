@@ -1,5 +1,5 @@
 from app.core.dependencies.db import GetDbAsync
-from app.core.dependencies.redis import RedisAsyncDep
+from app.core.dependencies.redis import GetRedisAsync
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import text
@@ -16,7 +16,7 @@ class HealthResponse(BaseModel):
 
 ##TODO: Need better exceptions here
 @router.get("/health", response_model=HealthResponse)
-async def health_check(db: GetDbAsync, r_client: RedisAsyncDep):
+async def health_check(db: GetDbAsync, r_client: GetRedisAsync):
     try:
         await db.execute(text("SELECT 1"))
     except Exception as e:

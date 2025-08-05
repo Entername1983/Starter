@@ -2,14 +2,13 @@ import logging
 from typing import Annotated, AsyncGenerator, Generator
 
 import redis.asyncio as RedisAsync
+from app.dependencies import get_settings
 from fastapi import Depends, Request
 from redis import Redis
 from redis.asyncio import ConnectionPool as AsyncConnectionPool
 from redis.asyncio import Redis as ARedis
 from redis.asyncio import Redis as AsyncRedis
 from redis.connection import ConnectionPool
-
-from app.dependencies import get_settings
 
 settings = get_settings()
 
@@ -45,5 +44,5 @@ async def get_async_redis_client(
         await client.aclose()
 
 
-RedisDep = Annotated[Redis, Depends(get_redis_client)]
-RedisAsyncDep = Annotated[ARedis, Depends(get_async_redis_client)]
+GetAsync = Annotated[Redis, Depends(get_redis_client)]
+GetRedisAsync = Annotated[ARedis, Depends(get_async_redis_client)]

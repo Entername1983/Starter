@@ -2,7 +2,7 @@ import ast
 
 from app.core.auth.auth import AuthHelpers
 from app.core.dependencies.auth import GetGoogleAuth
-from app.core.dependencies.redis import RedisAsyncDep
+from app.core.dependencies.redis import GetRedisAsync
 from app.core.dependencies.settings import AppSettings, get_settings
 from app.core.schemas import UserSchema
 from app.core.schemas.requests import SignUpRequest
@@ -46,7 +46,7 @@ async def logout_user(user: CurrentUser, response: Response):
 # TODO: Find a better name than extra for the additional state passed in
 @router.get("/auth/google_sign_in/", tags=["user"])
 async def sign_in_with_google(
-    google_auth: GetGoogleAuth, request: Request, r_client: RedisAsyncDep
+    google_auth: GetGoogleAuth, request: Request, r_client: GetRedisAsync
 ):
     params: dict[str, str] = dict(request.query_params)
 
@@ -77,7 +77,7 @@ async def auth_callback(
     google_auth: GetGoogleAuth,
     db: GetDbAsync,
     settings: AppSettings,
-    r_client: RedisAsyncDep,
+    r_client: GetRedisAsync,
     scope: str | None = None,
 ) -> RedirectResponse:
     session_id = request.cookies.get("session_id")
@@ -116,7 +116,7 @@ async def register(
     data: SignUpRequest,
     settings: AppSettings,
     db: GetDbAsync,
-    r_client: RedisAsyncDep,
+    r_client: GetRedisAsync,
 ):
     ## Receive the registration info from the frontend
     ## Can either be internal, in which case a password will be supplied.  Needs to be encrypted and stored in db

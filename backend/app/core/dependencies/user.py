@@ -2,15 +2,14 @@ import json
 import logging
 from typing import Annotated
 
-from fastapi import Depends, HTTPException, Request, status
-from starlette.status import HTTP_401_UNAUTHORIZED
-
 from app.core.auth.auth import AuthHelpers
 from app.core.dependencies.db import GetDbAsync
-from app.core.dependencies.redis import RedisAsyncDep
+from app.core.dependencies.redis import GetRedisAsync
 from app.core.dependencies.settings import get_settings
 from app.models import User, UserSettings
 from app.services import UserService
+from fastapi import Depends, HTTPException, Request, status
+from starlette.status import HTTP_401_UNAUTHORIZED
 
 settings = get_settings()
 
@@ -37,7 +36,7 @@ async def parse_jwt_data(request: Request) -> str:
 
 ##TODO: Add redis cache and check
 async def get_current_user(
-    db: GetDbAsync, r_client: RedisAsyncDep, user_id: str = Depends(parse_jwt_data)
+    db: GetDbAsync, r_client: GetRedisAsync, user_id: str = Depends(parse_jwt_data)
 ) -> User:
     ## First check if user is cached in Redis
     """Get the current user from the cache/database using the user ID from the JWT token.
@@ -66,7 +65,7 @@ CurrentUser = Annotated[User, Depends(get_current_user)]
 async def get_current_user_with_settings(
     user: CurrentUser,
     db: GetDbAsync,
-    r_client: RedisAsyncDep,
+    r_client: GetRedisAsync,
 ) -> User:
     """Get the current user with settings loaded from the database using the user ID from the JWT token.
     Raises:
