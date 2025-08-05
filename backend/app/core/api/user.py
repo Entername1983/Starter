@@ -114,7 +114,6 @@ async def auth_callback(
 @router.post("/auth/register", response_model=RegistrationResponse)
 async def register(
     data: SignUpRequest,
-    request: Request,
     settings: AppSettings,
     db: GetDbAsync,
     r_client: RedisAsyncDep,
@@ -170,8 +169,8 @@ async def register(
 #         "createdAt": "2025-08-04T20:22:26.527284",
 #         "updatedAt": "2025-08-04T20:22:26.527291",
 #         "email": "kevin.e.mccarthy1983@gmail.com",
-#         "firstName": "Kevin",
-#         "lastName": "McCarthy",
+#         "givenName": "Kevin",
+#         "familyName": "McCarthy",
 #         "username": "qfqfqefqefeq",
 #         "externalUserId": "112573635607727600000",
 #         "authProvider": "google",

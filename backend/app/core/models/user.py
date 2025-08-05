@@ -12,8 +12,8 @@ class User(BaseModel):
     __tablename__ = "users"
 
     email: Mapped[str] = mapped_column(String, unique=True, nullable=False)
-    first_name: Mapped[str] = mapped_column(String, nullable=False)
-    last_name: Mapped[str] = mapped_column(String, nullable=False)
+    given_name: Mapped[str] = mapped_column(String, nullable=False)
+    family_name: Mapped[str] = mapped_column(String, nullable=False)
     username: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     external_user_id: Mapped[str] = mapped_column(String, unique=True, nullable=True)
     auth_provider: Mapped[str] = mapped_column(String, nullable=True)

@@ -13,8 +13,8 @@ class UserSettingsSchema(BaseConfig):
 
 class UserSchema(BaseSchema):
     email: EmailStr
-    first_name: str
-    last_name: str | None
+    given_name: str
+    family_name: str | None
     username: str
     external_user_id: str | None
     auth_provider: AuthProviderEnum | None
