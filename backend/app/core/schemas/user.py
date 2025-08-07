@@ -54,7 +54,7 @@ class GoogleAuthWebClientConfig(BaseConfig):
 class OAuthUserInfoSchema(BaseConfig):
     o_auth_id: str
     email: str
-    name: str
+    name: str | None
     given_name: str | None
     family_name: str | None
     picture_url: str | None

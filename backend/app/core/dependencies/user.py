@@ -2,7 +2,7 @@ import json
 import logging
 from typing import Annotated
 
-from app.core.auth.auth import AuthHelpers
+from app.core.auth.auth_helpers import AuthHelpers
 from app.core.dependencies.db import GetDbAsync
 from app.core.dependencies.redis import GetRedisAsync
 from app.core.dependencies.settings import get_settings
@@ -22,7 +22,10 @@ async def parse_jwt_data(request: Request) -> str:
     Raises:
         HTTPException: If the JWT is invalid or not present.
     """
+    print("request", Request.cookies)
+    print("access token cookie name", settings.security.access_token_cookie_name)
     token_data = request.cookies.get(settings.security.access_token_cookie_name)
+    print("token_data", token_data)
     if not token_data:
         raise HTTPException(
             status_code=HTTP_401_UNAUTHORIZED,
@@ -31,7 +34,7 @@ async def parse_jwt_data(request: Request) -> str:
     encoded_token: str = (
         token_data.split(" ")[1] if token_data.startswith("Bearer ") else token_data
     )
-    return await AuthHelpers.decode_jwt_token(encoded_token)
+    return AuthHelpers.decode_jwt_token(encoded_token)
 
 
 ##TODO: Add redis cache and check

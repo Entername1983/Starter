@@ -12,8 +12,6 @@ class UserService:
         if user.auth_provider not in [e.value for e in AuthProviderEnum]:
             raise ValueError(f"Invalid auth provider: {user.auth_provider}")
         auth_provider = AuthProviderEnum(user.auth_provider)
-        print(f"created_at type: {type(user.created_at)}, value: {user.created_at}")
-        print(f"updated_at type: {type(user.updated_at)}, value: {user.updated_at}")
         return UserSchema(
             id=user.id,
             created_at=user.created_at,
