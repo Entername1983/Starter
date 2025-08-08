@@ -8,7 +8,6 @@ from app.core.schemas.user import LogoutResponse, UserDataResponse
 from app.dependencies import CurrentUser, GetDbAsync
 from app.services import UserService
 from fastapi import APIRouter, Request, Response
-from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 
 router = APIRouter(
@@ -66,9 +65,8 @@ async def sign_in_with_google(
     return await AuthService.sign_in_w_google(google_auth, request, r_client, settings)
 
 
-@router.get(
-    "/auth/callback",
-)
+##TODO: Need to add a check to make sure there is no tampering with the exteranl auth id or external provider
+@router.get("/auth/callback")
 async def auth_callback(
     state: str,
     code: str,
@@ -78,7 +76,7 @@ async def auth_callback(
     settings: AppSettings,
     r_client: GetRedisAsync,
     scope: str | None = None,
-) -> RedirectResponse:
+):
     """
     Takes the sign-in info and redirects to registration page or back
     to original page if user already exists
@@ -89,8 +87,8 @@ async def auth_callback(
 
     Args:
         state (str): State including originalPage & oAuthState token
-        code (str):
-        request (Request):
+        code (str): Code that will be exchange for the oauth token
+        request (Request)
         google_auth (GetGoogleAuth)
         db (GetDbAsync)
         settings (AppSettings)

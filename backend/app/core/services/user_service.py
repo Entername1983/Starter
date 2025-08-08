@@ -36,6 +36,8 @@ class UserService:
     async def get_user_by_external_id(
         db: AsyncSession, external_user_id: str, auth_provider: AuthProviderEnum
     ) -> User | None:
+        print("external_user_id", external_user_id)
+        print("auth_provider", auth_provider)
         result = await db.execute(
             select(User)
             .filter_by(external_user_id=external_user_id)

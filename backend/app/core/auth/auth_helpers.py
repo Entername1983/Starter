@@ -8,13 +8,13 @@ from app.core.auth.google import OAuthUserInfoSchema
 from app.core.dependencies.auth import GetGoogleAuth
 from app.core.dependencies.redis import AsyncRedis
 from app.core.dependencies.settings import AppSettings, get_settings
-from app.core.models.user import User
-from app.core.schemas import RegisterRedirectUrl
+from app.core.schemas import RegisterRedirectUrl, UserSchema
 from fastapi import HTTPException, status
 from fastapi.responses import RedirectResponse
 from google.oauth2.credentials import Credentials
 from passlib.context import CryptContext
 from pydantic import BaseModel
+from starlette.responses import JSONResponse
 
 settings = get_settings()
 
@@ -41,10 +41,8 @@ class AuthHelpers:
                 settings.security.token_secret_key,
                 algorithms=[settings.security.jwt_algorithm],
             )  # type: ignore
-            print("decoded_jwt", decoded_jwt)
             return decoded_jwt.get("sub")
         except Exception as e:
-            print(e)
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid token",
@@ -53,16 +51,11 @@ class AuthHelpers:
     @staticmethod
     def encode_jwt_data(payload: TokenPayload) -> str:
         try:
-            print(payload)
-            print("ALGO:", settings.security.jwt_algorithm)
-            print("KEY :", settings.security.token_secret_key[:8], "...")
             encoded_token = jwt.encode(  # type: ignore
                 payload.model_dump(),
                 settings.security.token_secret_key,
                 algorithm=settings.security.jwt_algorithm,
             )
-            print("encoded token type", type(encoded_token))
-            print("encoded token", encoded_token)
             return encoded_token
         except Exception as e:
             raise HTTPException(
@@ -120,6 +113,7 @@ class AuthHelpers:
         app_settings: AppSettings,
     ) -> RedirectResponse:
         data = new_user.model_dump(by_alias=True)
+        print("data", data)
         original_page = ast.literal_eval(state)["originalPage"]
 
         data["accessToken"] = credentials.token
@@ -133,25 +127,28 @@ class AuthHelpers:
 
     @staticmethod
     def login_redirect_response(
-        user: User,
+        user: UserSchema,
         credentials: Credentials,
         user_settings: dict[str, Any],
         state: str,
         google_auth: GetGoogleAuth,
         app_settings: AppSettings,
     ) -> RedirectResponse:
-        data = user.model_dump()
-        data["access_token"] = credentials.token
-        data["original_page"] = state
-        data["settings"] = {"settings": "empty"}
-        redirect_url_object = RegisterRedirectUrl.model_validate(data)
-        redirect_str = google_auth.construct_redirect_url(
-            redirect_url_object, app_settings.app.frontend_url, state
-        )
-        response = RedirectResponse(url=redirect_str)
+        # data["access_token"] = credentials.token
+        # data["original_page"] = state
+        # data["settings"] = {"settings": "empty"}
+        user_dict = user.model_dump(by_alias=True, exclude={"external_user_id", "auth_provider"})
+        original_page = ast.literal_eval(state)["originalPage"]
+        response_content = {
+            "redirectUrl": original_page,
+            "user": user_dict,
+        }
+        response = JSONResponse(content=response_content)
         access_token = AuthHelpers.create_access_token(
             data={"sub": str(user.id)}, settings=settings
         )
+        redirect_str = f"{settings.app.frontend_url}{original_page}"
+        response = RedirectResponse(url=redirect_str)
         response.set_cookie(
             key="access_token",
             value=access_token,

@@ -2,17 +2,25 @@ import { ContextWrapper } from '@contexts/ContextWrapper'
 import { MantineProvider } from '@mantine/core'
 import '@mantine/core/styles.css'
 import { store } from '@store/store'
-
-import './index.css'
-import { RouterProvider, createRouter } from '@tanstack/react-router'
+import {
+  RouterProvider,
+  createRouter,
+  parseSearchWith,
+  stringifySearchWith,
+} from '@tanstack/react-router'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
+import './index.css'
 
 import { routeTree } from './routeTree.gen'
 
 // Create a new router instance
-const router = createRouter({ routeTree })
+const router = createRouter({
+  routeTree,
+  parseSearch: parseSearchWith(val => val),
+  stringifySearch: stringifySearchWith(val => val),
+})
 
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {

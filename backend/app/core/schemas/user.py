@@ -19,7 +19,7 @@ class UserSchema(BaseSchema):
     external_user_id: str | None
     auth_provider: AuthProviderEnum | None
     disabled: bool
-    settings: UserSettingsSchema | None
+    settings: UserSettingsSchema | None = None
     picture_url: str | None
 
 

@@ -7,7 +7,7 @@ const authProviders = ['google', 'discord', 'microsoft', 'internal'] as const
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const registerSearchParams = z.object({
-  oAuthId: z.number(),
+  oAuthId: z.string(),
   email: z.email(),
   name: z.string(),
   givenName: z.string(),
@@ -28,7 +28,7 @@ export const Route = createFileRoute('/Register/')({
 
 function Register() {
   const params = registerSearchParams.parse(Route.useSearch())
-
+  console.log('registersearchparams', params)
   return (
     <div className='p-4'>
       <h1 className='text-4xl'>Register</h1>

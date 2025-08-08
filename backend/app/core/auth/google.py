@@ -83,6 +83,7 @@ class GoogleAuth:
     def turn_google_oauth_info_into_object(
         google_auth_content: dict[str, str],
     ) -> OAuthUserInfoSchema:
+        print("google auth info", google_auth_content)
         return OAuthUserInfoSchema(
             o_auth_id=google_auth_content["id"],
             email=google_auth_content["email"],

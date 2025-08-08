@@ -22,7 +22,7 @@ class AuthService:
         google_auth: GoogleAuth,
         r_client: AsyncRedis,
         db: AsyncSession,
-    ) -> RedirectResponse:
+    ) -> JSONResponse | RedirectResponse:
         """Receives the oauth callback from external providers, checks oAuthState against
         session id stored as a cookie to protect against CSRF
 
@@ -54,16 +54,20 @@ class AuthService:
         user = await UserService.get_user_by_external_id(
             db, new_user.o_auth_id, new_user.auth_provider
         )
+        print("user", user)
+        if user is None:
+            print(" DIDNT FIND ANY USERS WHAAT")
 
         if user:
             return AuthHelpers.login_redirect_response(
-                user=user,
+                user=UserService.turn_user_model_to_pydantic_schema(user),
                 credentials=credentials,
                 user_settings={"None": "None"},
                 state=state,
                 google_auth=google_auth,
                 app_settings=settings,
             )
+
         return AuthHelpers.registration_redirect_response(
             new_user=new_user,
             credentials=credentials,
