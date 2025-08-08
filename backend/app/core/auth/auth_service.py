@@ -214,7 +214,7 @@ class AuthService:
             key="provider_id",
             value=session_id,
             httponly=app_settings.auth.http_only,
-            max_age=app_settings.auth.cookie_max_age,
+            max_age=600,
             samesite=app_settings.auth.same_site,
             secure=True,
             domain=app_settings.auth.domain,
