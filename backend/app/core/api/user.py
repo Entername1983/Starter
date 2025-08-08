@@ -1,4 +1,4 @@
-from app.core.auth.auth import AuthService
+from app.core.auth.auth_service import AuthService
 from app.core.dependencies.auth import GetGoogleAuth
 from app.core.dependencies.redis import GetRedisAsync
 from app.core.dependencies.settings import AppSettings, get_settings
@@ -106,6 +106,7 @@ async def auth_callback(
 
 @router.post("/auth/register", response_model=RegistrationResponse)
 async def register(
+    request: Request,
     data: SignUpRequest,
     settings: AppSettings,
     db: GetDbAsync,
@@ -123,7 +124,7 @@ async def register(
         with an access token used for authentification.
     """
 
-    return await AuthService.register_user(data, settings, db, r_client)
+    return await AuthService.register_user(data, settings, db, r_client, request)
 
 
 # "redirectUrl": "/",
