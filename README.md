@@ -27,6 +27,7 @@ A starter template using FastAPI and React
    - [Components](#components)
    - [Styling](#styling)
    - [Validation](#validation)
+   - [Contexts](#contexts)
 6. [Reverse Proxy](#reverse-proxy)
 7. [Database](#database)
 8. [Cache](#cache)
@@ -143,7 +144,10 @@ settings = get_settings()
 
 ### Auth
 
-## Using OAuth with google auth + internal auth.
+- Using OAuth with google auth + internal auth.
+- Storing HTTP only cookie with JWT token
+- Before token expiry a check is made to see if user is still on page, if so refresh token is used to issue a new JWT token
+- During registration using a session_id with an oAuthState token to protect against CSRF as well as a provider_id storing the external oauth provider ID to ensure a user cannot register an account with an external provider ID that does not belong to them
 
 ## Frontend
 
@@ -152,6 +156,14 @@ A React-based single-page application (SPA) located in the `frontend/` directory
 ### Build
 
 Vite, what else?
+
+### Auth
+
+- Login made through API calls that then sets an HTTP only JWT token
+- Follow up check user status returns a user object upon verification of the JWT token
+- Logout API call to server deletes JWT token then frontend clears User in Redux store
+- Check user status made at top level so that a user is automatically logged in if the JWT token is still valid
+- TODO: Add refresh token
 
 ### Forms
 
@@ -182,6 +194,14 @@ Primarily tailwindcss
 ### Validation
 
 Using zod for validation where required (mostly search params & forms)
+
+### Contexts
+
+Using the following contexts:
+
+- ContextWrapper: Wrapping all other contexts
+- ModalContext: Toggling a modal + setting the content
+- LayoutContext: Toggling optional Sidebar
 
 ## Reverse Proxy
 
