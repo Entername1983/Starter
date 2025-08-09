@@ -1,41 +1,23 @@
-import { useLogoutUserMutation } from '@api/api.gen'
 import useUser from '@hooks/useUser'
-import { useAppDispatch } from '@store/hooks'
-import { removeUser } from '@store/user/userSlice'
-import { useLocation } from '@tanstack/react-router'
 import type React from 'react'
-
-interface LoginBtnProps {}
-
-const LoginButton: React.FC<LoginBtnProps> = ({}) => {
-  const [logoutUser, { isLoading }] = useLogoutUserMutation()
-  const dispatch = useAppDispatch()
-  const { user } = useUser()
-  const location = useLocation()
-
-  const handleGoogleSignIn = () => {
-    const redirectBack = encodeURIComponent(location.pathname)
-
-    window.location.href = `${import.meta.env.VITE_API_BASE_URL}/user/auth/google_sign_in?originalPage=${redirectBack}`
-  }
+const LoginButton: React.FC = () => {
+  const { user, onLogout, isLoggingOutLoading, handleGoogleSignIn, isLoading } =
+    useUser()
 
   return (
     <>
       {user ? (
         <button
           onClick={() => {
-            const handleLogout = async () => {
-              await logoutUser().unwrap()
-              dispatch(removeUser())
-            }
-            void handleLogout()
+            void onLogout()
           }}
-          disabled={isLoading}
+          disabled={isLoggingOutLoading}
+          type='button'
         >
           Logout
         </button>
       ) : (
-        <button onClick={handleGoogleSignIn} type='button'>
+        <button onClick={handleGoogleSignIn} type='button' disabled={isLoading}>
           Login
         </button>
       )}

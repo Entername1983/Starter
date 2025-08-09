@@ -18,8 +18,8 @@ import { routeTree } from './routeTree.gen'
 // Create a new router instance
 const router = createRouter({
   routeTree,
-  parseSearch: parseSearchWith(val => val),
-  stringifySearch: stringifySearchWith(val => val),
+  parseSearch: parseSearchWith((val: unknown) => val),
+  stringifySearch: stringifySearchWith((val: unknown) => val),
 })
 
 // Register the router instance for type safety

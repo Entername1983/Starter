@@ -1,3 +1,4 @@
+import { Sidebar } from '@components/Common/Sidebar/Sidebar'
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
@@ -9,9 +10,14 @@ export const Route = createRootRoute({
       <div className='p-2 flex gap-2'>
         <Navbar />
       </div>
-      <hr />
-      <Outlet />
-      <TanStackRouterDevtools initialIsOpen={false} />
+      <div className='flex'>
+        <Sidebar />
+        <div className='w-full'>
+          <hr />
+          <Outlet />
+          <TanStackRouterDevtools initialIsOpen={false} />
+        </div>
+      </div>
     </>
   ),
 })

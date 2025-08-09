@@ -15,13 +15,11 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUser(state, action: PayloadAction<UserSchema | null>) {
+      console.log('entered setuser', action)
       state.user = action.payload
-    },
-    removeUser(state) {
-      state.user = null
     },
   },
 })
 export default userSlice.reducer
 
-export const { setUser, removeUser } = userSlice.actions
+export const { setUser } = userSlice.actions
