@@ -15,41 +15,41 @@
         }
     </style>
 </head>
-    
+
 <body>
 <div class='wrapper'>
     <div class='pad1'>
         <h1><a href="../../../index.html">All files</a> / <a href="index.html">frontend/src/components</a> ApiIntegrationExample.tsx</h1>
         <div class='clearfix'>
-            
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
                 <span class='fraction'>0/136</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
                 <span class='fraction'>1/1</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
                 <span class='fraction'>1/1</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
                 <span class='fraction'>0/136</span>
             </div>
-        
-            
+
+
         </div>
         <p class="quiet">
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
@@ -542,7 +542,7 @@ import type React from 'react'
 <span class="cstat-no" title="statement not covered" >      setCountError(null)</span>
 <span class="cstat-no" title="statement not covered" >      try {</span>
 <span class="cstat-no" title="statement not covered" >        const response = await fetch(</span>
-<span class="cstat-no" title="statement not covered" >          `${import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000'}/api/v1/users/stats/designers-count`</span>
+<span class="cstat-no" title="statement not covered" >          `${import.meta.env.VITE_API_URL ?? 'http://localhost:8000'}/api/v1/users/stats/designers-count`</span>
 <span class="cstat-no" title="statement not covered" >        )</span>
 <span class="cstat-no" title="statement not covered" >        if (!response.ok) {</span>
 <span class="cstat-no" title="statement not covered" >          throw new Error(`HTTP ${String(response.status)}: ${response.statusText}`)</span>
@@ -754,4 +754,3 @@ function MyComponent() {
         <script src="../../../block-navigation.js"></script>
     </body>
 </html>
-    

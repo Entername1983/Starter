@@ -1,11 +1,12 @@
 import type React from 'react'
-import { createContext, useContext, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
 
 interface IModalContextProps {
-  isModalOpen: boolean
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
-  setModalContent: React.Dispatch<React.SetStateAction<ReactNode>>
-  modalContent: ReactNode | null
+  openModal: () => void
+  closeModal: () => void
+  modalProps: IModalProps
+  setModalProps: React.Dispatch<React.SetStateAction<IModalProps>>
+  dialogRef?: React.RefObject<HTMLDialogElement | null>
 }
 
 const ModalContext = createContext<IModalContextProps | undefined>(undefined)
@@ -13,20 +14,71 @@ const ModalContext = createContext<IModalContextProps | undefined>(undefined)
 interface IModalContextProviderProps {
   children: React.ReactNode
 }
+type CloseByOptions = 'any' | 'closerequest' | 'none'
 
+interface IModalProps {
+  type: string
+  title: string
+  closedby: CloseByOptions
+  extra?: object
+}
+
+const blankModal: IModalProps = {
+  title: 'title goes here',
+  type: 'blank',
+  closedby: 'any',
+}
 const ModalContextProvider: React.FC<IModalContextProviderProps> = ({
   children,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [modalContent, setModalContent] = useState<ReactNode | null>(null)
+  const [modalProps, setModalProps] = useState<IModalProps>(blankModal)
+
+  const dialogRef = useRef<HTMLDialogElement>(null)
+
+  // Dealing with browsers that have not implemented closedby
+  useEffect(() => {
+    const el = dialogRef.current
+    if (!el) return
+
+    if ('closedby' in el) return
+    const onClick = (e: MouseEvent) => {
+      const r = el.getBoundingClientRect()
+      const inside =
+        e.clientX >= r.left &&
+        e.clientX <= r.right &&
+        e.clientY >= r.top &&
+        e.clientY <= r.bottom
+      if (!inside) el.close()
+    }
+    el.addEventListener('click', onClick)
+
+    return () => {
+      el.removeEventListener('click', onClick)
+    }
+  }, [])
+
+  const openModal = () => {
+    if (!dialogRef.current) {
+      throw new Error('dialog missing')
+    }
+    dialogRef.current.showModal()
+  }
+
+  const closeModal = () => {
+    if (!dialogRef.current) {
+      throw new Error('dialog missing')
+    }
+    dialogRef.current.close()
+  }
 
   return (
     <ModalContext.Provider
       value={{
-        isModalOpen,
-        setIsModalOpen,
-        setModalContent,
-        modalContent,
+        openModal,
+        closeModal,
+        modalProps,
+        setModalProps,
+        dialogRef,
       }}
     >
       {children}

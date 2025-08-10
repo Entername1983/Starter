@@ -1,3 +1,4 @@
+import ModalWrapper from '@components/Common/Modals/ModalWrapper'
 import { Sidebar } from '@components/Common/Sidebar/Sidebar'
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
@@ -18,6 +19,7 @@ export const Route = createRootRoute({
           <TanStackRouterDevtools initialIsOpen={false} />
         </div>
       </div>
+      <ModalWrapper />
     </>
   ),
 })

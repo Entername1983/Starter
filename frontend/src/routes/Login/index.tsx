@@ -6,7 +6,7 @@ const Login: React.FC = () => {
   const handleGoogleSignIn = () => {
     const redirectBack = encodeURIComponent(location.pathname)
 
-    window.location.href = `${import.meta.env.VITE_API_BASE_URL}/user/auth/google_sign_in?originalPage=${redirectBack}`
+    window.location.href = `${import.meta.env.VITE_API_URL}/user/auth/google_sign_in?originalPage=${redirectBack}`
   }
 
   return (

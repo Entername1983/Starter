@@ -1,32 +1,11 @@
 import type React from 'react'
 
 import Button from '../../Button'
-import ModalWrapper from '../ModalWrapper'
 
-interface ILoginModalProps {
-  isOpen: boolean
-  onLogin: () => void
-  onClose: () => void
-}
-
-const LoginModal: React.FC<ILoginModalProps> = ({
-  isOpen,
-  onLogin,
-  onClose,
-}) => {
-  const handleLogin = () => {
-    onLogin()
-    onClose()
-  }
-
+const LoginModal: React.FC = () => {
+  const handleLogin = () => {}
   return (
-    <ModalWrapper
-      isOpen={isOpen}
-      onClose={onClose}
-      title='Authentication Required'
-      size='md'
-      closable={true}
-    >
+    <>
       <div className='text-center'>
         <div className='text-4xl mb-4'>🎨</div>
         <h2 className='text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-2'>
@@ -74,7 +53,7 @@ const LoginModal: React.FC<ILoginModalProps> = ({
           By signing in, you agree to our Terms of Service and Privacy Policy!!!
         </p>
       </div>
-    </ModalWrapper>
+    </>
   )
 }
 

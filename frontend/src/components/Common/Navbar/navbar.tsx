@@ -1,17 +1,17 @@
+import useLoginModal from '@hooks/useLoginModal'
 import { Link } from '@tanstack/react-router'
 
-import { LoginButton } from '../Button/LoginButton'
-
 const Navbar = () => {
+  const { openLoginModal } = useLoginModal()
   return (
     <>
       <Link to='/' className='[&.active]:font-bold'>
         Home
-      </Link>{' '}
+      </Link>
       <Link to='/about' className='[&.active]:font-bold'>
         About
       </Link>
-      <LoginButton />
+      <button onClick={openLoginModal}>Login</button>
     </>
   )
 }
