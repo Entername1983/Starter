@@ -1,7 +1,9 @@
+import StarterLogo from '@assets/starter-logo.svg?react'
 import useLoginModal from '@hooks/useLoginModal'
 import type { INotificationOptions } from '@hooks/useNotificationModal'
 import useNotificationModal from '@hooks/useNotificationModal'
 import useUser from '@hooks/useUser'
+import { Button } from '@mantine/core'
 
 import { NavbarLink } from './NavbarLink'
 
@@ -17,28 +19,33 @@ const Navbar = () => {
   }
 
   return (
-    <>
-      <NavbarLink linkTo='/' title='Home' />
-      <NavbarLink linkTo='/about' title='About' />
-      {user ? (
-        <button
+    <nav className='flex justify-between p-2 '>
+      <div className='flex items-center'>
+        <StarterLogo className='h-6 w-6 ' />
+        <NavbarLink linkTo='/' title='Home' />
+        <NavbarLink linkTo='/about' title='About' />
+      </div>
+      <div className='flex gap-2'>
+        {user ? (
+          <Button
+            onClick={() => {
+              void onLogout()
+            }}
+          >
+            Logout
+          </Button>
+        ) : (
+          <Button onClick={openLoginModal}>Login</Button>
+        )}
+        <Button
           onClick={() => {
-            void onLogout()
+            setAndOpenNotificationsModal(welcomeNotificationModal)
           }}
         >
-          Logout
-        </button>
-      ) : (
-        <button onClick={openLoginModal}>Login</button>
-      )}
-      <button
-        onClick={() => {
-          setAndOpenNotificationsModal(welcomeNotificationModal)
-        }}
-      >
-        Welcome notifications modal
-      </button>
-    </>
+          Welcome notifications modal
+        </Button>
+      </div>
+    </nav>
   )
 }
 

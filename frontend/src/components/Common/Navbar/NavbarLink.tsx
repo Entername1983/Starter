@@ -8,7 +8,7 @@ interface NavbarLinkProps {
 
 const NavbarLink: React.FC<NavbarLinkProps> = ({ linkTo, title }) => {
   return (
-    <Link to={linkTo} className='[&.active]:font-bold'>
+    <Link to={linkTo} className='[&.active]:font-bold px-2'>
       {title}
     </Link>
   )

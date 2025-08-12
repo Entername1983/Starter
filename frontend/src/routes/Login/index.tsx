@@ -10,12 +10,12 @@ const Login: React.FC = () => {
   }
 
   return (
-    <>
+    <main>
       <div>Hello Login!</div>
       <button onClick={handleGoogleSignIn} type='button'>
         Sign in with Google
       </button>
-    </>
+    </main>
   )
 }
 

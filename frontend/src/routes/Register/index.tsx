@@ -30,7 +30,7 @@ function Register() {
   const params = registerSearchParams.parse(Route.useSearch())
   console.log('registersearchparams', params)
   return (
-    <div className='p-4'>
+    <main className='p-4'>
       <h1 className='text-4xl'>Register</h1>
       <ul>
         <li>Auth Provider: {params.authProvider}</li>
@@ -41,6 +41,6 @@ function Register() {
       </ul>
 
       <RegistrationForm defaults={params} />
-    </div>
+    </main>
   )
 }
