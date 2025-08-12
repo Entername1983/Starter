@@ -10,7 +10,6 @@ A starter template using FastAPI and React
 2. [Technologies](#technologies)
 3. [Getting Started](#getting-started)
 4. [Backend](#backend)
-
    - [Rules](#backend-rules)
    - [Startup](#startup)
    - [Tooling](#tooling)
@@ -22,9 +21,7 @@ A starter template using FastAPI and React
    - [DB](#db)
    - [Testing](#testing)
    - [Auth](#backend-auth)
-
 5. [Frontend](#frontend)
-
    - [Rules](#frontend-rules)
    - [Build](#build)
    - [Auth](#frontend-auth)

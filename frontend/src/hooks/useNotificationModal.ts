@@ -5,7 +5,7 @@ import {
 } from '@contexts/ModalContext'
 type NotificationType = 'success' | 'error' | 'warning' | 'info'
 
-interface INotificationOptions {
+export interface INotificationOptions {
   type: NotificationType
   title: string
   message: string
@@ -21,6 +21,59 @@ interface INotificationModalProps {
   ) => void
   closeModal: () => void
   modalProps: IModalProps
+}
+
+export const isNotificationType = (
+  value: unknown
+): value is NotificationType => {
+  return (
+    typeof value === 'string' &&
+    ['success', 'error', 'warning', 'info'].includes(value)
+  )
+}
+
+export const isCloseByOptions = (value: unknown): value is CloseByOptions => {
+  return (
+    typeof value === 'string' && ['any', 'closerequest', 'none'].includes(value)
+  )
+}
+
+export const isNotificationOptions = (
+  value: unknown
+): value is INotificationOptions => {
+  if (!value || typeof value !== 'object') {
+    return false
+  }
+
+  const obj = value as Record<string, unknown>
+
+  if (!isNotificationType(obj['type'])) return false
+  if (typeof obj['title'] !== 'string') return false
+  if (typeof obj['message'] !== 'string') return false
+  if (!isCloseByOptions(obj['closedby'])) return false
+
+  if (
+    obj['confirmText'] !== undefined &&
+    typeof obj['confirmText'] !== 'string'
+  ) {
+    return false
+  }
+
+  if (
+    obj['onConfirm'] !== undefined &&
+    typeof obj['onConfirm'] !== 'function'
+  ) {
+    return false
+  }
+
+  if (
+    obj['showCancel'] !== undefined &&
+    typeof obj['showCancel'] !== 'boolean'
+  ) {
+    return false
+  }
+
+  return true
 }
 
 const useNotificationModal = (): INotificationModalProps => {

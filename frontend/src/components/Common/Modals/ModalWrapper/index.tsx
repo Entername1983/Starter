@@ -2,6 +2,7 @@ import { useModalContext } from '@contexts/ModalContext'
 import type React from 'react'
 
 import { LoginModalContent } from '../ModalsContent/LoginModalContent'
+import { NotificationModalContent } from '../ModalsContent/NotificationModalContent'
 
 // Using new HTML dialog element https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog
 // closedby = "none" Only closable using a specific provided mechanism, which in this case is pressing the "Close" button below.
@@ -27,12 +28,17 @@ const ModalWrapper: React.FC = () => {
           </button>
         </div>
 
-        <div className='bg-red-200 flex-1 rounded-xl p-2'>
+        <div className=' flex-1 rounded-xl '>
           {(() => {
             switch (modalProps.type) {
               case 'login':
                 return <LoginModalContent />
-
+              case 'notification':
+                return (
+                  <NotificationModalContent
+                    notificationOptions={modalProps.extra}
+                  />
+                )
               default:
                 return <div>Unknown modal type</div>
             }

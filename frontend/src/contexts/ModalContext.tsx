@@ -1,3 +1,4 @@
+import type { INotificationOptions } from '@hooks/useNotificationModal'
 import type React from 'react'
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
 
@@ -16,11 +17,11 @@ interface IModalContextProviderProps {
 }
 export type CloseByOptions = 'any' | 'closerequest' | 'none'
 
-interface IModalProps {
+export interface IModalProps {
   type: string
   title: string
   closedby: CloseByOptions
-  extra?: object
+  extra?: object | INotificationOptions
 }
 
 const blankModal: IModalProps = {

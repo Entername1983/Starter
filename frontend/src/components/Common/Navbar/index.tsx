@@ -24,6 +24,10 @@ const Navbar = () => {
         <StarterLogo className='h-6 w-6 ' />
         <NavbarLink linkTo='/' title='Home' />
         <NavbarLink linkTo='/about' title='About' />
+        <NavbarLink linkTo='/readme' title='ReadMe' />
+        <NavbarLink linkTo='/about' title='About' />
+        <NavbarLink linkTo='/about' title='About' />
+        <NavbarLink linkTo='/about' title='About' />
       </div>
       <div className='flex gap-2'>
         {user ? (

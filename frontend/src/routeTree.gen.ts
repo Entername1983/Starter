@@ -12,7 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutIndexRouteImport } from './routes/about/index'
 import { Route as RegisterIndexRouteImport } from './routes/Register/index'
+import { Route as ReadmeIndexRouteImport } from './routes/Readme/index'
 import { Route as LoginIndexRouteImport } from './routes/Login/index'
+import { Route as LicenseIndexRouteImport } from './routes/License/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -29,42 +31,67 @@ const RegisterIndexRoute = RegisterIndexRouteImport.update({
   path: '/Register/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReadmeIndexRoute = ReadmeIndexRouteImport.update({
+  id: '/Readme/',
+  path: '/Readme/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginIndexRoute = LoginIndexRouteImport.update({
   id: '/Login/',
   path: '/Login/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LicenseIndexRoute = LicenseIndexRouteImport.update({
+  id: '/License/',
+  path: '/License/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/License': typeof LicenseIndexRoute
   '/Login': typeof LoginIndexRoute
+  '/Readme': typeof ReadmeIndexRoute
   '/Register': typeof RegisterIndexRoute
   '/about': typeof AboutIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/License': typeof LicenseIndexRoute
   '/Login': typeof LoginIndexRoute
+  '/Readme': typeof ReadmeIndexRoute
   '/Register': typeof RegisterIndexRoute
   '/about': typeof AboutIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/License/': typeof LicenseIndexRoute
   '/Login/': typeof LoginIndexRoute
+  '/Readme/': typeof ReadmeIndexRoute
   '/Register/': typeof RegisterIndexRoute
   '/about/': typeof AboutIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/Login' | '/Register' | '/about'
+  fullPaths: '/' | '/License' | '/Login' | '/Readme' | '/Register' | '/about'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/Login' | '/Register' | '/about'
-  id: '__root__' | '/' | '/Login/' | '/Register/' | '/about/'
+  to: '/' | '/License' | '/Login' | '/Readme' | '/Register' | '/about'
+  id:
+    | '__root__'
+    | '/'
+    | '/License/'
+    | '/Login/'
+    | '/Readme/'
+    | '/Register/'
+    | '/about/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LicenseIndexRoute: typeof LicenseIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
+  ReadmeIndexRoute: typeof ReadmeIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
   AboutIndexRoute: typeof AboutIndexRoute
 }
@@ -92,6 +119,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/Readme/': {
+      id: '/Readme/'
+      path: '/Readme'
+      fullPath: '/Readme'
+      preLoaderRoute: typeof ReadmeIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/Login/': {
       id: '/Login/'
       path: '/Login'
@@ -99,12 +133,21 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/License/': {
+      id: '/License/'
+      path: '/License'
+      fullPath: '/License'
+      preLoaderRoute: typeof LicenseIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LicenseIndexRoute: LicenseIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
+  ReadmeIndexRoute: ReadmeIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
   AboutIndexRoute: AboutIndexRoute,
 }
