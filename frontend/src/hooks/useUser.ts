@@ -47,6 +47,7 @@ const useUser = (): IUseAuth => {
 
   const onLogout = async () => {
     try {
+      console.log('logging out user')
       await logoutUser().unwrap()
     } finally {
       void dispatch(setUser(null))

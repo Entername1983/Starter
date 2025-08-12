@@ -14,7 +14,7 @@ const ModalContext = createContext<IModalContextProps | undefined>(undefined)
 interface IModalContextProviderProps {
   children: React.ReactNode
 }
-type CloseByOptions = 'any' | 'closerequest' | 'none'
+export type CloseByOptions = 'any' | 'closerequest' | 'none'
 
 interface IModalProps {
   type: string
@@ -27,6 +27,7 @@ const blankModal: IModalProps = {
   title: 'title goes here',
   type: 'blank',
   closedby: 'any',
+  extra: {},
 }
 const ModalContextProvider: React.FC<IModalContextProviderProps> = ({
   children,
@@ -68,6 +69,7 @@ const ModalContextProvider: React.FC<IModalContextProviderProps> = ({
     if (!dialogRef.current) {
       throw new Error('dialog missing')
     }
+    setModalProps(blankModal)
     dialogRef.current.close()
   }
 

@@ -3,7 +3,7 @@ import { Sidebar } from '@components/Common/Sidebar/Sidebar'
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
-import { Navbar } from '../components/Common/Navbar/navbar'
+import { Navbar } from '../components/Common/Navbar'
 
 export const Route = createRootRoute({
   component: () => (

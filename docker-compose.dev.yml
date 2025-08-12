@@ -1,14 +1,13 @@
-# Docker Compose file for TryUI development
+# Docker Compose file for Starter template development
+# Container names "st" for starter + "-" + service name e.g "st-backend"
 
 services:
-  # PostgreSQL Database
-
   # FastAPI Backend
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: tryui-backend
+    container_name: st-backend
     restart: unless-stopped
     ports:
       - "8000:8000"
@@ -18,7 +17,6 @@ services:
       - backend_cache:/app/.cache
     networks:
       - network-1
-
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
   # React Frontend
@@ -27,7 +25,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       target: development
-    container_name: tryui-frontend
+    container_name: st-frontend
     restart: unless-stopped
     environment:
       - NODE_ENV=development
@@ -50,7 +48,7 @@ services:
 
   # Redis (Optional - for caching and sessions)
   redis-starter:
-    container_name: redis-starter
+    container_name: st-redis
     image: redis/redis-stack-server:latest
     ports:
       - "6378:6378"
@@ -69,18 +67,13 @@ services:
 
   postgres:
     image: postgres:17-alpine
-    container_name: mydb-postgres
+    container_name: st-postgres
     restart: unless-stopped
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     networks:
       - network-1
     env_file:

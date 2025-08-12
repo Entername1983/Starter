@@ -10,6 +10,7 @@ A starter template using FastAPI and React
 2. [Technologies](#technologies)
 3. [Getting Started](#getting-started)
 4. [Backend](#backend)
+   - [Rules](#Backend-rules)
    - [Startup](#Startup)
    - [Tooling](#Tooling)
    - [Config](#config)
@@ -20,6 +21,7 @@ A starter template using FastAPI and React
    - [Testing](#Testing)
    - [Auth](#Auth)
 5. [Frontend](#frontend)
+   - [Rules](#Frontend-rules)
    - [Routing](#routing)
    - [Forms](#forms)
    - [Api](#api)
@@ -43,7 +45,7 @@ project-root/
 ├── backend/            # FastAPI application
 ├── frontend/           # React application
 ├── nginx/              # Nginx configuration files
-├── postgres/                 # Database initialization scripts
+├── postgres/           # Database initialization scripts
 ├── cache/              # Redis configuration
 └── README.md           # Project overview and instructions
 ```
@@ -81,6 +83,10 @@ psql -h localhost -p 5432 -U admin -d mydb
 ## Backend
 
 The backend is built with FastAPI and provides RESTful endpoints for the application.
+
+### Backend-rules
+
+- All API routes use dependency injections for DB, Cache(Redis), Settings + User
 
 ### Startup
 
@@ -152,6 +158,12 @@ settings = get_settings()
 ## Frontend
 
 A React-based single-page application (SPA) located in the `frontend/` directory. See `frontend/README.md` for setup and development instructions.
+
+### Frontend-rules
+
+- Seperate UI & Functionality as much as possible
+- Atomic components, every file contains a single component
+- Major components are in their own directory and named index.tsx
 
 ### Build
 
