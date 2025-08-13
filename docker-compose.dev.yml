@@ -28,7 +28,7 @@ services:
     container_name: st-frontend
     restart: unless-stopped
     environment:
-      - NODE_ENV=development
+      - VITE_ENV=development
       - VITE_API_URL=http://localhost:8000
       - VITE_API_URL=http://localhost:8000/api
       - VITE_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-your-google-client-id}

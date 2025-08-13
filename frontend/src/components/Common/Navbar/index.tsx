@@ -1,11 +1,13 @@
 import StarterLogo from '@assets/starter-logo.svg?react'
+import { useLayout } from '@contexts/LayoutContext'
 import useLoginModal from '@hooks/useLoginModal'
 import type { INotificationOptions } from '@hooks/useNotificationModal'
 import useNotificationModal from '@hooks/useNotificationModal'
 import useUser from '@hooks/useUser'
-import { Button } from '@mantine/core'
+import { useEffect, useState } from 'react'
 
 import { NavbarLink } from './NavbarLink'
+import { ThemeToggle } from './ThemeToggle'
 
 const Navbar = () => {
   const { openLoginModal } = useLoginModal()
@@ -17,6 +19,30 @@ const Navbar = () => {
     message: 'welcome to my website',
     closedby: 'any',
   }
+  const { sidebarOpen, setSidebarOpen } = useLayout()
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [isDarkMode, setIsDarkMode] = useState(() =>
+    document.body.classList.contains('dark')
+  )
+  useEffect(() => {
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.attributeName === 'class') {
+          const isDark = document.body.classList.contains('dark')
+          setIsDarkMode(isDark)
+        }
+      })
+    })
+
+    observer.observe(document.body, {
+      attributes: true,
+    })
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   return (
     <nav className='flex justify-between p-2 '>
@@ -25,29 +51,37 @@ const Navbar = () => {
         <NavbarLink linkTo='/' title='Home' />
         <NavbarLink linkTo='/about' title='About' />
         <NavbarLink linkTo='/readme' title='ReadMe' />
-        <NavbarLink linkTo='/about' title='About' />
-        <NavbarLink linkTo='/about' title='About' />
+        <NavbarLink linkTo='/Account' title='Account' />
+        <NavbarLink linkTo='/License' title='License' />
         <NavbarLink linkTo='/about' title='About' />
       </div>
       <div className='flex gap-2'>
+        <ThemeToggle />
+        <button
+          onClick={() => {
+            setSidebarOpen(!sidebarOpen)
+          }}
+        >
+          Toggle side bar
+        </button>
         {user ? (
-          <Button
+          <button
             onClick={() => {
               void onLogout()
             }}
           >
             Logout
-          </Button>
+          </button>
         ) : (
-          <Button onClick={openLoginModal}>Login</Button>
+          <button onClick={openLoginModal}>Login</button>
         )}
-        <Button
+        <button
           onClick={() => {
             setAndOpenNotificationsModal(welcomeNotificationModal)
           }}
         >
           Welcome notifications modal
-        </Button>
+        </button>
       </div>
     </nav>
   )

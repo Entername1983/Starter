@@ -2,7 +2,7 @@ import { defineConfig } from '@hey-api/openapi-ts'
 
 export default defineConfig({
   input:
-    process.env.NODE_ENV === 'production'
+    process.env.VITE_ENV === 'production'
       ? 'http://localhost:8000/openapi.json'
       : 'http://localhost:8000/openapi.json',
   output: {

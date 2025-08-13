@@ -217,7 +217,7 @@ Using Redux RTK + context api
 
 ### Components
 
-Using mantine core
+Atomic
 
 ### SVG
 

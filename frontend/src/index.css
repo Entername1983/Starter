@@ -1,6 +1,54 @@
 @import 'tailwindcss';
 @custom-variant dark (&:where(.dark, .dark *));
 
+body {
+  font-family: 'Fira Code', monospace;
+}
+
+h1 {
+  font-size: 40px;
+}
+h2 {
+  font-size: 36px;
+}
+h3 {
+  font-size: 32px;
+}
+h4 {
+  font-size: 26px;
+}
+h5 {
+  font-size: 20px;
+}
+
+p {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+a:hover {
+  text-decoration: none;
+  opacity: 0.9;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+header {
+  margin-bottom: 20px;
+}
+
 ::backdrop {
   background-color: #334155;
   opacity: 0.9;
@@ -26,6 +74,7 @@ dialog:open {
     transform: scaleY(0);
   }
 }
+
 /* Custom scrollbar styles */
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;

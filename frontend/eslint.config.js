@@ -100,7 +100,7 @@ export default tseslint.config([
       'import/no-unresolved': 'off', // TypeScript handles this
 
       // General strict rules
-      'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+      'no-console': process.env.VITE_ENV === 'production' ? 'error' : 'warn',
       'no-debugger': 'error',
       'prefer-const': 'error',
       'no-var': 'error',

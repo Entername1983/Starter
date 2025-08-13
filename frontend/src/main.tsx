@@ -1,6 +1,4 @@
 import { ContextWrapper } from '@contexts/ContextWrapper'
-import { MantineProvider } from '@mantine/core'
-import '@mantine/core/styles.css'
 import { store } from '@store/store'
 import {
   RouterProvider,
@@ -19,7 +17,7 @@ import { routeTree } from './routeTree.gen'
 const router = createRouter({
   routeTree,
   parseSearch: parseSearchWith((val: unknown) => val),
-  stringifySearch: stringifySearchWith((val: unknown) => val),
+  stringifySearch: stringifySearchWith((val: unknown) => JSON.stringify(val)),
 })
 
 // Register the router instance for type safety
@@ -36,13 +34,11 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
-      <MantineProvider>
-        <Provider store={store}>
-          <ContextWrapper>
-            <RouterProvider router={router} />
-          </ContextWrapper>
-        </Provider>
-      </MantineProvider>
+      <Provider store={store}>
+        <ContextWrapper>
+          <RouterProvider router={router} />
+        </ContextWrapper>
+      </Provider>
     </StrictMode>
   )
 }

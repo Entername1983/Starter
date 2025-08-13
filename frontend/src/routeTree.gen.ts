@@ -15,6 +15,7 @@ import { Route as RegisterIndexRouteImport } from './routes/Register/index'
 import { Route as ReadmeIndexRouteImport } from './routes/Readme/index'
 import { Route as LoginIndexRouteImport } from './routes/Login/index'
 import { Route as LicenseIndexRouteImport } from './routes/License/index'
+import { Route as AccountIndexRouteImport } from './routes/Account/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,9 +47,15 @@ const LicenseIndexRoute = LicenseIndexRouteImport.update({
   path: '/License/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountIndexRoute = AccountIndexRouteImport.update({
+  id: '/Account/',
+  path: '/Account/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/Account': typeof AccountIndexRoute
   '/License': typeof LicenseIndexRoute
   '/Login': typeof LoginIndexRoute
   '/Readme': typeof ReadmeIndexRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/Account': typeof AccountIndexRoute
   '/License': typeof LicenseIndexRoute
   '/Login': typeof LoginIndexRoute
   '/Readme': typeof ReadmeIndexRoute
@@ -66,6 +74,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/Account/': typeof AccountIndexRoute
   '/License/': typeof LicenseIndexRoute
   '/Login/': typeof LoginIndexRoute
   '/Readme/': typeof ReadmeIndexRoute
@@ -74,12 +83,27 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/License' | '/Login' | '/Readme' | '/Register' | '/about'
+  fullPaths:
+    | '/'
+    | '/Account'
+    | '/License'
+    | '/Login'
+    | '/Readme'
+    | '/Register'
+    | '/about'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/License' | '/Login' | '/Readme' | '/Register' | '/about'
+  to:
+    | '/'
+    | '/Account'
+    | '/License'
+    | '/Login'
+    | '/Readme'
+    | '/Register'
+    | '/about'
   id:
     | '__root__'
     | '/'
+    | '/Account/'
     | '/License/'
     | '/Login/'
     | '/Readme/'
@@ -89,6 +113,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountIndexRoute: typeof AccountIndexRoute
   LicenseIndexRoute: typeof LicenseIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
   ReadmeIndexRoute: typeof ReadmeIndexRoute
@@ -140,11 +165,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LicenseIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/Account/': {
+      id: '/Account/'
+      path: '/Account'
+      fullPath: '/Account'
+      preLoaderRoute: typeof AccountIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountIndexRoute: AccountIndexRoute,
   LicenseIndexRoute: LicenseIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
   ReadmeIndexRoute: ReadmeIndexRoute,

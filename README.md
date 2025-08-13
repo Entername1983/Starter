@@ -220,7 +220,7 @@ Using Redux RTK + context api
 
 ### Components
 
-Using mantine core
+No component library included
 
 ### SVG
 
@@ -229,7 +229,7 @@ https://www.npmjs.com/package/vite-plugin-svgr
 
 ### Styling
 
-Primarily tailwindcss
+Tailwindcss is configured but considering moving to CSS modules for more easily manageable AI generated code
 
 ### Validation
 
