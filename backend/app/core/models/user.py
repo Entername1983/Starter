@@ -23,3 +23,4 @@ class User(BaseModel):
     )
     picture_url: Mapped[str] = mapped_column(String, nullable=True)
     password: Mapped[str] = mapped_column(String, nullable=True)
+    email_confirmed: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
