@@ -19,7 +19,14 @@ const Navbar = () => {
     message: 'welcome to my website',
     closedby: 'any',
   }
-  const { sidebarOpen, setSidebarOpen } = useLayout()
+  const {
+    sidebarOpen,
+    setSidebarOpen,
+    stickyNavbar,
+    toggleStickyNavbar,
+    toggleStickySidebar,
+    stickySidebar,
+  } = useLayout()
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isDarkMode, setIsDarkMode] = useState(() =>
@@ -45,7 +52,9 @@ const Navbar = () => {
   }, [])
 
   return (
-    <nav className='flex justify-between p-2 '>
+    <nav
+      className={`flex justify-between p-2 bg-white dark:bg-blue-950 ${stickyNavbar ? 'sticky top-0 z-10' : ''}`}
+    >
       <div className='flex items-center'>
         <StarterLogo className='h-6 w-6 ' />
         <NavbarLink linkTo='/' title='Home' />
@@ -53,17 +62,26 @@ const Navbar = () => {
         <NavbarLink linkTo='/readme' title='ReadMe' />
         <NavbarLink linkTo='/Account' title='Account' />
         <NavbarLink linkTo='/License' title='License' />
-        <NavbarLink linkTo='/about' title='About' />
+        <NavbarLink linkTo='/LoremIpsum' title='Lorem Ipsum' />
       </div>
-      <div className='flex gap-2'>
-        <ThemeToggle />
+      <div className='flex gap-2 items-center'>
+        <ThemeToggle /> |
+        <button onClick={toggleStickyNavbar}>
+          {stickyNavbar ? 'Unstick Navbar' : 'Stick Navbar'}
+        </button>{' '}
+        |
+        <button onClick={toggleStickySidebar}>
+          {stickySidebar ? 'Unstick Sidebar' : 'Stick Sidebar'}
+        </button>{' '}
+        |
         <button
           onClick={() => {
             setSidebarOpen(!sidebarOpen)
           }}
         >
           Toggle side bar
-        </button>
+        </button>{' '}
+        |
         {user ? (
           <button
             onClick={() => {
@@ -74,7 +92,8 @@ const Navbar = () => {
           </button>
         ) : (
           <button onClick={openLoginModal}>Login</button>
-        )}
+        )}{' '}
+        |
         <button
           onClick={() => {
             setAndOpenNotificationsModal(welcomeNotificationModal)

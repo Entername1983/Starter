@@ -1,7 +1,7 @@
 import Button from '@components/Common/Button'
 import useUser from '@hooks/useUser'
 import type React from 'react'
-const LoginButton: React.FC = () => {
+const LoginWithGoogleButton: React.FC = () => {
   const { user, onLogout, isLoggingOutLoading, handleGoogleSignIn, isLoading } =
     useUser()
 
@@ -18,7 +18,7 @@ const LoginButton: React.FC = () => {
           Logout
         </button>
       ) : (
-        <div className='space-y-4 bg-white'>
+        <div className='space-y-4 '>
           <Button
             variant='primary'
             fullWidth
@@ -54,4 +54,4 @@ const LoginButton: React.FC = () => {
   )
 }
 
-export { LoginButton }
+export { LoginWithGoogleButton }

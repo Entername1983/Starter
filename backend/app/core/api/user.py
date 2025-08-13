@@ -43,6 +43,29 @@ async def logout_user(user: CurrentUser, response: Response):
     return LogoutResponse(status="success", message="User logged out successfully.")
 
 
+class InternalSigninRequest(BaseModel):
+    username: str
+    password: str
+    originalPage: str
+
+
+@router.post("/auth/sign_in/", tags=["user"])
+async def sign_in(
+    request: InternalSigninRequest, r_client: GetRedisAsync, settings: AppSettings, db: GetDbAsync
+):
+    """Sign in using internal auth
+
+    Args:
+        request (InternalSigninRequest): _description_
+        r_client (GetRedisAsync): _description_
+        settings (AppSettings): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    return await AuthService.sign_in(request, r_client, settings)
+
+
 @router.get("/auth/google_sign_in/", tags=["user"])
 async def sign_in_with_google(
     google_auth: GetGoogleAuth,

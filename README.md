@@ -26,6 +26,7 @@ A starter template using FastAPI and React
 5. [Frontend](#frontend)
 
    - [Rules](#frontend-rules)
+   - [Layout](#Layout)
    - [Build](#build)
    - [Auth](#frontend-auth)
    - [Forms](#forms)
@@ -187,9 +188,14 @@ directory. See `frontend/README.md` for setup and development instructions.
 
 ### Build
 
-Vite, what else?
+Using vite for builds
 
-### Backend-Auth
+### Layout
+
+Navbar and sidebar with options to make them sticky to act like a dashboard
+TODO: Mobile responsiveness
+
+### Frontend-Auth
 
 - Login made through API calls that then sets an HTTP only JWT token
 - Follow up check user status returns a user object upon verification of the JWT

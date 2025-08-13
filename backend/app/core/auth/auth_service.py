@@ -101,6 +101,8 @@ class AuthService:
             JSONResponse: Returns a response with a redirectUrl and a user object with
             an attached cookie containing the access_token.
         """
+        if data.auth_provider == "internal":
+            return await AuthService.register_internal_user(data, settings, db, r_client, request)
         session_id = request.cookies.get("provider_id")
         if session_id is None:
             raise HTTPException("No provider id")
@@ -120,7 +122,7 @@ class AuthService:
         access_token = AuthHelpers.encode_jwt_data(TokenPayload(sub=str(new_user.id)))
         user_schema = UserService.turn_user_model_to_pydantic_schema(new_user)
         redirect_url = data.original_page
-        if redirect_url == "/login":
+        if (redirect_url == "/login") or (redirect_url == "/register"):
             redirect_url = "/"
         if redirect_url is None:
             redirect_url = "/"
@@ -145,6 +147,88 @@ class AuthService:
             path="/",
         )
 
+        return response
+
+    @staticmethod
+    async def register_internal_user(
+        data: SignUpRequest,
+        settings: AppSettings,
+        db: AsyncSession,
+        r_client: AsyncRedis,
+        request: Request,
+    ) -> JSONResponse:
+        if data.password is None:
+            raise Exception("No password provided")
+        new_user: User = await UserService.create_user(
+            db,
+            data.email,
+            data.username,
+            data.auth_provider,
+            data.given_name,
+            data.family_name,
+            data.o_auth_id,
+            AuthHelpers.hash_password(data.password),
+        )
+        redirect_url = data.original_page
+
+        if (redirect_url == "/login") or (redirect_url == "/register"):
+            redirect_url = "/"
+        if redirect_url is None:
+            redirect_url = "/"
+        user_schema = UserService.turn_user_model_to_pydantic_schema(new_user)
+
+        user_dict = user_schema.model_dump(
+            by_alias=True, exclude={"external_user_id", "auth_provider"}
+        )
+
+        response_content = {
+            "redirectUrl": redirect_url,
+            "user": user_dict,
+        }
+        response = JSONResponse(content=response_content)
+        access_token = AuthHelpers.encode_jwt_data(TokenPayload(sub=str(new_user.id)))
+
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=settings.auth.http_only,
+            max_age=settings.auth.cookie_max_age,
+            samesite=settings.auth.same_site,
+            secure=settings.app.environment == "production",
+            domain=settings.auth.domain,
+            path="/",
+        )
+
+        return response
+
+    @staticmethod
+    async def sign_in(
+        request, r_client: AsyncRedis, app_settings: AppSettings, db
+    ) -> RedirectResponse:
+        ## Check if password is correct
+        username = request.username
+        if username is None:
+            raise HTTPException("Username not found")
+        user = await UserService.get_user_by_username(username, db)
+        if user is None:
+            raise HTTPException("Username not found")
+        if not AuthHelpers.verify_password(request.password, user.password):
+            raise HTTPException("Password does not match")
+
+        access_token = AuthHelpers.encode_jwt_data(TokenPayload(sub=str(user.id)))
+
+        redirect_url = request.originalPage if request.originalPage is not None else "/"
+        response = RedirectResponse(url=redirect_url)
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=app_settings.auth.http_only,
+            max_age=app_settings.auth.cookie_max_age,
+            samesite=app_settings.auth.same_site,
+            secure=True,
+            domain=app_settings.auth.domain,
+            path="/",
+        )
         return response
 
     @staticmethod
@@ -234,13 +318,8 @@ class AuthService:
         # data["access_token"] = credentials.token
         # data["original_page"] = state
         # data["settings"] = {"settings": "empty"}
-        user_dict = user.model_dump(by_alias=True, exclude={"external_user_id", "auth_provider"})
         original_page = ast.literal_eval(state)["originalPage"]
-        response_content = {
-            "redirectUrl": original_page,
-            "user": user_dict,
-        }
-        response = JSONResponse(content=response_content)
+
         access_token = AuthHelpers.encode_jwt_data(TokenPayload(sub=str(user.id)))
         redirect_str = f"{app_settings.app.frontend_url}{original_page}"
         response = RedirectResponse(url=redirect_str)

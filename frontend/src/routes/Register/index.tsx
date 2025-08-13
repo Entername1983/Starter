@@ -6,19 +6,40 @@ import { RegistrationForm } from './-components/RegistrationForm'
 const authProviders = ['google', 'discord', 'microsoft', 'internal'] as const
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const registerSearchParams = z.object({
-  oAuthId: z.string(),
-  email: z.email(),
-  name: z.string(),
-  givenName: z.string(),
-  familyName: z.string(),
-  pictureUrl: z.url(),
-  authProvider: z.enum(authProviders),
-  accessToken: z.string(),
-  originalPage: z.string(),
-  settings: z.string(),
-  // oAuthState: z.string(),
-})
+export const registerSearchParams = z
+  .object({
+    oAuthId: z.string().optional(),
+    email: z.email().optional(),
+    name: z.string().optional(),
+    givenName: z.string().optional(),
+    familyName: z.string().optional(),
+    pictureUrl: z.url().optional(),
+    authProvider: z.enum(authProviders),
+    accessToken: z.string().optional(),
+    originalPage: z.string().optional(),
+    settings: z.string().optional(),
+  })
+  .refine(
+    data => {
+      if (data.authProvider === 'internal') {
+        return true // All nullable fields can be null for internal auth
+      }
+      // For non-internal auth, ensure required fields are not null
+      return (
+        data.oAuthId !== undefined &&
+        data.email !== undefined &&
+        data.name !== undefined &&
+        data.givenName !== undefined &&
+        data.familyName !== undefined &&
+        data.pictureUrl !== undefined &&
+        data.accessToken !== undefined
+      )
+    },
+    {
+      message: "OAuth fields are required when authProvider is not 'internal'",
+    }
+  )
+
 export type TRegisterParams = z.infer<typeof registerSearchParams>
 
 export const Route = createFileRoute('/Register/')({
@@ -32,13 +53,6 @@ function Register() {
   return (
     <main className='p-4'>
       <h1 className='text-4xl'>Register</h1>
-      <ul>
-        <li>Auth Provider: {params.authProvider}</li>
-        <li>Access token: {params.accessToken}</li>
-        <li>Original page: {params.originalPage}</li>
-        <li>Settings: {params.settings}</li>
-        <li>OAuthId: {params.oAuthId}</li>
-      </ul>
 
       <RegistrationForm defaults={params} />
     </main>

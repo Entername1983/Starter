@@ -1,4 +1,27 @@
 import type { ChangeHandler, FieldError, RefCallBack } from 'react-hook-form'
+
+export type InputType =
+  | 'button'
+  | 'checkbox'
+  | 'color'
+  | 'date'
+  | 'datetime-local'
+  | 'email'
+  | 'file'
+  | 'hidden'
+  | 'month'
+  | 'number'
+  | 'time'
+  | 'text'
+  | 'tel'
+  | 'submit'
+  | 'week'
+  | 'password'
+  | 'search'
+  | 'range'
+  | 'reset'
+  | 'radio'
+
 interface IInputField {
   label?: string
   placeholder?: string
@@ -20,6 +43,7 @@ interface IInputField {
   inputStyle?: string
   includeErrorSpace?: boolean
   labelStyle?: string
+  type?: InputType
 }
 
 export const InputField: React.FC<IInputField> = ({
@@ -43,6 +67,7 @@ export const InputField: React.FC<IInputField> = ({
   includeErrorSpace,
   labelStyle,
   style,
+  type = 'text',
 }) => {
   const updatedLabelStyle = labelStyle ?? ''
   const updatedStyle = style ?? ''
@@ -58,6 +83,7 @@ export const InputField: React.FC<IInputField> = ({
         </label>
       )}
       <input
+        type={type}
         id={id}
         ref={ref}
         name={name}
@@ -78,7 +104,7 @@ export const InputField: React.FC<IInputField> = ({
         className={updatedInputClassName}
       />
       {includeErrorSpace && (
-        <div className='h-10 bg-white'>
+        <div className='h-10 '>
           {error && <p className={updatedErrorClassName}>{error.message}</p>}
         </div>
       )}

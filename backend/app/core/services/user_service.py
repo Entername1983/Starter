@@ -33,6 +33,11 @@ class UserService:
         return result.scalars().first()
 
     @staticmethod
+    async def get_user_by_username(username: str, db: AsyncSession) -> User | None:
+        result = await db.execute(select(User).filter_by(username=username))
+        return result.scalars().first()
+
+    @staticmethod
     async def get_user_by_external_id(
         db: AsyncSession, external_user_id: str, auth_provider: AuthProviderEnum
     ) -> User | None:

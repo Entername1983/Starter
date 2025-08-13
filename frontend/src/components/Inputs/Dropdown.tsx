@@ -84,7 +84,7 @@ const Dropdown: React.FC<IDropdownProps> = ({
         ))}
       </select>
       {includeErrorSpace && (
-        <div className='h-10 bg-white'>
+        <div className='h-10 '>
           {error && <p className={updatedErrorClassName}>{error.message}</p>}
         </div>
       )}

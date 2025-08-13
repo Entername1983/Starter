@@ -13,7 +13,11 @@ const DropdownOption: React.FC<IDropdownOptionProps> = ({
   value,
 }) => {
   return (
-    <option disabled={disabled} value={value}>
+    <option
+      disabled={disabled}
+      className='dark:bg-blue-500 dark:text-white'
+      value={value}
+    >
       {label}
     </option>
   )

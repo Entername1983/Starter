@@ -5,6 +5,13 @@ body {
   font-family: 'Fira Code', monospace;
 }
 
+main {
+  min-height: screen;
+}
+
+section {
+  margin: 10px 0px;
+}
 h1 {
   font-size: 40px;
 }

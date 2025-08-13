@@ -18,11 +18,11 @@ const ModalWrapper: React.FC = () => {
       ref={dialogRef}
       // eslint-disable-next-line react/no-unknown-property
       closedby={closedBy}
-      className={`mx-auto my-auto  rounded-xl p-2  `}
+      className={`mx-auto my-auto  rounded-xl p-2 bg-white dark:bg-blue-800 text-black dark:text-white`}
     >
       <div className={` flex flex-col h-80 w-140 `}>
         <div className='flex justify-between px-2'>
-          <h3>{modalProps.title}</h3>
+          <h5>{modalProps.title}</h5>
           <button className='cursor-pointer' onClick={closeModal}>
             X
           </button>

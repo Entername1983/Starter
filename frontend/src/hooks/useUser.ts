@@ -14,6 +14,7 @@ interface IUseAuth {
   isLoading: boolean
   error?: FetchBaseQueryError | SerializedError | undefined
   handleGoogleSignIn: () => void
+  handleInternalSignIn: () => void
   onLogout: () => Promise<void>
   isLoggingOutLoading: boolean
 }
@@ -45,6 +46,10 @@ const useUser = (): IUseAuth => {
     window.location.href = `${import.meta.env.VITE_API_URL}/user/auth/google_sign_in?originalPage=${redirectBack}`
   }
 
+  const handleInternalSignIn = () => {
+    console.log('handling internal sign in')
+  }
+
   const onLogout = async () => {
     try {
       console.log('logging out user')
@@ -61,6 +66,7 @@ const useUser = (): IUseAuth => {
     isLoading,
     isLoggingOutLoading,
     error,
+    handleInternalSignIn,
   }
 }
 

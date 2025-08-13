@@ -8,14 +8,12 @@ const ENVIRONMENT = import.meta.env.VITE_ENV
 export const Route = createRootRoute({
   component: () => (
     <div className='bg-white dark:bg-blue-950 text-black dark:text-white min-h-screen'>
-      <div>
-        <Navbar />
-      </div>
-      <div className='flex border-2 border-amber-500'>
-        <div className='border-2 border-red-800 '>
+      <Navbar />
+      <div className='flex  min-h-screen'>
+        <div className=''>
           <Sidebar />
         </div>
-        <div className='border-2  flex grow border-green-800'>
+        <div className='flex grow  overflow-auto'>
           <hr />
           <Outlet />
           {ENVIRONMENT === 'development' && (

@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutIndexRouteImport } from './routes/about/index'
 import { Route as RegisterIndexRouteImport } from './routes/Register/index'
 import { Route as ReadmeIndexRouteImport } from './routes/Readme/index'
+import { Route as LoremIpsumIndexRouteImport } from './routes/LoremIpsum/index'
 import { Route as LoginIndexRouteImport } from './routes/Login/index'
 import { Route as LicenseIndexRouteImport } from './routes/License/index'
 import { Route as AccountIndexRouteImport } from './routes/Account/index'
@@ -37,6 +38,11 @@ const ReadmeIndexRoute = ReadmeIndexRouteImport.update({
   path: '/Readme/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoremIpsumIndexRoute = LoremIpsumIndexRouteImport.update({
+  id: '/LoremIpsum/',
+  path: '/LoremIpsum/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginIndexRoute = LoginIndexRouteImport.update({
   id: '/Login/',
   path: '/Login/',
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/Account': typeof AccountIndexRoute
   '/License': typeof LicenseIndexRoute
   '/Login': typeof LoginIndexRoute
+  '/LoremIpsum': typeof LoremIpsumIndexRoute
   '/Readme': typeof ReadmeIndexRoute
   '/Register': typeof RegisterIndexRoute
   '/about': typeof AboutIndexRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/Account': typeof AccountIndexRoute
   '/License': typeof LicenseIndexRoute
   '/Login': typeof LoginIndexRoute
+  '/LoremIpsum': typeof LoremIpsumIndexRoute
   '/Readme': typeof ReadmeIndexRoute
   '/Register': typeof RegisterIndexRoute
   '/about': typeof AboutIndexRoute
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/Account/': typeof AccountIndexRoute
   '/License/': typeof LicenseIndexRoute
   '/Login/': typeof LoginIndexRoute
+  '/LoremIpsum/': typeof LoremIpsumIndexRoute
   '/Readme/': typeof ReadmeIndexRoute
   '/Register/': typeof RegisterIndexRoute
   '/about/': typeof AboutIndexRoute
@@ -88,6 +97,7 @@ export interface FileRouteTypes {
     | '/Account'
     | '/License'
     | '/Login'
+    | '/LoremIpsum'
     | '/Readme'
     | '/Register'
     | '/about'
@@ -97,6 +107,7 @@ export interface FileRouteTypes {
     | '/Account'
     | '/License'
     | '/Login'
+    | '/LoremIpsum'
     | '/Readme'
     | '/Register'
     | '/about'
@@ -106,6 +117,7 @@ export interface FileRouteTypes {
     | '/Account/'
     | '/License/'
     | '/Login/'
+    | '/LoremIpsum/'
     | '/Readme/'
     | '/Register/'
     | '/about/'
@@ -116,6 +128,7 @@ export interface RootRouteChildren {
   AccountIndexRoute: typeof AccountIndexRoute
   LicenseIndexRoute: typeof LicenseIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
+  LoremIpsumIndexRoute: typeof LoremIpsumIndexRoute
   ReadmeIndexRoute: typeof ReadmeIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
   AboutIndexRoute: typeof AboutIndexRoute
@@ -151,6 +164,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReadmeIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/LoremIpsum/': {
+      id: '/LoremIpsum/'
+      path: '/LoremIpsum'
+      fullPath: '/LoremIpsum'
+      preLoaderRoute: typeof LoremIpsumIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/Login/': {
       id: '/Login/'
       path: '/Login'
@@ -180,6 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountIndexRoute: AccountIndexRoute,
   LicenseIndexRoute: LicenseIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
+  LoremIpsumIndexRoute: LoremIpsumIndexRoute,
   ReadmeIndexRoute: ReadmeIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
   AboutIndexRoute: AboutIndexRoute,

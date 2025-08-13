@@ -14,7 +14,7 @@ interface IFormInput {
   email: string
   pictureUrl?: string
   authProvider: AuthProviderEnum
-  oAuthId: string
+  oAuthId?: string
   accessToken?: string
   originalPage: string
   settings: string | null
@@ -23,6 +23,7 @@ interface IFormInput {
   location: string
   username: string
   password?: string
+  confirmPassword?: string
 }
 
 interface IRegistrationFormProps {
@@ -57,7 +58,7 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
   const MAX_LENGTH = { value: 20, message: 'No more than 20 characters' }
   const REGEX_PW_PATTERN =
     /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,16}$/gm
-  const REGEX_USERNAME_PATTERN = /^[a-z0-9](?:[a-z0-9._-]{1,}[a-z0-9])?$/gm
+  const REGEX_USERNAME_PATTERN = /^[a-zA-Z0-9_-]+$/gm
   const REGEX_NAME_PATTERN = /^[A-Za-zÀ-ÖØ-öø-ÿ]+([ '-.][A-Za-zÀ-ÖØ-öø-ÿ]+)*$/gm
 
   const [registerUser, { data, isLoading, isError, error }] =
@@ -73,54 +74,40 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
       newsletter: data.newsletter,
       terms: data.terms,
       location: data.location,
-      email: defaults.email,
+      email: defaults.email ?? data.email,
       auth_provider: defaults.authProvider,
-      o_auth_id: defaults.oAuthId.toString(),
+      o_auth_id: defaults.oAuthId?.toString(),
       access_token: defaults.accessToken,
       original_page: defaults.originalPage,
       settings: defaults.settings,
       pictureUrl: defaults.pictureUrl,
-      // o_auth_state: defaults.oAuthState,
     }
 
     console.log('payload', payload)
 
     const API = import.meta.env.VITE_API_URL || 'http://localhost:8000'
-    const res = await fetch(`${API}/user/auth/register`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      redirect: 'manual',
-    })
+    try {
+      const res = await fetch(`${API}/user/auth/register`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        redirect: 'manual',
+      })
 
-    // "redirectUrl": "/",
-    // "user": {
-    //     "id": 96,
-    //     "createdAt": "2025-08-04T20:22:26.527284",
-    //     "updatedAt": "2025-08-04T20:22:26.527291",
-    //     "email": "kevin.e.mccarthy1983@gmail.com",
-    //     "givenName": "Kevin",
-    //     "familyName": "McCarthy",
-    //     "username": "qfqfqefqefeq",
-    //     "externalUserId": "112573635607727600000",
-    //     "authProvider": "google",
-    //     "disabled": false,
-    //     "settings": null,
-    //     "pictureUrl": null
-    // }
-    console.log('entered status ')
-    const json_response = await res.json()
+      const json_response = await res.json()
 
-    const redirectTo = json_response.redirectUrl
-    if (redirectTo) {
-      // This is a real navigation, not an AJAX fetch.
-      void navigate({ to: redirectTo })
+      const redirectTo = json_response.redirectUrl
+      if (redirectTo) {
+        void navigate({ to: redirectTo })
+      }
+    } catch {
+      console.error('Encountered error', payload)
     }
 
     // handle JSON errors here…
   })
-
+  console.log('authprovider', defaults.authProvider)
   return (
     <form className='p-2' onSubmit={onSubmit} noValidate>
       <div className='max-w-[200px] flex gap-2'>
@@ -165,24 +152,59 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
           includeErrorSpace={true}
         />
         {defaults.authProvider === 'internal' && (
-          <InputField
-            {...register('password', {
-              required: {
-                value: passwordRequired,
-                message: 'Password is required',
-              },
-              minLength: { value: 8, message: 'At least 8 characters' },
-              maxLength: MAX_LENGTH,
-              pattern: {
-                value: REGEX_PW_PATTERN,
-                message:
-                  'Password must include at least one uppercase letter, one lowercase letter, one number and one special character',
-              },
-            })}
-            label={'Password'}
-            error={errors.password}
-            includeErrorSpace={true}
-          />
+          <>
+            {' '}
+            <InputField
+              {...register('password', {
+                required: {
+                  value: passwordRequired,
+                  message: 'Password is required',
+                },
+                minLength: { value: 8, message: 'At least 8 characters' },
+                maxLength: MAX_LENGTH,
+                pattern: {
+                  value: REGEX_PW_PATTERN,
+                  message:
+                    'Password must include at least one uppercase letter, one lowercase letter, one number and one special character',
+                },
+              })}
+              label={'Password'}
+              error={errors.password}
+              includeErrorSpace={true}
+              type={'password'}
+            />
+            <InputField
+              {...register('confirmPassword', {
+                required: {
+                  value: passwordRequired,
+                  message: 'Password is required',
+                },
+                minLength: { value: 8, message: 'At least 8 characters' },
+                maxLength: MAX_LENGTH,
+                pattern: {
+                  value: REGEX_PW_PATTERN,
+                  message:
+                    'Password must include at least one uppercase letter, one lowercase letter, one number and one special character',
+                },
+              })}
+              label={'Confirm Password'}
+              error={errors.password}
+              includeErrorSpace={true}
+              type={'password'}
+            />
+            <InputField
+              {...register('email', {
+                required: {
+                  value: passwordRequired,
+                  message: 'Email is required',
+                },
+              })}
+              label={'Email'}
+              error={errors.password}
+              includeErrorSpace={true}
+              type={'email'}
+            />
+          </>
         )}
       </div>
       <div>
