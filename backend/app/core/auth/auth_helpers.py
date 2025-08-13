@@ -52,8 +52,8 @@ class AuthHelpers:
             ) from e
 
     @staticmethod
-    def create_session_id() -> str:
-        return secrets.token_urlsafe(16)
+    def generate_secret_token(length=16) -> str:
+        return secrets.token_urlsafe(length)
 
     @staticmethod
     async def create_oauth_state(session_id: str, r_client: AsyncRedis) -> str:

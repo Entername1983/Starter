@@ -2,6 +2,7 @@ import ast
 from http.client import HTTPException
 from typing import Any
 
+from app.core.api.user import ConfirmEmailRequest
 from app.core.auth.auth_helpers import AuthHelpers, TokenPayload
 from app.core.auth.google import GoogleAuth, OAuthUserInfoSchema
 from app.core.dependencies.auth import GetGoogleAuth
@@ -199,6 +200,22 @@ class AuthService:
             path="/",
         )
 
+        ## c
+        email_token = AuthHelpers.generate_secret_token(32)
+        await r_client.set(new_user.email, f"email:confirmation:{email_token}")
+
+        return response
+
+    @staticmethod
+    async def confirm_email(
+        request: ConfirmEmailRequest, r_client: AsyncRedis, settings: AppSettings, db: AsyncSession
+    ) -> RedirectResponse:
+        stored_token = await r_client.get(request.email)
+        if stored_token != request.token:
+            raise Exception("Invalid tokens")
+        await UserService.mark_email_confirmed(request.email, db)
+        ## TODO: Send confirmation email has been confirmed
+        response = RedirectResponse(url="/")
         return response
 
     @staticmethod
@@ -251,7 +268,7 @@ class AuthService:
             and attached session id cookie
         """
         params: dict[str, str] = dict(request.query_params)
-        session_id = AuthHelpers.create_session_id()
+        session_id = AuthHelpers.generate_secret_token()
         oauth_state = await AuthHelpers.create_oauth_state(session_id, r_client)
         params["oAuthState"] = oauth_state
         auth_url = await google_auth.get_auth_url(params)
@@ -281,7 +298,7 @@ class AuthService:
         print("data", data)
         original_page = ast.literal_eval(state)["originalPage"]
         ## Creat
-        session_id = AuthHelpers.create_session_id()
+        session_id = AuthHelpers.generate_secret_token()
         await r_client.set(
             f"oauth:state:{new_user.auth_provider}-{new_user.o_auth_id}", session_id, ex=600
         )

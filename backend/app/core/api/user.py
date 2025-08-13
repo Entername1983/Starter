@@ -9,6 +9,7 @@ from app.dependencies import CurrentUser, GetDbAsync
 from app.services import UserService
 from fastapi import APIRouter, Request, Response
 from pydantic import BaseModel
+from pydantic.networks import EmailStr
 
 router = APIRouter(
     prefix="/user",
@@ -63,7 +64,19 @@ async def sign_in(
     Returns:
         _type_: _description_
     """
-    return await AuthService.sign_in(request, r_client, settings)
+    return await AuthService.sign_in(request, r_client, settings, db)
+
+
+class ConfirmEmailRequest(BaseModel):
+    token: str
+    email: EmailStr
+
+
+@router.get("/auth/confirm-email/", tags=["user"])
+async def confirm_email(
+    request: ConfirmEmailRequest, r_client: GetRedisAsync, settings: AppSettings, db: GetDbAsync
+):
+    return await AuthService.confirm_email(request, r_client, settings, db)
 
 
 @router.get("/auth/google_sign_in/", tags=["user"])

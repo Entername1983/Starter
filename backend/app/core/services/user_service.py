@@ -33,6 +33,15 @@ class UserService:
         return result.scalars().first()
 
     @staticmethod
+    async def mark_email_confirmed(email: str, db: AsyncSession):
+        result = await db.execute(select(User).filter_by(email=email))
+        user = result.scalars().first()
+        if user is None:
+            raise Exception("User not found")
+        user.email_confirmed = True
+        await db.commit()
+
+    @staticmethod
     async def get_user_by_username(username: str, db: AsyncSession) -> User | None:
         result = await db.execute(select(User).filter_by(username=username))
         return result.scalars().first()
