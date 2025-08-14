@@ -2,13 +2,13 @@
 # Base Stage
 FROM node:24-slim AS base-stage
 
-WORKDIR /code
+WORKDIR /app
 
 # Copy package.json and package-lock.json FIRST
 COPY package.json package-lock.json ./
 
-# Use npm ci for consistent installs
-RUN npm ci
+# Install dependencies with better network handling
+RUN npm ci --verbose
 
 # Copy the rest of the source code AFTER installing dependencies
 COPY . .
@@ -23,7 +23,7 @@ ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
 EXPOSE 5173
 
 # Start the React app in development mode
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
 
 
 
