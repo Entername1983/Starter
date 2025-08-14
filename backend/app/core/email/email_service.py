@@ -12,7 +12,7 @@ class EmailService:
         self.smtp_username = smtp_username
         self.smtp_password = smtp_password
         # Load pre-compiled HTML templates
-        self.jinja_env = Environment(loader=FileSystemLoader("templates/html"))
+        self.jinja_env = Environment(loader=FileSystemLoader("templates"))
 
     def render_html_template(self, template_name: str, **kwargs) -> str:
         """Render HTML template with variables using Jinja2"""

@@ -162,6 +162,13 @@ class Security(BSettings):
     token_secret_key: str = "default"
 
 
+class Email(BSettings):
+    SMTP_USERNAME: str
+    SMTP_PASSWORD: str
+    SMTP_SERVER: str = "smtp.gmail.com"
+    SMTP_PORT: int = 587
+
+
 class Settings(BaseSettings):
     app: App = App()  # type: ignore
     auth: Auth = Auth()  # type: ignore
@@ -171,3 +178,4 @@ class Settings(BaseSettings):
     redis: Redis = Redis()  # type: ignore
     s3: S3 = S3()
     security: Security = Security()
+    email: Email = Email()  # type: ignore

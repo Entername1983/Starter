@@ -1,15 +1,15 @@
 from app.core.auth.auth_service import AuthService
 from app.core.dependencies.auth import GetGoogleAuth
+from app.core.dependencies.email import GetEmailService
 from app.core.dependencies.redis import GetRedisAsync
 from app.core.dependencies.settings import AppSettings, get_settings
-from app.core.schemas.requests import SignUpRequest
+from app.core.schemas.requests import ConfirmEmailRequest, SignUpRequest
 from app.core.schemas.responses import RegistrationResponse
 from app.core.schemas.user import LogoutResponse, UserDataResponse
 from app.dependencies import CurrentUser, GetDbAsync
 from app.services import UserService
 from fastapi import APIRouter, Request, Response
 from pydantic import BaseModel
-from pydantic.networks import EmailStr
 
 router = APIRouter(
     prefix="/user",
@@ -67,16 +67,15 @@ async def sign_in(
     return await AuthService.sign_in(request, r_client, settings, db)
 
 
-class ConfirmEmailRequest(BaseModel):
-    token: str
-    email: EmailStr
-
-
 @router.get("/auth/confirm-email/", tags=["user"])
 async def confirm_email(
-    request: ConfirmEmailRequest, r_client: GetRedisAsync, settings: AppSettings, db: GetDbAsync
+    request: ConfirmEmailRequest,
+    r_client: GetRedisAsync,
+    settings: AppSettings,
+    db: GetDbAsync,
+    email_service: GetEmailService,
 ):
-    return await AuthService.confirm_email(request, r_client, settings, db)
+    return await AuthService.confirm_email(request, r_client, settings, db, email_service)
 
 
 @router.get("/auth/google_sign_in/", tags=["user"])

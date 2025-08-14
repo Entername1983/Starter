@@ -2,14 +2,14 @@ import ast
 from http.client import HTTPException
 from typing import Any
 
-from app.core.api.user import ConfirmEmailRequest
 from app.core.auth.auth_helpers import AuthHelpers, TokenPayload
 from app.core.auth.google import GoogleAuth, OAuthUserInfoSchema
 from app.core.dependencies.auth import GetGoogleAuth
 from app.core.dependencies.redis import AsyncRedis
 from app.core.dependencies.settings import AppSettings
+from app.core.email.email_service import EmailService
 from app.core.schemas import RegisterRedirectUrl, UserSchema
-from app.core.schemas.requests import SignUpRequest
+from app.core.schemas.requests import ConfirmEmailRequest, SignUpRequest
 from app.core.services.user_service import UserService
 from app.models import User
 from fastapi import Request
@@ -157,6 +157,7 @@ class AuthService:
         db: AsyncSession,
         r_client: AsyncRedis,
         request: Request,
+        email_service: EmailService,
     ) -> JSONResponse:
         if data.password is None:
             raise Exception("No password provided")
@@ -200,15 +201,21 @@ class AuthService:
             path="/",
         )
 
-        ## c
         email_token = AuthHelpers.generate_secret_token(32)
         await r_client.set(new_user.email, f"email:confirmation:{email_token}")
+        email_service.send_confirmation_email(
+            new_user.email, new_user.username, email_token, settings.app.frontend_url
+        )
 
         return response
 
     @staticmethod
     async def confirm_email(
-        request: ConfirmEmailRequest, r_client: AsyncRedis, settings: AppSettings, db: AsyncSession
+        request: ConfirmEmailRequest,
+        r_client: AsyncRedis,
+        settings: AppSettings,
+        db: AsyncSession,
+        email_service: EmailService,
     ) -> RedirectResponse:
         stored_token = await r_client.get(request.email)
         if stored_token != request.token:

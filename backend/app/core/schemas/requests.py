@@ -18,3 +18,8 @@ class SignUpRequest(BaseConfig):
     promo_code: str | None = None
     original_page: str | None = None
     settings: str | None = None
+
+
+class ConfirmEmailRequest(BaseConfig):
+    token: str
+    email: EmailStr
