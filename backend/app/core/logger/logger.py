@@ -1,5 +1,6 @@
 import logging
 import logging.config
+import os
 from pathlib import Path
 
 import yaml
@@ -18,8 +19,13 @@ CURRENT_DIR = Path(__file__).resolve().parent
 CONFIG_PATH = CURRENT_DIR / CONFIG_TO_USE
 
 
+LOG_DIR = os.getenv("LOG_DIR", "/app/logs")
+os.makedirs(LOG_DIR, exist_ok=True)
+
 with open(CONFIG_PATH, "r") as f:
     config = yaml.safe_load(f.read())
+    config["handlers"]["timed_file"]["filename"] = os.path.join(LOG_DIR, "app.log")
+
     logging.config.dictConfig(config)
 
 logger = logging.getLogger("app")
