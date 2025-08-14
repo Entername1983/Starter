@@ -7,17 +7,21 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
+      network: host
     container_name: st-backend
     restart: unless-stopped
     ports:
       - "8000:8000"
-
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     volumes:
       - ./backend:/app
       - backend_cache:/app/.cache
+      - /app/.venv
     networks:
       - network-1
-    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    # command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
   # React Frontend
   frontend:
