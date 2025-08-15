@@ -15,6 +15,7 @@ backend/.env
 backend/__pycache__/
 backend/backend.egg-info/*
 backend/secrets
+backend/logs/*
 *.pyc
 
 ## Frontend
