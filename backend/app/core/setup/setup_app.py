@@ -58,6 +58,10 @@ async def verify_redis_connection(redis_pool):
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     logger.info("Starting application lifespan")
+    if settings.app.environment == "development":
+        # pprint.pprint(settings.model_dump())
+        # print(WARNING_BANNER)
+        logger.info(settings.model_dump())
     app.state.db_async_engine, app.state.async_session_maker = setup_async_sessionmaker()
     await verify_db_connection(app.state.db_async_engine)
 
@@ -72,11 +76,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
 
     logger.info("STARTING APP...")
     # setup_payment_logger()
-
-    if settings.app.environment == "development":
-        # pprint.pprint(settings.model_dump())
-        # print(WARNING_BANNER)
-        logger.info(settings.model_dump())
 
     yield
 
