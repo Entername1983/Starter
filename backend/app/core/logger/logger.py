@@ -19,7 +19,7 @@ CURRENT_DIR = Path(__file__).resolve().parent
 CONFIG_PATH = CURRENT_DIR / CONFIG_TO_USE
 
 
-LOG_DIR = os.getenv("LOG_DIR", "/app/logs")
+LOG_DIR = os.getenv("LOG_DIR", str(Path(__file__).resolve().parent.parent.parent / "logs"))
 os.makedirs(LOG_DIR, exist_ok=True)
 
 with open(CONFIG_PATH, "r") as f:

@@ -57,17 +57,6 @@ class App(BSettings):
     secret_key: str
 
 
-class GoogleAuth(BSettings):
-    client_id: str
-    client_secret: str = Field(validation_alias="google_client_secret")
-    project_id: str
-    auth_provider_x509_cert_url: str
-    redirect_uris: list[str]
-    auth_uri: str
-    token_uri: str
-    javascript_origins: str
-
-
 class Auth(BSettings):
     access_token_expire_minutes: int = 1440
     algorithm: str = "HS256"
@@ -80,6 +69,23 @@ class Auth(BSettings):
     secure: bool = True
     domain: str = "localhost"
     secret_key: str | None = None
+    google_client_id: str
+    google_project_id: str
+    google_auth_uri: str = "https://accounts.google.com/o/oauth2/auth"
+    google_token_uri: str = "https://oauth2.googleapis.com/token"
+    google_auth_provider_x509_cert_url: str = "https://www.googleapis.com/oauth2/v1/certs"
+    google_client_secret: str
+    google_redirect_uris: list[str] = ["http://localhost:8000/user/auth/callback"]
+    google_javascript_origins: list[str] = ["http://localhost:8000", "http://localhost:5173"]
+    google_auth_scopes: list[str] = [
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/drive.metadata.readonly",
+        "https://www.googleapis.com/auth/calendar.readonly",
+        "openid",
+    ]
+    google_auth_req_api: str = "https://www.googleapis.com/oauth2/v2/userinfo"
+
     # google_auth_client_id: str
     # google_auth_secret: str
     # google_auth_callback_redirect_slug: str
@@ -113,7 +119,7 @@ class Db(BSettings):
     POSTGRES_DB: str
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
-    db_host: str = "localhost"
+    db_host: str = "postgres"
     db_port: int = 5432
     engine_options: dict[str, int] = {
         "pool_recycle": 299,
@@ -138,7 +144,7 @@ class Db(BSettings):
 
 class Redis(BSettings):
     redis_password: str
-    redis_host: str
+    redis_host: str = "localhost"
     redis_port: str
     redis_max_connections: int = 20
     redis_socket_connection_timout: int = 10

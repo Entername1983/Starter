@@ -1,10 +1,10 @@
 import json
-from pathlib import Path
 from typing import cast
 from urllib.parse import urlencode
 
 import google_auth_oauthlib.flow
 import httpx
+from app.core.dependencies.settings import get_settings
 from app.core.schemas.user import (
     AuthProviderEnum,
     GoogleAuthWebClientConfig,
@@ -14,42 +14,38 @@ from app.core.schemas.user import (
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 
-CURRENT_DIR = Path(__file__).resolve().parent.parent.parent.parent
-
-FILENAME = "google_auth_secret_file.json"
-GOOGLE_SECRET_FILE = CURRENT_DIR / "secrets" / FILENAME
-
-# TODO: moves scopes to a config file
-GOOGLE_AUTH_SCOPES = [
-    "https://www.googleapis.com/auth/userinfo.profile",
-    "https://www.googleapis.com/auth/userinfo.email",
-    "https://www.googleapis.com/auth/drive.metadata.readonly",
-    "https://www.googleapis.com/auth/calendar.readonly",
-    "openid",
-]
-
 # GOOGLE_REDIRECT_URI = "http://localhost:8000/user/auth/callback"
-GOOGLE_AUTH_REQ_API = "https://www.googleapis.com/oauth2/v2/userinfo"
+
+settings = get_settings()
 
 
 class GoogleAuth:
     def __init__(
         self,
-        client_secret_path: Path = GOOGLE_SECRET_FILE,
-        scopes: list[str] = GOOGLE_AUTH_SCOPES,
     ):
-        self.scopes = scopes
+        self.scopes = settings.auth.google_auth_scopes
         self.redirect_uri = None
+        self.google_auth_req_api = settings.auth.google_auth_req_api
+        self.config = {
+            "web": {
+                "client_id": settings.auth.google_client_id,
+                "project_id": settings.auth.google_project_id,
+                "auth_uri": settings.auth.google_auth_uri,
+                "token_uri": settings.auth.google_token_uri,
+                "auth_provider_x509_cert_url": settings.auth.google_auth_provider_x509_cert_url,
+                "client_secret": settings.auth.google_client_secret,
+                "redirect_uris": settings.auth.google_redirect_uris,
+                "javascript_origins": settings.auth.google_javascript_origins,
+            }
+        }
 
-        with open(client_secret_path, "r") as f:
-            config = json.load(f)
-            validated = GoogleAuthWebClientConfig.model_validate(config)
-
-            self.redirect_uri = validated.web.redirect_uris[0]
+        self.redirect_uri = GoogleAuthWebClientConfig.model_validate(self.config).web.redirect_uris[
+            0
+        ]
 
         self.flow: Flow = google_auth_oauthlib.flow.Flow.from_client_config(  # type:ignore
-            config,
-            scopes=scopes,
+            self.config,
+            scopes=self.scopes,
         )
         self.flow.redirect_uri = self.redirect_uri  # type:ignore
 
@@ -74,7 +70,7 @@ class GoogleAuth:
         print(access_token)
         async with httpx.AsyncClient() as client:
             raw_bytes = await client.get(
-                GOOGLE_AUTH_REQ_API,
+                self.google_auth_req_api,
                 headers={"Authorization": f"Bearer {access_token}"},
             )
         return json.loads(raw_bytes.content.decode("utf-8"))

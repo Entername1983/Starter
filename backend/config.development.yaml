@@ -48,7 +48,7 @@ auto_commit: false
 auto_flush: false
 
 # ───── Redis Settings ─────
-redis_host: localhost
+redis_host: redis
 redis_port: "6378"
 redis_max_connections: 20
 redis_socket_connection_timeout: 10
@@ -61,3 +61,7 @@ s3_default_region: eu-north-1
 s3_logging_level: ERROR
 s3_uri: s3://my-bucket
 s3_bucket: my-bucket
+
+
+smtp_server: smtp.gmail.com
+smtp_port: 587

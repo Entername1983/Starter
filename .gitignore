@@ -26,6 +26,8 @@ frontend/.dist
 frontend/.dist-ssr
 frontend/.*.local
 frontend/.count.txt
-frontend/..env
-frontend/..nitro
-frontend/..tanstack
+frontend/.env
+frontend/.nitro
+frontend/.tanstack
+
+postgres_data

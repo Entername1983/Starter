@@ -1,0 +1,168 @@
+{
+  "level": "ERROR",
+  "time": "2025-08-15 10:51:02,141",
+  "name": "app",
+  "message": "Migration error: No 'script_location' key found in configuration."
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 10:51:45,098",
+  "name": "app",
+  "message": "Migration error: No 'script_location' key found in configuration."
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 10:53:12,020",
+  "name": "app",
+  "message": "Migration error: No 'script_location' key found in configuration."
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 10:53:25,760",
+  "name": "app",
+  "message": "Migration error: No 'script_location' key found in configuration."
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 10:53:31,313",
+  "name": "app",
+  "message": "Migration error: No 'script_location' key found in configuration."
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 10:56:04,053",
+  "name": "app",
+  "message": "Migration error: No 'script_location' key found in configuration."
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 10:56:10,228",
+  "name": "app",
+  "message": "Migration error: No 'script_location' key found in configuration."
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 10:56:48,551",
+  "name": "app",
+  "message": "Migration error: No 'script_location' key found in configuration."
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 10:58:15,841",
+  "name": "app",
+  "message": "Migration error: Source contains parsing errors: PosixPath('pyproject.toml')\n\t[line 23]: ']\\n'"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 10:58:27,274",
+  "name": "app",
+  "message": "Migration error: Source contains parsing errors: PosixPath('pyproject.toml')\n\t[line 23]: ']\\n'"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 11:10:01,408",
+  "name": "app",
+  "message": "Migration error: Source contains parsing errors: PosixPath('/mnt/dev_drive/Repos/Base/backend/pyproject.toml')\n\t[line 23]: ']\\n'"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 11:10:17,208",
+  "name": "app",
+  "message": "Migration error: Source contains parsing errors: PosixPath('/mnt/dev_drive/Repos/Base/backend/pyproject.toml')\n\t[line 23]: ']\\n'"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 11:10:32,971",
+  "name": "app",
+  "message": "Migration error: Source contains parsing errors: PosixPath('/mnt/dev_drive/Repos/Base/backend/pyproject.toml')\n\t[line 23]: ']\\n'"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 11:10:38,236",
+  "name": "app",
+  "message": "Migration error: Source contains parsing errors: PosixPath('/mnt/dev_drive/Repos/Base/backend/pyproject.toml')\n\t[line 23]: ']\\n'"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 13:56:19,805",
+  "name": "app",
+  "message": "Migration error: [Errno 111] Connection refused"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 14:02:29,755",
+  "name": "app",
+  "message": "Migration error: [Errno 111] Connection refused"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 14:03:17,150",
+  "name": "app",
+  "message": "Migration error: [Errno 111] Connection refused"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 14:04:16,463",
+  "name": "app",
+  "message": "Migration error: [Errno 111] Connection refused"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 14:06:40,432",
+  "name": "app",
+  "message": "Migration error: [Errno 111] Connection refused"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 14:09:06,667",
+  "name": "app",
+  "message": "Migration error: [Errno 111] Connection refused"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 14:10:53,329",
+  "name": "app",
+  "message": "Migration error: [Errno 111] Connection refused"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 14:11:56,544",
+  "name": "app",
+  "message": "Migration error: [Errno 111] Connection refused"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 14:12:23,033",
+  "name": "app",
+  "message": "Migration error: [Errno 111] Connection refused"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 14:12:35,910",
+  "name": "app",
+  "message": "Migration error: [Errno 111] Connection refused"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 14:13:38,776",
+  "name": "app",
+  "message": "Migration error: [Errno 111] Connection refused"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 14:13:50,041",
+  "name": "app",
+  "message": "Migration error: [Errno 111] Connection refused"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 14:15:00,186",
+  "name": "app",
+  "message": "Migration error: [Errno -2] Name or service not known"
+}
+{
+  "level": "ERROR",
+  "time": "2025-08-15 14:15:08,243",
+  "name": "app",
+  "message": "Migration error: [Errno -2] Name or service not known"
+}
