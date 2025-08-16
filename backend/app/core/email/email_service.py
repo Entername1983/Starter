@@ -12,7 +12,7 @@ class EmailService:
         self.smtp_username = smtp_username
         self.smtp_password = smtp_password
         # Load pre-compiled HTML templates
-        self.jinja_env = Environment(loader=FileSystemLoader("templates"))
+        self.jinja_env = Environment(loader=FileSystemLoader("app/core/email/templates"))
 
     def render_html_template(self, template_name: str, **kwargs) -> str:
         """Render HTML template with variables using Jinja2"""
@@ -40,15 +40,29 @@ class EmailService:
         self, to_email: str, username: str, confirmation_token: str, base_url: str
     ):
         """Send email confirmation using pre-compiled HTML template"""
-        confirmation_link = f"{base_url}/confirm-email?token={confirmation_token}"
+        confirmation_link = f"{base_url}/confirm-email?token={confirmation_token}&email={to_email}"
 
         html_content = self.render_html_template(
-            "email_confirmation.html",
+            "confirm_email.html",
             username=username,
             confirmation_link=confirmation_link,
             project_name="Your App Name",
         )
 
+        self.send_email(
+            to_email=to_email,
+            subject="Please confirm your email address",
+            html_content=html_content,
+        )
+
+    ##TODO: Implement welcome email
+    def send_welcome_email(self, to_email: str, username: str):
+        print(f"Send welcome email not yet implemented {to_email}, {username}")
+        html_content = self.render_html_template(
+            "welcome_email.html",
+            username=username,
+            project_name="Your App Name",
+        )
         self.send_email(
             to_email=to_email,
             subject="Please confirm your email address",

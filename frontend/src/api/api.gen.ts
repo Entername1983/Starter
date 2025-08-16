@@ -25,6 +25,16 @@ const injectedRtkApi = api
         }),
         invalidatesTags: ["user", "user"],
       }),
+      confirmEmail: build.mutation<ConfirmEmailApiResponse, ConfirmEmailApiArg>(
+        {
+          query: (queryArg) => ({
+            url: `/user/auth/confirm-email/`,
+            method: "POST",
+            body: queryArg.confirmEmailRequest,
+          }),
+          invalidatesTags: ["user", "user"],
+        },
+      ),
       signInWithGoogle: build.query<
         SignInWithGoogleApiResponse,
         SignInWithGoogleApiArg
@@ -71,6 +81,11 @@ export type LogoutUserApiArg = void;
 export type SignInApiResponse = /** status 200 Successful Response */ any;
 export type SignInApiArg = {
   internalSigninRequest: InternalSigninRequest;
+};
+export type ConfirmEmailApiResponse =
+  /** status 200 Successful Response */ ConfirmEmailResponse;
+export type ConfirmEmailApiArg = {
+  confirmEmailRequest: ConfirmEmailRequest;
 };
 export type SignInWithGoogleApiResponse =
   /** status 200 Successful Response */ any;
@@ -134,6 +149,13 @@ export type InternalSigninRequest = {
   password: string;
   originalPage: string;
 };
+export type ConfirmEmailResponse = {
+  confirmed: boolean;
+};
+export type ConfirmEmailRequest = {
+  token: string;
+  email: string;
+};
 export type RegistrationResponse = {
   redirectUrl?: string;
   user: UserSchema;
@@ -161,6 +183,7 @@ export const {
   useCheckUserStatusQuery,
   useLogoutUserMutation,
   useSignInMutation,
+  useConfirmEmailMutation,
   useSignInWithGoogleQuery,
   useAuthCallbackQuery,
   useRegisterMutation,

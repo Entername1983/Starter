@@ -75,6 +75,7 @@ export const InputField: React.FC<IInputField> = ({
     inputStyle ?? 'px-2 py-1 border-[1px] rounded-lg'
   const updatedErrorClassName = errorStyle ?? 'text-red-500 '
 
+  //TODO: Improve location of error messages
   return (
     <div className={updatedStyle}>
       {label && (
@@ -101,11 +102,15 @@ export const InputField: React.FC<IInputField> = ({
         max={max}
         maxLength={maxLength}
         minLength={minLength}
-        className={updatedInputClassName}
+        className={` ${updatedInputClassName} relative`}
       />
       {includeErrorSpace && (
-        <div className='h-10 '>
-          {error && <p className={updatedErrorClassName}>{error.message}</p>}
+        <div className=' '>
+          {error && (
+            <p className={`${updatedErrorClassName} h-10 absolute top-20 `}>
+              {error.message}
+            </p>
+          )}
         </div>
       )}
     </div>

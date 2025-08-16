@@ -1,14 +1,16 @@
-import { LoginInternalButton } from '@components/Common/Button/LoginInternalButton'
 import { LoginWithGoogleButton } from '@components/Common/Button/LoginWithGoogleButton'
 import type React from 'react'
+
+import { LoginForm } from './LoginForm'
 
 interface LoginModalContentProps {}
 
 const LoginModalContent: React.FC<LoginModalContentProps> = ({}) => {
   return (
     <div>
+      <LoginForm />
+
       <LoginWithGoogleButton />
-      <LoginInternalButton />
     </div>
   )
 }

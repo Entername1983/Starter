@@ -1,4 +1,8 @@
-import { useLogoutUserMutation } from '@api/api.gen'
+import {
+  useConfirmEmailMutation,
+  useLogoutUserMutation,
+  useSignInMutation,
+} from '@api/api.gen'
 import type { SerializedError } from '@reduxjs/toolkit'
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
@@ -14,18 +18,28 @@ interface IUseAuth {
   isLoading: boolean
   error?: FetchBaseQueryError | SerializedError | undefined
   handleGoogleSignIn: () => void
-  handleInternalSignIn: () => void
   onLogout: () => Promise<void>
   isLoggingOutLoading: boolean
+  signIn: ReturnType<typeof useSignInMutation>[0]
+  signInError: FetchBaseQueryError | SerializedError | undefined
+  confirmEmail: ReturnType<typeof useConfirmEmailMutation>[0]
+  confirmEmailIsLoading: boolean
+  confirmEmailError: FetchBaseQueryError | SerializedError | undefined
 }
 
 const useUser = (): IUseAuth => {
   const user = useAppSelector((state: IRootState) => state.user.user)
   const dispatch = useAppDispatch()
   const location = useLocation()
+  const [signIn, { error: signInError }] = useSignInMutation()
 
   const [logoutUser, { isLoading: isLoggingOutLoading }] =
     useLogoutUserMutation()
+
+  const [
+    confirmEmail,
+    { isLoading: confirmEmailIsLoading, error: confirmEmailError },
+  ] = useConfirmEmailMutation()
 
   const { currentData, error, isLoading } = useCheckUserStatusQuery(undefined, {
     skip: !!user,
@@ -46,13 +60,8 @@ const useUser = (): IUseAuth => {
     window.location.href = `${import.meta.env.VITE_API_URL}/user/auth/google_sign_in?originalPage=${redirectBack}`
   }
 
-  const handleInternalSignIn = () => {
-    console.log('handling internal sign in')
-  }
-
   const onLogout = async () => {
     try {
-      console.log('logging out user')
       await logoutUser().unwrap()
     } finally {
       void dispatch(setUser(null))
@@ -66,7 +75,11 @@ const useUser = (): IUseAuth => {
     isLoading,
     isLoggingOutLoading,
     error,
-    handleInternalSignIn,
+    signIn,
+    signInError,
+    confirmEmail,
+    confirmEmailError,
+    confirmEmailIsLoading,
   }
 }
 

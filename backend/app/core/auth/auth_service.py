@@ -5,11 +5,13 @@ from typing import Any
 from app.core.auth.auth_helpers import AuthHelpers, TokenPayload
 from app.core.auth.google import GoogleAuth, OAuthUserInfoSchema
 from app.core.dependencies.auth import GetGoogleAuth
+from app.core.dependencies.email import GetEmailService
 from app.core.dependencies.redis import AsyncRedis
 from app.core.dependencies.settings import AppSettings
 from app.core.email.email_service import EmailService
 from app.core.schemas import RegisterRedirectUrl, UserSchema
 from app.core.schemas.requests import ConfirmEmailRequest, SignUpRequest
+from app.core.schemas.responses import ConfirmEmailResponse
 from app.core.services.user_service import UserService
 from app.models import User
 from fastapi import Request
@@ -89,6 +91,7 @@ class AuthService:
         db: AsyncSession,
         r_client: AsyncRedis,
         request: Request,
+        email_service: GetEmailService,
     ) -> JSONResponse:
         """Receives the registration form data and creates a new user
 
@@ -103,7 +106,9 @@ class AuthService:
             an attached cookie containing the access_token.
         """
         if data.auth_provider == "internal":
-            return await AuthService.register_internal_user(data, settings, db, r_client, request)
+            return await AuthService.register_internal_user(
+                data, settings, db, r_client, request, email_service
+            )
         session_id = request.cookies.get("provider_id")
         if session_id is None:
             raise HTTPException("No provider id")
@@ -216,13 +221,13 @@ class AuthService:
         settings: AppSettings,
         db: AsyncSession,
         email_service: EmailService,
-    ) -> RedirectResponse:
+    ) -> ConfirmEmailResponse:
         stored_token = await r_client.get(request.email)
         if stored_token != request.token:
             raise Exception("Invalid tokens")
         await UserService.mark_email_confirmed(request.email, db)
         ## TODO: Send confirmation email has been confirmed
-        response = RedirectResponse(url="/")
+        response = ConfirmEmailResponse(confirmed=True)
         return response
 
     @staticmethod

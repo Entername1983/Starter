@@ -4,7 +4,7 @@ from app.core.dependencies.email import GetEmailService
 from app.core.dependencies.redis import GetRedisAsync
 from app.core.dependencies.settings import AppSettings, get_settings
 from app.core.schemas.requests import ConfirmEmailRequest, SignUpRequest
-from app.core.schemas.responses import RegistrationResponse
+from app.core.schemas.responses import ConfirmEmailResponse, RegistrationResponse
 from app.core.schemas.user import LogoutResponse, UserDataResponse
 from app.dependencies import CurrentUser, GetDbAsync
 from app.services import UserService
@@ -67,7 +67,7 @@ async def sign_in(
     return await AuthService.sign_in(request, r_client, settings, db)
 
 
-@router.get("/auth/confirm-email/", tags=["user"])
+@router.post("/auth/confirm-email/", tags=["user"], response_model=ConfirmEmailResponse)
 async def confirm_email(
     request: ConfirmEmailRequest,
     r_client: GetRedisAsync,
@@ -146,6 +146,7 @@ async def register(
     settings: AppSettings,
     db: GetDbAsync,
     r_client: GetRedisAsync,
+    email_service: GetEmailService,
 ):
     """
     Args:
@@ -159,7 +160,7 @@ async def register(
         with an access token used for authentification.
     """
 
-    return await AuthService.register_user(data, settings, db, r_client, request)
+    return await AuthService.register_user(data, settings, db, r_client, request, email_service)
 
 
 # "redirectUrl": "/",

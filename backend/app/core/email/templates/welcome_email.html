@@ -4,7 +4,7 @@
   xmlns:v="urn:schemas-microsoft-com:vml"
   xmlns:o="urn:schemas-microsoft-com:office:office">
   <head>
-    <title>Confirm Your Email - {{ project_name }}</title>
+    <title>Welcome to {{ project_name }}</title>
     <!--[if !mso]><!-->
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!--<![endif]-->
@@ -222,7 +222,29 @@
                               text-align: center;
                               color: #0f172a;
                             ">
-                            Confirm Your Email
+                            Welcome to {{ project_name }}!
+                          </div>
+                        </td>
+                      </tr>
+
+                      <!-- Personal greeting -->
+                      <tr>
+                        <td
+                          align="center"
+                          style="
+                            font-size: 0px;
+                            padding: 0 20px 20px;
+                            word-break: break-word;
+                          ">
+                          <div
+                            style="
+                              font-family: Inter, Arial, sans-serif;
+                              font-size: 18px;
+                              line-height: 24px;
+                              text-align: center;
+                              color: #334155;
+                            ">
+                            Hi {{ username }},
                           </div>
                         </td>
                       </tr>
@@ -244,14 +266,13 @@
                               text-align: center;
                               color: #64748b;
                             ">
-                            Thank you for joining {{ project_name }}. To
-                            complete your registration and start using your
-                            account, please confirm your email address.
+                            Thank you for joining {{ project_name }}! We're excited to have you on board. 
+                            Your account is now active and ready to use.
                           </div>
                         </td>
                       </tr>
 
-                      <!-- Confirmation Button -->
+                      <!-- Get Started Button -->
                       <tr>
                         <td
                           align="center"
@@ -284,7 +305,7 @@
                                 "
                                 valign="middle">
                                 <a
-                                  href="{{ confirmation_link }}"
+                                  href="{{ dashboard_link }}"
                                   style="
                                     display: inline-block;
                                     background: #3b82f6;
@@ -301,64 +322,11 @@
                                     border-radius: 8px;
                                   "
                                   target="_blank">
-                                  Confirm Email Address
+                                  Get Started
                                 </a>
                               </td>
                             </tr>
                           </table>
-                        </td>
-                      </tr>
-
-                      <!-- Alternative Link Text -->
-                      <tr>
-                        <td
-                          align="center"
-                          style="
-                            font-size: 0px;
-                            padding: 30px 20px 0;
-                            word-break: break-word;
-                          ">
-                          <div
-                            style="
-                              font-family: Inter, Arial, sans-serif;
-                              font-size: 14px;
-                              line-height: 1;
-                              text-align: center;
-                              color: #64748b;
-                            ">
-                            If the button doesn't work, you can also click this
-                            link:
-                          </div>
-                        </td>
-                      </tr>
-
-                      <!-- Alternative Link -->
-                      <tr>
-                        <td
-                          align="center"
-                          style="
-                            font-size: 0px;
-                            padding: 10px 20px 0;
-                            word-break: break-word;
-                          ">
-                          <div
-                            style="
-                              font-family: Inter, Arial, sans-serif;
-                              font-size: 14px;
-                              line-height: 1;
-                              text-align: center;
-                              color: #000000;
-                            ">
-                            <a
-                              href="{{ confirmation_link }}"
-                              style="
-                                color: #3b82f6;
-                                text-decoration: none;
-                                word-break: break-all;
-                              "
-                              >{{ confirmation_link }}</a
-                            >
-                          </div>
                         </td>
                       </tr>
 
@@ -380,7 +348,7 @@
                         </td>
                       </tr>
 
-                      <!-- Security Notice -->
+                      <!-- Additional Info -->
                       <tr>
                         <td
                           align="center"
@@ -393,14 +361,12 @@
                             style="
                               font-family: Inter, Arial, sans-serif;
                               font-size: 14px;
-                              line-height: 1;
+                              line-height: 20px;
                               text-align: center;
                               color: #64748b;
                             ">
-                            <strong>Security Notice:</strong> This confirmation
-                            link will expire in 24 hours. If you didn't create
-                            an account with {{ project_name }}, you can safely
-                            ignore this email.
+                            If you have any questions or need help getting started, 
+                            feel free to reach out to our support team.
                           </div>
                         </td>
                       </tr>
@@ -471,7 +437,7 @@
                               text-align: center;
                               color: #64748b;
                             ">
-                            Â© {{ project_name }}. All rights reserved.
+                            © {{ project_name }}. All rights reserved.
                           </div>
                         </td>
                       </tr>

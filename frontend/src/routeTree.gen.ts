@@ -12,10 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutIndexRouteImport } from './routes/about/index'
 import { Route as RegisterIndexRouteImport } from './routes/Register/index'
+import { Route as RecoverPasswordIndexRouteImport } from './routes/RecoverPassword/index'
 import { Route as ReadmeIndexRouteImport } from './routes/Readme/index'
 import { Route as LoremIpsumIndexRouteImport } from './routes/LoremIpsum/index'
 import { Route as LoginIndexRouteImport } from './routes/Login/index'
 import { Route as LicenseIndexRouteImport } from './routes/License/index'
+import { Route as ConfirmEmailIndexRouteImport } from './routes/Confirm-email/index'
 import { Route as AccountIndexRouteImport } from './routes/Account/index'
 
 const IndexRoute = IndexRouteImport.update({
@@ -31,6 +33,11 @@ const AboutIndexRoute = AboutIndexRouteImport.update({
 const RegisterIndexRoute = RegisterIndexRouteImport.update({
   id: '/Register/',
   path: '/Register/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecoverPasswordIndexRoute = RecoverPasswordIndexRouteImport.update({
+  id: '/RecoverPassword/',
+  path: '/RecoverPassword/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReadmeIndexRoute = ReadmeIndexRouteImport.update({
@@ -53,6 +60,11 @@ const LicenseIndexRoute = LicenseIndexRouteImport.update({
   path: '/License/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConfirmEmailIndexRoute = ConfirmEmailIndexRouteImport.update({
+  id: '/Confirm-email/',
+  path: '/Confirm-email/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccountIndexRoute = AccountIndexRouteImport.update({
   id: '/Account/',
   path: '/Account/',
@@ -62,20 +74,24 @@ const AccountIndexRoute = AccountIndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/Account': typeof AccountIndexRoute
+  '/Confirm-email': typeof ConfirmEmailIndexRoute
   '/License': typeof LicenseIndexRoute
   '/Login': typeof LoginIndexRoute
   '/LoremIpsum': typeof LoremIpsumIndexRoute
   '/Readme': typeof ReadmeIndexRoute
+  '/RecoverPassword': typeof RecoverPasswordIndexRoute
   '/Register': typeof RegisterIndexRoute
   '/about': typeof AboutIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/Account': typeof AccountIndexRoute
+  '/Confirm-email': typeof ConfirmEmailIndexRoute
   '/License': typeof LicenseIndexRoute
   '/Login': typeof LoginIndexRoute
   '/LoremIpsum': typeof LoremIpsumIndexRoute
   '/Readme': typeof ReadmeIndexRoute
+  '/RecoverPassword': typeof RecoverPasswordIndexRoute
   '/Register': typeof RegisterIndexRoute
   '/about': typeof AboutIndexRoute
 }
@@ -83,10 +99,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/Account/': typeof AccountIndexRoute
+  '/Confirm-email/': typeof ConfirmEmailIndexRoute
   '/License/': typeof LicenseIndexRoute
   '/Login/': typeof LoginIndexRoute
   '/LoremIpsum/': typeof LoremIpsumIndexRoute
   '/Readme/': typeof ReadmeIndexRoute
+  '/RecoverPassword/': typeof RecoverPasswordIndexRoute
   '/Register/': typeof RegisterIndexRoute
   '/about/': typeof AboutIndexRoute
 }
@@ -95,30 +113,36 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/Account'
+    | '/Confirm-email'
     | '/License'
     | '/Login'
     | '/LoremIpsum'
     | '/Readme'
+    | '/RecoverPassword'
     | '/Register'
     | '/about'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/Account'
+    | '/Confirm-email'
     | '/License'
     | '/Login'
     | '/LoremIpsum'
     | '/Readme'
+    | '/RecoverPassword'
     | '/Register'
     | '/about'
   id:
     | '__root__'
     | '/'
     | '/Account/'
+    | '/Confirm-email/'
     | '/License/'
     | '/Login/'
     | '/LoremIpsum/'
     | '/Readme/'
+    | '/RecoverPassword/'
     | '/Register/'
     | '/about/'
   fileRoutesById: FileRoutesById
@@ -126,10 +150,12 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountIndexRoute: typeof AccountIndexRoute
+  ConfirmEmailIndexRoute: typeof ConfirmEmailIndexRoute
   LicenseIndexRoute: typeof LicenseIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
   LoremIpsumIndexRoute: typeof LoremIpsumIndexRoute
   ReadmeIndexRoute: typeof ReadmeIndexRoute
+  RecoverPasswordIndexRoute: typeof RecoverPasswordIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
   AboutIndexRoute: typeof AboutIndexRoute
 }
@@ -155,6 +181,13 @@ declare module '@tanstack/react-router' {
       path: '/Register'
       fullPath: '/Register'
       preLoaderRoute: typeof RegisterIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/RecoverPassword/': {
+      id: '/RecoverPassword/'
+      path: '/RecoverPassword'
+      fullPath: '/RecoverPassword'
+      preLoaderRoute: typeof RecoverPasswordIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/Readme/': {
@@ -185,6 +218,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LicenseIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/Confirm-email/': {
+      id: '/Confirm-email/'
+      path: '/Confirm-email'
+      fullPath: '/Confirm-email'
+      preLoaderRoute: typeof ConfirmEmailIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/Account/': {
       id: '/Account/'
       path: '/Account'
@@ -198,10 +238,12 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountIndexRoute: AccountIndexRoute,
+  ConfirmEmailIndexRoute: ConfirmEmailIndexRoute,
   LicenseIndexRoute: LicenseIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
   LoremIpsumIndexRoute: LoremIpsumIndexRoute,
   ReadmeIndexRoute: ReadmeIndexRoute,
+  RecoverPasswordIndexRoute: RecoverPasswordIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
   AboutIndexRoute: AboutIndexRoute,
 }

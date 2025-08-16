@@ -1,8 +1,14 @@
-import { useRegisterMutation, type AuthProviderEnum } from '@api/api.gen'
+import { type AuthProviderEnum } from '@api/api.gen'
 import { Checkbox } from '@components/Inputs/Checkbox'
 import { Dropdown } from '@components/Inputs/Dropdown'
 import { InputField } from '@components/Inputs/Input'
 import { useNavigate } from '@tanstack/react-router'
+import {
+  REGEX_NAME_PATTERN,
+  REGEX_PW_PATTERN,
+  REGEX_USERNAME_PATTERN,
+} from '@utils/regex'
+import { MAX_LENGTH, MIN_LENGTH } from '@utils/validation'
 import type React from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -39,9 +45,9 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
   } = useForm<IFormInput>({
     mode: 'onBlur',
     defaultValues: {
-      givenName: defaults.givenName,
-      familyName: defaults.familyName,
-      email: defaults.email,
+      givenName: defaults.givenName ?? '',
+      familyName: defaults.familyName ?? '',
+      email: defaults.email ?? '',
     },
   })
   const navigate = useNavigate()
@@ -54,18 +60,11 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
     { label: 'Mars', value: 'mars' },
     { label: 'Earth', value: 'earth' },
   ]
-  const MIN_LENGTH = { value: 2, message: 'At least 2 characters' }
-  const MAX_LENGTH = { value: 20, message: 'No more than 20 characters' }
-  const REGEX_PW_PATTERN =
-    /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,16}$/gm
-  const REGEX_USERNAME_PATTERN = /^[a-zA-Z0-9_-]+$/gm
-  const REGEX_NAME_PATTERN = /^[A-Za-zÀ-ÖØ-öø-ÿ]+([ '-.][A-Za-zÀ-ÖØ-öø-ÿ]+)*$/gm
 
-  const [registerUser, { data, isLoading, isError, error }] =
-    useRegisterMutation()
+  // const [registerUser, { data, isLoading, isError, error }] =
+  //   useRegisterMutation()
 
-  const onSubmit = handleSubmit(async data => {
-    console.log('defaults', defaults)
+  const onSubmit = handleSubmit(async (data: IFormInput) => {
     const payload = {
       given_name: data.givenName,
       family_name: data.familyName,
@@ -107,9 +106,13 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
 
     // handle JSON errors here…
   })
-  console.log('authprovider', defaults.authProvider)
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    void onSubmit(e)
+  }
   return (
-    <form className='p-2' onSubmit={onSubmit} noValidate>
+    <form className='p-2' onSubmit={handleFormSubmit} noValidate>
       <div className='max-w-[200px] flex gap-2'>
         <InputField
           {...register('givenName', {
@@ -188,7 +191,7 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
                 },
               })}
               label={'Confirm Password'}
-              error={errors.password}
+              error={errors.confirmPassword}
               includeErrorSpace={true}
               type={'password'}
             />
@@ -200,7 +203,7 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
                 },
               })}
               label={'Email'}
-              error={errors.password}
+              error={errors.email}
               includeErrorSpace={true}
               type={'email'}
             />
