@@ -11,6 +11,7 @@ class EmailService:
         self.smtp_port = smtp_port
         self.smtp_username = smtp_username
         self.smtp_password = smtp_password
+        self.project_name = "Starter kit"
         # Load pre-compiled HTML templates
         self.jinja_env = Environment(loader=FileSystemLoader("app/core/email/templates"))
 
@@ -46,7 +47,7 @@ class EmailService:
             "confirm_email.html",
             username=username,
             confirmation_link=confirmation_link,
-            project_name="Your App Name",
+            project_name=self.project_name,
         )
 
         self.send_email(
@@ -55,13 +56,12 @@ class EmailService:
             html_content=html_content,
         )
 
-    ##TODO: Implement welcome email
     def send_welcome_email(self, to_email: str, username: str):
         print(f"Send welcome email not yet implemented {to_email}, {username}")
         html_content = self.render_html_template(
             "welcome_email.html",
             username=username,
-            project_name="Your App Name",
+            project_name=self.project_name,
         )
         self.send_email(
             to_email=to_email,

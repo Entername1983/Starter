@@ -1,5 +1,5 @@
 import ast
-from http.client import HTTPException
+import logging
 from typing import Any
 
 from app.core.auth.auth_helpers import AuthHelpers, TokenPayload
@@ -14,10 +14,12 @@ from app.core.schemas.requests import ConfirmEmailRequest, SignUpRequest
 from app.core.schemas.responses import ConfirmEmailResponse
 from app.core.services.user_service import UserService
 from app.models import User
-from fastapi import Request
+from fastapi import HTTPException, Request
 from fastapi.responses import JSONResponse, RedirectResponse
 from google.oauth2.credentials import Credentials
 from sqlalchemy.ext.asyncio import AsyncSession
+
+logger = logging.getLogger("app")
 
 
 class AuthService:
@@ -52,7 +54,7 @@ class AuthService:
         """
         session_id = request.cookies.get("session_id")
         if session_id is None:
-            raise HTTPException("missing session_id")
+            raise HTTPException(status_code=401, detail="No session id")
         await AuthHelpers.verify_oauth_state(
             session_id, ast.literal_eval(state)["oAuthState"], r_client
         )
@@ -105,55 +107,77 @@ class AuthService:
             JSONResponse: Returns a response with a redirectUrl and a user object with
             an attached cookie containing the access_token.
         """
-        if data.auth_provider == "internal":
-            return await AuthService.register_internal_user(
-                data, settings, db, r_client, request, email_service
-            )
-        session_id = request.cookies.get("provider_id")
-        if session_id is None:
-            raise HTTPException("No provider id")
-        await AuthHelpers.verify_oauth_state(
-            session_id, f"{data.auth_provider}-{data.o_auth_id}", r_client
-        )
-        new_user: User = await UserService.create_user(
-            db,
-            data.email,
-            data.username,
-            data.auth_provider,
-            data.given_name,
-            data.family_name,
-            data.o_auth_id,
-            data.password,
-        )
-        access_token = AuthHelpers.encode_jwt_data(TokenPayload(sub=str(new_user.id)))
-        user_schema = UserService.turn_user_model_to_pydantic_schema(new_user)
-        redirect_url = data.original_page
-        if (redirect_url == "/login") or (redirect_url == "/register"):
+        redirect_url = await AuthService.return_redirect_url(data.original_page)
+
+        async with db.begin():
+            password = None
+            try:
+                if data.auth_provider == "internal":
+                    if data.password is None:
+                        raise Exception("No password provided")
+                    password = AuthHelpers.hash_password(data.password)
+                else:
+                    session_id = request.cookies.get("provider_id")
+                    if session_id is None:
+                        raise HTTPException(status_code=401, detail="No provider id")
+                    await AuthHelpers.verify_oauth_state(
+                        session_id, f"{data.auth_provider}-{data.o_auth_id}", r_client
+                    )
+
+                new_user: User = await UserService.create_user(
+                    db,
+                    data.email,
+                    data.username,
+                    data.auth_provider,
+                    data.given_name,
+                    data.family_name,
+                    data.o_auth_id,
+                    password,
+                    commit=False,
+                )
+                db.add(new_user)
+                await db.flush()
+                access_token = AuthHelpers.encode_jwt_data(TokenPayload(sub=str(new_user.id)))
+                user_schema = UserService.turn_user_model_to_pydantic_schema(new_user)
+                user_dict = user_schema.model_dump(
+                    by_alias=True, exclude={"external_user_id", "auth_provider"}
+                )
+
+                response = JSONResponse(
+                    content={
+                        "redirectUrl": redirect_url,
+                        "user": user_dict,
+                    }
+                )
+                email_service.send_welcome_email(user_schema.email, user_schema.username)
+                response.set_cookie(
+                    key="access_token",
+                    value=access_token,
+                    httponly=settings.auth.http_only,
+                    max_age=settings.auth.cookie_max_age,
+                    samesite=settings.auth.same_site,
+                    secure=settings.app.environment == "production",
+                    domain=settings.auth.domain,
+                    path="/",
+                )
+
+                return response
+            except Exception:
+                logger.exception
+                await db.rollback()
+                error_response = JSONResponse(
+                    status_code=500, content={"detail": "Registration failed"}
+                )
+                error_response.delete_cookie("provider_id", path="/")
+                error_response.delete_cookie("session_id", path="/")
+                error_response.delete_cookie("access_token", path="/")
+                return error_response
+
+    @staticmethod
+    async def return_redirect_url(redirect_url: str | None) -> str:
+        if (redirect_url == "/login") or (redirect_url == "/register") or (redirect_url is None):
             redirect_url = "/"
-        if redirect_url is None:
-            redirect_url = "/"
-        user_dict = user_schema.model_dump(
-            by_alias=True, exclude={"external_user_id", "auth_provider"}
-        )
-
-        response_content = {
-            "redirectUrl": redirect_url,
-            "user": user_dict,
-        }
-        response = JSONResponse(content=response_content)
-
-        response.set_cookie(
-            key="access_token",
-            value=access_token,
-            httponly=settings.auth.http_only,
-            max_age=settings.auth.cookie_max_age,
-            samesite=settings.auth.same_site,
-            secure=settings.app.environment == "production",
-            domain=settings.auth.domain,
-            path="/",
-        )
-
-        return response
+        return redirect_url
 
     @staticmethod
     async def register_internal_user(
@@ -224,7 +248,7 @@ class AuthService:
     ) -> ConfirmEmailResponse:
         stored_token = await r_client.get(request.email)
         if stored_token != request.token:
-            raise Exception("Invalid tokens")
+            raise HTTPException(status_code=401, detail="Access denied")
         await UserService.mark_email_confirmed(request.email, db)
         ## TODO: Send confirmation email has been confirmed
         response = ConfirmEmailResponse(confirmed=True)
@@ -237,12 +261,12 @@ class AuthService:
         ## Check if password is correct
         username = request.username
         if username is None:
-            raise HTTPException("Username not found")
+            raise HTTPException(status_code=401, detail="Username not found")
         user = await UserService.get_user_by_username(username, db)
         if user is None:
-            raise HTTPException("Username not found")
+            raise HTTPException(status_code=401, detail="Username not found")
         if not AuthHelpers.verify_password(request.password, user.password):
-            raise HTTPException("Password does not match")
+            raise HTTPException(status_code=401, detail="Password does not match")
 
         access_token = AuthHelpers.encode_jwt_data(TokenPayload(sub=str(user.id)))
 

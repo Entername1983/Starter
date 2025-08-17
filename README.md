@@ -22,6 +22,7 @@ A starter template using FastAPI and React
    - [DB](#db)
    - [Testing](#testing)
    - [Auth](#backend-auth)
+   - [Middleware](#middlewares)
 
 5. [Frontend](#frontend)
 
@@ -162,6 +163,10 @@ settings = get_settings()
 ### Testing
 
 - Using pytest
+
+### Middlewares
+
+- Auth failure middleware: Picks up on 401 HTTPExceptions and clear session_id, provider_id, access_token, refresh_token cookies.
 
 ### Frontend-Auth
 

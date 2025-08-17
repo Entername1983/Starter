@@ -1,5 +1,5 @@
-import ModalWrapper from '@components/Common/Modals/ModalWrapper'
 import { Sidebar } from '@components/Common/Sidebar'
+import ModalWrapper from '@components/Modals/ModalWrapper'
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 

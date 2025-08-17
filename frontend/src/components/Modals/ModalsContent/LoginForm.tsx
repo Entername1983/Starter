@@ -3,9 +3,10 @@ import useLoginModal from '@hooks/useLoginModal'
 import useUser from '@hooks/useUser'
 import { Link } from '@tanstack/react-router'
 import { REGEX_PW_PATTERN, REGEX_USERNAME_PATTERN } from '@utils/regex'
+import { isFastAPIError } from '@utils/typeGuards'
 import { MAX_LENGTH, MIN_LENGTH } from '@utils/validation'
 import type React from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiHide, BiShow } from 'react-icons/bi'
 
@@ -15,6 +16,7 @@ interface ILoginFormInput {
 }
 
 const LoginForm: React.FC = () => {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const { signIn, signInError } = useUser()
   const [showPassword, setShowPassword] = useState(false)
   const { closeLoginModal } = useLoginModal()
@@ -29,14 +31,30 @@ const LoginForm: React.FC = () => {
 
   const onSubmit = handleSubmit(data => {
     console.log('submitting', data)
-    void signIn({
-      internalSigninRequest: {
-        username: data.username,
-        password: data.password,
-        originalPage: originalPage,
-      },
-    })
+    try {
+      void signIn({
+        internalSigninRequest: {
+          username: data.username,
+          password: data.password,
+          originalPage: originalPage,
+        },
+      })
+    } catch (error: unknown) {
+      console.log('Sign in failed:', error)
+      if (isFastAPIError(error)) {
+        const data = error.data as { detail?: string }
+        setErrorMessage(data.detail ?? 'Error logging in')
+      }
+    }
   })
+
+  useEffect(() => {
+    if (isFastAPIError(signInError)) {
+      console.log('Sign in error', signInError)
+      setErrorMessage(signInError.data.detail)
+    }
+  }, [signInError])
+
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     void onSubmit(e)
@@ -106,6 +124,7 @@ const LoginForm: React.FC = () => {
             Register here
           </Link>
         </div>
+        {errorMessage && <p className='text-red-500'> {errorMessage}</p>}
       </div>
     </form>
   )

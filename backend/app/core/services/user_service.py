@@ -1,3 +1,5 @@
+from xmlrpc.client import boolean
+
 from app.core.schemas import UserSchema
 from app.core.schemas.enums import AuthProviderEnum
 from app.models import User, UserSettings
@@ -81,6 +83,7 @@ class UserService:
         family_name: str | None = None,
         external_id: str | None = None,
         password: str | None = None,
+        commit: boolean = True,
     ) -> User:
         new_user = User(
             email=email,
@@ -92,8 +95,11 @@ class UserService:
             password=password,
         )
         db.add(new_user)
-        await db.commit()
-        await db.refresh(new_user)
+        if commit:
+            await db.commit()
+            await db.refresh(new_user)
+        else:
+            await db.flush()
         return new_user
 
     @staticmethod
