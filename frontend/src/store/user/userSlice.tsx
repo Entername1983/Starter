@@ -1,7 +1,6 @@
+import type { UserSchema } from '@api/api.gen'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
-
-import type { UserSchema } from '@api/api.gen'
 
 export interface IUserState {
   user: UserSchema | null

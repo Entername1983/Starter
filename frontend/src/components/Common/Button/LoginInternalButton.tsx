@@ -1,16 +1,8 @@
-import Button from '@components/Common/Button'
 import useUser from '@hooks/useUser'
 import type React from 'react'
-import { HiLogin } from 'react-icons/hi'
 
 const LoginInternalButton: React.FC = () => {
-  const {
-    user,
-    onLogout,
-    isLoggingOutLoading,
-    handleInternalSignIn,
-    isLoading,
-  } = useUser()
+  const { user, onLogout, isLoggingOutLoading } = useUser()
 
   return (
     <>
@@ -26,7 +18,7 @@ const LoginInternalButton: React.FC = () => {
         </button>
       ) : (
         <div className='space-y-4 '>
-          <Button
+          {/* <Button
             variant='primary'
             fullWidth
             onClick={handleInternalSignIn}
@@ -35,7 +27,7 @@ const LoginInternalButton: React.FC = () => {
             leftIcon={<HiLogin />}
           >
             Login / Register
-          </Button>
+          </Button> */}
         </div>
       )}
     </>

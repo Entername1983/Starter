@@ -1,8 +1,7 @@
+import { enhancedApi } from '@api/api.gen'
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 import userReducer from '@store/user/userSlice'
-
-import { enhancedApi } from '@api/api.gen'
 
 const ENVIRONMENT = import.meta.env.VITE_ENV
 

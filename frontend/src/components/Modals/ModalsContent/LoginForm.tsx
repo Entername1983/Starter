@@ -60,24 +60,33 @@ const LoginForm: React.FC = () => {
     void onSubmit(e)
   }
   return (
-    <form className='p-2' onSubmit={handleFormSubmit} noValidate>
-      <div className='flex'>
-        <InputField
-          {...register('username', {
-            required: 'Username is required',
-            minLength: MIN_LENGTH,
-            maxLength: MAX_LENGTH,
-            pattern: {
-              value: REGEX_USERNAME_PATTERN,
-              message:
-                'Username can only include alpha numeric characters, underscores, hyphens, and periods',
-            },
-          })}
-          label={'Username'}
-          error={errors.username}
-          includeErrorSpace={true}
-        />
-        <div className='relative'>
+    <form className='p-1 space-y-4' onSubmit={handleFormSubmit} noValidate>
+      <div className='flex flex-col gap-4'>
+        <div className='w-full'>
+          <InputField
+            {...register('username', {
+              required: 'Username is required',
+              minLength: MIN_LENGTH,
+              maxLength: MAX_LENGTH,
+              pattern: {
+                value: REGEX_USERNAME_PATTERN,
+                message:
+                  'Username can only include alpha numeric characters, underscores, hyphens, and periods',
+              },
+            })}
+            label={'Username'}
+            error={errors.username}
+            includeErrorSpace={false}
+            inputStyle="w-full px-3 py-2 border rounded-lg"
+          />
+          {errors.username && (
+            <p className='text-red-500 text-xs mt-1'>
+              {errors.username.message}
+            </p>
+          )}
+        </div>
+        
+        <div className='w-full relative'>
           <InputField
             {...register('password', {
               required: {
@@ -94,37 +103,57 @@ const LoginForm: React.FC = () => {
             })}
             label={'Password'}
             error={errors.password}
-            includeErrorSpace={true}
+            includeErrorSpace={false}
             type={showPassword ? 'text' : 'password'}
+            inputStyle="w-full px-3 py-2 pr-10 border rounded-lg"
           />
           <button
             type='button'
             onClick={() => {
               setShowPassword(!showPassword)
             }}
-            className='absolute h-10 right-6 top-5 dark:text-white dark:hover:text-gray-200'
+            className='absolute right-3 top-8 p-1 dark:text-white dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded'
           >
             {showPassword ? <BiHide /> : <BiShow />}
           </button>
+          {errors.password && (
+            <p className='text-red-500 text-xs mt-1'>
+              {errors.password.message}
+            </p>
+          )}
         </div>
       </div>
-      <div>
-        <button type='submit'>Login</button>
-        <div>
-          <Link to={'/RecoverPassword'} onClick={closeLoginModal}>
+      <div className='space-y-3'>
+        <button 
+          type='submit'
+          className='w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded'
+        >
+          Login
+        </button>
+        
+        <div className='flex flex-col gap-2 text-sm'>
+          <Link 
+            to={'/RecoverPassword'} 
+            onClick={closeLoginModal}
+            className='text-blue-600 hover:text-blue-800 underline text-center'
+          >
             Forgot Password
           </Link>
-        </div>
-        <div>
           <Link
             to={'/Register'}
             search={{ authProvider: 'internal' }}
             onClick={closeLoginModal}
+            className='text-blue-600 hover:text-blue-800 underline text-center'
           >
             Register here
           </Link>
         </div>
-        {errorMessage && <p className='text-red-500'> {errorMessage}</p>}
+        
+        {errorMessage && (
+          <p className='text-red-500 text-xs bg-red-50 dark:bg-red-900/20 p-2 rounded'>
+            {errorMessage}
+          </p>
+        )}
       </div>
     </form>
   )

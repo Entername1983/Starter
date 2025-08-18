@@ -12,6 +12,9 @@ interface LayoutContextType {
   stickySidebar: boolean
   setStickySidebar: (sticky: boolean) => void
   toggleStickySidebar: () => void
+  mobileMenuOpen: boolean
+  setMobileMenuOpen: (open: boolean) => void
+  toggleMobileMenu: () => void
 }
 
 const LayoutContext = createContext<LayoutContextType | undefined>(undefined)
@@ -34,6 +37,7 @@ export const LayoutProvider = ({ children }: LayoutProviderProps) => {
   const [sidebarContent, setSidebarContent] = useState<ReactNode | null>(null)
   const [stickyNavbar, setStickyNavbar] = useState(false)
   const [stickySidebar, setStickySidebar] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen)
@@ -45,6 +49,10 @@ export const LayoutProvider = ({ children }: LayoutProviderProps) => {
 
   const toggleStickySidebar = () => {
     setStickySidebar(!stickySidebar)
+  }
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen)
   }
 
   return (
@@ -61,6 +69,9 @@ export const LayoutProvider = ({ children }: LayoutProviderProps) => {
         stickySidebar,
         setStickySidebar,
         toggleStickySidebar,
+        mobileMenuOpen,
+        setMobileMenuOpen,
+        toggleMobileMenu,
       }}
     >
       {children}

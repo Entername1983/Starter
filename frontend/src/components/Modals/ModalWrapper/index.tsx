@@ -18,17 +18,21 @@ const ModalWrapper: React.FC = () => {
       ref={dialogRef}
       // eslint-disable-next-line react/no-unknown-property
       closedby={closedBy}
-      className={`mx-auto my-auto  rounded-xl p-2 bg-white dark:bg-blue-800 text-black dark:text-white`}
+      className="fixed inset-2 md:inset-4 md:mx-auto md:my-auto max-w-sm md:max-w-2xl w-auto h-auto max-h-[95vh] rounded-xl p-1 md:p-2 bg-white dark:bg-blue-800 text-black dark:text-white"
     >
-      <div className={` flex flex-col h-80 w-140 `}>
-        <div className='flex justify-between px-2'>
-          <h5>{modalProps.title}</h5>
-          <button className='cursor-pointer' onClick={closeModal}>
-            X
+      <div className="flex flex-col min-h-80 md:h-80 w-full">
+        <div className='flex justify-between items-center px-2 py-2 border-b'>
+          <h5 className='text-lg font-semibold'>{modalProps.title}</h5>
+          <button 
+            className='cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-full w-8 h-8 flex items-center justify-center' 
+            onClick={closeModal}
+            aria-label="Close modal"
+          >
+            ✕
           </button>
         </div>
 
-        <div className=' flex-1 rounded-xl '>
+        <div className='flex-1 rounded-xl overflow-y-auto p-1 md:p-2'>
           {(() => {
             switch (modalProps.type) {
               case 'login':

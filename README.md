@@ -40,6 +40,7 @@ A starter template using FastAPI and React
    - [Validation](#validation)
    - [Contexts](#contexts)
    - [Text-Editor](#text-editor)
+   - [Icons](#Icons)
 
 6. [Reverse Proxy](#reverse-proxy)
 7. [Database](#database)
@@ -257,6 +258,10 @@ Using the following contexts:
 ### Text-editor
 
 Using react-markdown and remark gfm
+
+### Icons
+
+Using react icons https://react-icons.github.io/
 
 ## Reverse Proxy
 

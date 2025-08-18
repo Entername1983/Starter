@@ -60,13 +60,15 @@ const NotificationModalContent: React.FC<NotificationModalContentProps> = ({
   }
 
   return (
-    <div className={`border-4 rounded-xl h-full ${getBorderColor()}`}>
-      <div className='p-2 flex text-center gap-2 text-2xl'>
-        <div className={` ${getIconColor()}`}>{getIcon()}</div>
-        <h3>{notificationOptions.title}</h3>
+    <div className={`border-2 rounded-lg h-full ${getBorderColor()}`}>
+      <div className='p-4 flex items-center gap-3'>
+        <div className={`text-2xl ${getIconColor()}`}>{getIcon()}</div>
+        <h3 className='text-lg font-semibold'>{notificationOptions.title}</h3>
       </div>
-      <div className='p-3'>
-        <p> {notificationOptions.message}</p>
+      <div className='px-4 pb-4'>
+        <p className='text-gray-700 dark:text-gray-300 leading-relaxed'>
+          {notificationOptions.message}
+        </p>
       </div>
     </div>
   )

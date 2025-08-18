@@ -9,7 +9,14 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config([
-  globalIgnores(['dist', 'node_modules', '*.config.js', 'src/api/**/*.gen.ts']),
+  globalIgnores([
+    'dist',
+    'node_modules',
+    '*.config.js',
+    'src/api/**/*.gen.ts',
+    '.tanstack/**/*',
+    'tsrouter.config.ts',
+  ]),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

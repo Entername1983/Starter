@@ -156,7 +156,6 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
         />
         {defaults.authProvider === 'internal' && (
           <>
-            {' '}
             <InputField
               {...register('password', {
                 required: {

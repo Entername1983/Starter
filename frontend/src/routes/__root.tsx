@@ -1,26 +1,35 @@
-import { Sidebar } from '@components/Common/Sidebar'
 import ModalWrapper from '@components/Modals/ModalWrapper'
+import { Navbar } from '@components/Navbar'
+import { Sidebar } from '@components/Sidebar'
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
-import { Navbar } from '../components/Common/Navbar'
 const ENVIRONMENT = import.meta.env.VITE_ENV
 export const Route = createRootRoute({
   component: () => (
-    <div className='bg-white dark:bg-blue-950 text-black dark:text-white min-h-screen'>
+    <div className='bg-white dark:bg-blue-950 text-black dark:text-white min-h-screen flex flex-col'>
       <Navbar />
-      <div className='flex  min-h-screen'>
-        <div className=''>
-          <Sidebar />
-        </div>
-        <div className='flex grow  overflow-auto'>
-          <hr />
+
+      <div className='hidden md:flex flex-grow'>
+        <Sidebar />
+        <div className='flex-grow overflow-auto'>
           <Outlet />
           {ENVIRONMENT === 'development' && (
             <TanStackRouterDevtools initialIsOpen={false} />
           )}
         </div>
       </div>
+
+      <div className='md:hidden flex flex-col flex-grow'>
+        <div className='flex-grow overflow-auto pb-16'>
+          <Outlet />
+          {ENVIRONMENT === 'development' && (
+            <TanStackRouterDevtools initialIsOpen={false} />
+          )}
+        </div>
+        <Sidebar />
+      </div>
+
       <ModalWrapper />
     </div>
   ),
