@@ -25,6 +25,9 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
+      args:
+        - VITE_API_URL=${VITE_API_URL}
+        - VITE_ENV=${VITE_ENV}
     restart: unless-stopped
     env_file: .env
     ports:

@@ -10,10 +10,21 @@ COPY .env .
 RUN npm install
 
 COPY ../ /code
+
+ARG VITE_API_URL
+ARG VITE_ENV
+
+ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_ENV=$VITE_ENV
+
 ENV NODE_OPTIONS="--max_old_space_size=4096"
 
 
 RUN npm config set loglevel verbose
+
+
+
+
 
 RUN npm run build
 
