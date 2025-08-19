@@ -5,7 +5,6 @@ import { useLayout } from '@contexts/LayoutContext'
 import useLoginModal from '@hooks/useLoginModal'
 import { useSettings } from '@hooks/useSettings'
 import useUser from '@hooks/useUser'
-import { useEffect, useState } from 'react'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { IoMdClose } from 'react-icons/io'
 
@@ -26,28 +25,28 @@ const Navbar = () => {
     handleWelcomeNotification,
   } = useSettings()
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isDarkMode, setIsDarkMode] = useState(() =>
-    document.body.classList.contains('dark')
-  )
-  useEffect(() => {
-    const observer = new MutationObserver(mutations => {
-      mutations.forEach(mutation => {
-        if (mutation.attributeName === 'class') {
-          const isDark = document.body.classList.contains('dark')
-          setIsDarkMode(isDark)
-        }
-      })
-    })
+  //TODO: remove this if unecessary
+  // const [isDarkMode, setIsDarkMode] = useState(() =>
+  //   document.body.classList.contains('dark')
+  // )
+  // useEffect(() => {
+  //   const observer = new MutationObserver(mutations => {
+  //     mutations.forEach(mutation => {
+  //       if (mutation.attributeName === 'class') {
+  //         const isDark = document.body.classList.contains('dark')
+  //         setIsDarkMode(isDark)
+  //       }
+  //     })
+  //   })
 
-    observer.observe(document.body, {
-      attributes: true,
-    })
+  //   observer.observe(document.body, {
+  //     attributes: true,
+  //   })
 
-    return () => {
-      observer.disconnect()
-    }
-  }, [])
+  //   return () => {
+  //     observer.disconnect()
+  //   }
+  // }, [])
 
   return (
     <nav

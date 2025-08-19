@@ -60,5 +60,5 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src", "env.t.ts", "src/api/api.gen.ts"]
+  "include": ["src", "src/types/env.d.ts", "src/api/api.gen.ts"]
 }

@@ -8,8 +8,6 @@ export const confirmEmailSearchParams = z.object({
   token: z.string(),
 })
 
-type TConfirmEmailParams = z.infer<typeof confirmEmailSearchParams>
-
 export const Route = createFileRoute('/Confirm-email/')({
   component: RouteComponent,
   validateSearch: confirmEmailSearchParams,

@@ -1,125 +1,96 @@
-version: "3.8"
+# Docker Compose file for Starter template prodelopment
+# Container names "st" for starter + "-" + service name e.g "st-backend"
 
 services:
-  # PostgreSQL Database
-  postgres:
-    image: postgres:15-alpine
-    container_name: tryui-postgres-prod
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-tryui}
-    volumes:
-      - postgres_data_prod:/var/lib/postgresql/data
-      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - tryui-network-prod
-
   # FastAPI Backend
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
-      target: production
-    container_name: tryui-backend-prod
+      dockerfile: Dockerfile.prod
+      # network: host
+    container_name: st-backend
     restart: unless-stopped
-    environment:
-      - APP_NAME=TryUI API
-      - APP_ENV=production
-      - DEBUG=false
-      - HOST=0.0.0.0
-      - PORT=8000
-      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-tryui}
-      - SECRET_KEY=${SECRET_KEY}
-      - ACCESS_TOKEN_EXPIRE_MINUTES=20
-      - REFRESH_TOKEN_EXPIRE_DAYS=30
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
-      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
-    ports:
-      - "8000:8000"
-    depends_on:
-      postgres:
-        condition: service_healthy
     networks:
-      - tryui-network-prod
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      - network-1
+    depends_on:
+      - redis
+      - postgres
+      - minio
 
   # React Frontend
   frontend:
+    container_name: st-frontend
     build:
       context: ./frontend
-      dockerfile: Dockerfile
-      target: production
-    container_name: tryui-frontend-prod
+      dockerfile: Dockerfile.prod
     restart: unless-stopped
-    environment:
-      - VITE_ENV=production
-      - VITE_API_URL=${VITE_API_URL}
-      - VITE_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - VITE_GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
-    ports:
-      - "3000:3000"
+    env_file: .env
+    expose:
+      - "80"
     depends_on:
       - backend
     networks:
-      - tryui-network-prod
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      - network-1
 
-  # Nginx Reverse Proxy
-  nginx:
-    image: nginx:alpine
-    container_name: tryui-nginx-prod
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/ssl:/etc/nginx/ssl
-    depends_on:
-      - frontend
-      - backend
-    networks:
-      - tryui-network-prod
-
-  # Redis for caching and sessions
   redis:
-    image: redis:7-alpine
-    container_name: tryui-redis-prod
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data_prod:/data
+    container_name: st-redis
+    image: redis/redis-stack-server:latest
+    secrets:
+      - redis_password
+    env_file:
+      - ./backend/.env
+    command:
+      - redis-server
+      - --port
+      - "6378"
+      - --requirepass
+      - --loadmodule
+      - /opt/redis-stack/lib/redisearch.so
+      - --loadmodule
+      - /opt/redis-stack/lib/rejson.so
     networks:
-      - tryui-network-prod
-    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redis_password}
+      - network-1
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: st-postgres
+    restart: unless-stopped
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - network-1
+    env_file:
+      - ./backend/.env
+
+  minio:
+    container_name: st-minio
+    image: minio/minio:latest
+    command: server /data --console-address ":9003"
+    ports:
+      - "9002:9002" # MinIO API Port
+      - "9003:9003" # MinIO Console Port
+    volumes:
+      # - /mnt/volume-nbg1-1/minio_data:/data
+      - minio_data:/data
+    env_file:
+      - ./backend/.env
+    networks:
+      - network-1
 
 volumes:
-  postgres_data_prod:
+  backend_cache:
     driver: local
-  redis_data_prod:
+  frontend_node_modules:
+    driver: local
+  frontend_cache:
+    driver: local
+  redis_data:
     driver: local
 
 networks:
-  tryui-network-prod:
+  network-1:
     driver: bridge
-    name: tryui-network-prod
+    name: network-1
