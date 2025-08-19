@@ -37,9 +37,9 @@ async def verify_db_connection(db):
             """)
             )
             table_exists = result.scalar()
-            Base.metadata.create_all(bind=db)
         if not table_exists:
             logger.info("TABLES DO NOT EXIST")
+            await conn.run_sync(Base.metadata.create_all)
         else:
             logger.info("CONFIRM TABLES EXIST YAY")
     except Exception as e:
