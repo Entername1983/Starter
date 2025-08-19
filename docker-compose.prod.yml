@@ -41,8 +41,8 @@ services:
       - ./backend/.env
     command:
       - redis-server
-      # - --port
-      # - "6378"
+      - --port
+      - "6378"
       - --requirepass
       - "${REDIS_PASSWORD}"
       - --loadmodule
@@ -59,8 +59,8 @@ services:
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
-    # ports:
-    #   - "5432:5432"
+    ports:
+      - "5432:5432"
     networks:
       - network-1
     env_file:
@@ -71,7 +71,7 @@ services:
     image: minio/minio:latest
     command: server /data --console-address ":9003"
     ports:
-      # - "9002:9002" # MinIO API Port
+      - "9002:9002" # MinIO API Port
       - "9003:9003" # MinIO Console Port
     volumes:
       # - /mnt/volume-nbg1-1/minio_data:/data
