@@ -3,9 +3,9 @@
 # ───── App Settings ─────
 version: 0.0.1
 debug: false
-environment: development
-api_base_url: https://api.example.com
-frontend_url: http://localhost:5173
+environment: production
+api_base_url: https://cognaite.com/api
+frontend_url: https://cognaite.com
 
 # ───── Auth Settings ─────
 access_token_expire_minutes: 1440
@@ -17,12 +17,9 @@ same_site: lax
 secure: true
 domain: localhost
 google_auth_client_id: your-google-client-id
-
+google_javascript_origins: http://cognaite.com
 # ───── CORS Settings ─────
 cors_origins:
-  - http://localhost:5173
-  - https://app.example.com
-  - http://localhost:8000
   - http://cognaite.com
 
 cors_allow_credentials: true
