@@ -35,8 +35,6 @@ services:
   redis:
     container_name: st-redis
     image: redis/redis-stack-server:latest
-    secrets:
-      - redis_password
     env_file:
       - ./backend/.env
     command:
@@ -44,6 +42,7 @@ services:
       - --port
       - "6378"
       - --requirepass
+      - "${REDIS_PASSWORD}"
       - --loadmodule
       - /opt/redis-stack/lib/redisearch.so
       - --loadmodule
