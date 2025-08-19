@@ -32,3 +32,4 @@ frontend/.nitro
 frontend/.tanstack
 
 postgres_data
+nginx

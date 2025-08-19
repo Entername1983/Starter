@@ -1,4 +1,4 @@
-import { InputField } from '@components/Inputs/Input'
+import { InputField } from '@components/Inputs/InputField'
 import useLoginModal from '@hooks/useLoginModal'
 import useUser from '@hooks/useUser'
 import { Link } from '@tanstack/react-router'
@@ -77,7 +77,7 @@ const LoginForm: React.FC = () => {
             label={'Username'}
             error={errors.username}
             includeErrorSpace={false}
-            inputStyle="w-full px-3 py-2 border rounded-lg"
+            inputStyle='w-full px-3 py-2 border rounded-lg'
           />
           {errors.username && (
             <p className='text-red-500 text-xs mt-1'>
@@ -85,7 +85,7 @@ const LoginForm: React.FC = () => {
             </p>
           )}
         </div>
-        
+
         <div className='w-full relative'>
           <InputField
             {...register('password', {
@@ -105,7 +105,7 @@ const LoginForm: React.FC = () => {
             error={errors.password}
             includeErrorSpace={false}
             type={showPassword ? 'text' : 'password'}
-            inputStyle="w-full px-3 py-2 pr-10 border rounded-lg"
+            inputStyle='w-full px-3 py-2 pr-10 border rounded-lg'
           />
           <button
             type='button'
@@ -124,18 +124,18 @@ const LoginForm: React.FC = () => {
         </div>
       </div>
       <div className='space-y-3'>
-        <button 
+        <button
           type='submit'
           className='w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded'
         >
           Login
         </button>
-        
-        <div className='flex flex-col gap-2 text-sm'>
-          <Link 
-            to={'/RecoverPassword'} 
+
+        <div className='flex flex-col gap-2 text-sm dark:text-blue-200'>
+          <Link
+            to={'/RecoverPassword'}
             onClick={closeLoginModal}
-            className='text-blue-600 hover:text-blue-800 underline text-center'
+            className='underline text-center'
           >
             Forgot Password
           </Link>
@@ -143,12 +143,12 @@ const LoginForm: React.FC = () => {
             to={'/Register'}
             search={{ authProvider: 'internal' }}
             onClick={closeLoginModal}
-            className='text-blue-600 hover:text-blue-800 underline text-center'
+            className=' underline text-center'
           >
             Register here
           </Link>
         </div>
-        
+
         {errorMessage && (
           <p className='text-red-500 text-xs bg-red-50 dark:bg-red-900/20 p-2 rounded'>
             {errorMessage}

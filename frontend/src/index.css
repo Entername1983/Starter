@@ -48,7 +48,20 @@ a:hover {
   text-decoration: none;
   opacity: 0.9;
 }
+ul {
+  list-style: none;
+}
 
+li::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background-color: #a09b9b;
+  margin-right: 10px;
+  vertical-align: middle;
+  transform: rotate(45deg); /* Diamond shape */
+}
 button {
   cursor: pointer;
 }

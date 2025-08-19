@@ -1,6 +1,6 @@
+import { Navbar } from '@components/Layout/Navbar'
+import { Sidebar } from '@components/Layout/Sidebar'
 import ModalWrapper from '@components/Modals/ModalWrapper'
-import { Navbar } from '@components/Navbar'
-import { Sidebar } from '@components/Sidebar'
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 

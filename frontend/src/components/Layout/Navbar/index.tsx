@@ -1,4 +1,5 @@
 import StarterLogo from '@assets/starter-logo.svg?react'
+import Button from '@components/Common/Button'
 import { SettingsMenu } from '@components/Common/SettingsMenu'
 import { useLayout } from '@contexts/LayoutContext'
 import useLoginModal from '@hooks/useLoginModal'
@@ -68,28 +69,28 @@ const Navbar = () => {
         <SettingsMenu />
         <span className='text-gray-400'>|</span>
         {user ? (
-          <button
+          <Button
             onClick={() => {
               void onLogout()
             }}
             className='hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded'
           >
             Logout
-          </button>
+          </Button>
         ) : (
-          <button
+          <Button
             onClick={openLoginModal}
             className='hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded'
           >
             Login
-          </button>
+          </Button>
         )}
       </div>
 
       {/* Mobile Navigation */}
       <div className='md:hidden flex w-full justify-between items-center'>
         <StarterLogo className='h-6 w-6' />
-        <button
+        <Button
           onClick={toggleMobileMenu}
           className='p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded'
           aria-label='Toggle menu'
@@ -99,10 +100,9 @@ const Navbar = () => {
           ) : (
             <GiHamburgerMenu className='h-6 w-6' />
           )}
-        </button>
+        </Button>
       </div>
 
-      {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div className='md:hidden absolute top-full left-0 w-full bg-white dark:bg-blue-950 border-t z-20 border-b-2 border-b-amber-400 animate-slide-down'>
           <div className='flex flex-col p-2'>
@@ -115,38 +115,37 @@ const Navbar = () => {
 
             <hr className='my-2 border-gray-300 dark:border-gray-600' />
 
-            {/* Mobile Settings - Flattened */}
             <div className='py-2'>
               <div className='grid grid-cols-2 gap-2 mb-3'>
-                <button
+                <Button
                   onClick={toggleStickySidebar}
                   className='flex items-center justify-between p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded text-sm'
                 >
                   <span>Stick Sidebar</span>
                   <span>{stickySidebar ? '✓' : '○'}</span>
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={toggleStickyNavbar}
                   className='flex items-center justify-between p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded text-sm'
                 >
                   <span>Stick Navbar</span>
                   <span>{stickyNavbarSetting ? '✓' : '○'}</span>
-                </button>
+                </Button>
               </div>
 
               <div className='grid grid-cols-1 gap-2 mb-3'>
-                <button
+                <Button
                   onClick={handleToggleSidebar}
                   className='p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded text-sm text-left'
                 >
                   {sidebarOpen ? 'Hide Sidebar' : 'Show Sidebar'}
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={handleWelcomeNotification}
                   className='p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded text-sm text-left'
                 >
                   Welcome Notification
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -155,21 +154,21 @@ const Navbar = () => {
             <div className='flex justify-between items-center py-2'>
               <ThemeToggle />
               {user ? (
-                <button
+                <Button
                   onClick={() => {
                     void onLogout()
                   }}
                   className='hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded'
                 >
                   Logout
-                </button>
+                </Button>
               ) : (
-                <button
+                <Button
                   onClick={openLoginModal}
                   className='hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded'
                 >
                   Login
-                </button>
+                </Button>
               )}
             </div>
           </div>

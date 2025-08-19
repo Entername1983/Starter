@@ -8,7 +8,7 @@ const LoginWithGoogleButton: React.FC = () => {
   return (
     <>
       {user ? (
-        <button
+        <Button
           onClick={() => {
             void onLogout()
           }}
@@ -16,7 +16,7 @@ const LoginWithGoogleButton: React.FC = () => {
           type='button'
         >
           Logout
-        </button>
+        </Button>
       ) : (
         <div className='space-y-4 '>
           <Button

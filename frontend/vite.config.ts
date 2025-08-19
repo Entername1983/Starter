@@ -35,6 +35,7 @@ export default defineConfig({
       '@client': path.resolve(__dirname, './src/client'),
       '@contexts': path.resolve(__dirname, './src/contexts'),
       '@api': path.resolve(__dirname, './src/api'),
+      '@styles': path.resolve(__dirname, './src/styles'),
     },
   },
   test: {

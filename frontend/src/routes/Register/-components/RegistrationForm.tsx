@@ -1,7 +1,7 @@
 import { type AuthProviderEnum } from '@api/api.gen'
 import { Checkbox } from '@components/Inputs/Checkbox'
 import { Dropdown } from '@components/Inputs/Dropdown'
-import { InputField } from '@components/Inputs/Input'
+import { InputField } from '@components/Inputs/InputField'
 import { useNavigate } from '@tanstack/react-router'
 import {
   REGEX_NAME_PATTERN,

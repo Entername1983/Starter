@@ -1,5 +1,8 @@
 import type React from 'react'
 
+import Button from '../Button'
+import ToggleSwitch from '../ToggleSwitch'
+
 import type { MenuItem } from './types'
 
 interface MenuItemProps {
@@ -18,34 +21,36 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item, onItemClick }) => {
   }
 
   if (item.type === 'divider') {
-    return <hr className="border-gray-300 dark:border-gray-600" />
+    return <hr className='border-gray-300 dark:border-gray-600' />
   }
 
-  const baseClasses = "w-full text-left p-2 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50"
-  
+  const baseClasses =
+    'w-full text-left p-2 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 '
+
   if (item.type === 'toggle') {
     return (
-      <button
+      <Button
         className={baseClasses}
         onClick={handleClick}
         disabled={item.disabled}
+        fullWidth={true}
       >
-        <span className="flex justify-between">
+        <span className='flex w-full justify-between items-center gap-1'>
           <span>{item.label}</span>
-          <span>{item.isToggled ? '✓' : '○'}</span>
+          <ToggleSwitch isToggled={item.isToggled} size='sm' />
         </span>
-      </button>
+      </Button>
     )
   }
 
   return (
-    <button
+    <Button
       className={baseClasses}
       onClick={handleClick}
       disabled={item.disabled}
     >
       {item.label}
-    </button>
+    </Button>
   )
 }
 

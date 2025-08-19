@@ -2,6 +2,7 @@ import { useSettings } from '@hooks/useSettings'
 import type React from 'react'
 import { MdOutlineSettings } from 'react-icons/md'
 
+import Button from './Button'
 import { MenuDropdown } from './MenuDropdown'
 import type { MenuItem } from './MenuDropdown/types'
 
@@ -37,9 +38,10 @@ const SettingsMenu: React.FC = () => {
     },
     {
       id: 'toggle-sidebar',
-      type: 'button',
+      type: 'toggle',
       label: sidebarOpen ? 'Hide Sidebar' : 'Show Sidebar',
-      onClick: handleToggleSidebar,
+      isToggled: sidebarOpen,
+      onToggle: handleToggleSidebar,
     },
     {
       id: 'divider-2',
@@ -54,12 +56,12 @@ const SettingsMenu: React.FC = () => {
   ]
 
   const trigger = (
-    <button className='p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded flex items-center gap-2'>
+    <Button className='p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded flex items-center gap-2'>
       <span>
         <MdOutlineSettings />
       </span>
-      Settings
-    </button>
+      Settings!
+    </Button>
   )
 
   return <MenuDropdown trigger={trigger} items={menuItems} position='right' />

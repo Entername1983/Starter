@@ -1,7 +1,6 @@
+import { DropdownOption } from '@components/Inputs/Dropdown/components/DropdownOption'
 import type React from 'react'
 import type { ChangeHandler, FieldError, RefCallBack } from 'react-hook-form'
-
-import { DropdownOption } from './DropdownOption'
 
 interface IDropdownOption {
   value: string

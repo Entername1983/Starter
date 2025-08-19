@@ -29,7 +29,8 @@
       "@assets/*": ["src/assets/*"],
       "@api/*": ["src/api/*"],
       "@client/*": ["src/client/*"],
-      "@contexts/*": ["src/contexts/*"]
+      "@contexts/*": ["src/contexts/*"],
+      "@styles/*": ["src/styles/*"]
     },
 
     /* Strict Type Checking */
