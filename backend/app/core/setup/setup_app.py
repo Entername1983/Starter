@@ -5,7 +5,7 @@ from app.core.auth.google import GoogleAuth
 from app.core.dependencies.settings import get_settings
 from app.core.logger.logger import logger
 from app.core.setup.ascii_art import BY_KEM, PLANET
-from app.core.setup.setup_db import setup_async_sessionmaker, setup_sessionmaker
+from app.core.setup.setup_db import Base, setup_async_sessionmaker, setup_sessionmaker
 from app.core.setup.setup_middleware import setup_middlewares
 from app.core.setup.setup_redis import (
     setup_redis_async_pool,
@@ -37,7 +37,7 @@ async def verify_db_connection(db):
             """)
             )
             table_exists = result.scalar()
-
+            Base.metadata.create_all(bind=db)
         if not table_exists:
             logger.info("TABLES DO NOT EXIST")
         else:
