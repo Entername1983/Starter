@@ -27,7 +27,7 @@ services:
       dockerfile: Dockerfile.prod
     restart: unless-stopped
     env_file: .env
-    expose:
+    ports:
       - "81:81"
     depends_on:
       - backend
