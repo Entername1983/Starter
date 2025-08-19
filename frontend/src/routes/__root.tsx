@@ -5,6 +5,10 @@ import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 const ENVIRONMENT = import.meta.env.VITE_ENV
+const VITE_API_URL = import.meta.env.VITE_API_URL
+console.log('VITE_API_URL', VITE_API_URL)
+console.log('Environment', ENVIRONMENT)
+
 export const Route = createRootRoute({
   component: () => (
     <div className='bg-white dark:bg-blue-950 text-black dark:text-white min-h-screen flex flex-col'>
