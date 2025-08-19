@@ -28,7 +28,7 @@ services:
     restart: unless-stopped
     env_file: .env
     expose:
-      - "80"
+      - "81"
     depends_on:
       - backend
     networks:
