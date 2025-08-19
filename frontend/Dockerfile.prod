@@ -2,7 +2,10 @@ FROM node:24-alpine AS build-stage
 
 WORKDIR /code
 
+
 COPY package.json .
+
+COPY .env .
 
 RUN npm install
 
