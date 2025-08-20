@@ -303,7 +303,6 @@ class AuthService:
             _type_: A redirect response with url containing all necessary query params
             and attached session id cookie
         """
-        print("SIGNING IN WITH GOOGLE")
         params: dict[str, str] = dict(request.query_params)
         session_id = AuthHelpers.generate_secret_token()
         oauth_state = await AuthHelpers.create_oauth_state(session_id, r_client)

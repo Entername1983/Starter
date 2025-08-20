@@ -15,7 +15,7 @@ cookie_max_age: 86400
 cookie_expiration_check: 86400
 same_site: strict
 secure: true
-domain: cognaite.com
+domain: .cognaite.com
 google_auth_client_id: your-google-client-id
 google_redirect_uris:
   - https://cognaite.com/api/user/auth/callback
