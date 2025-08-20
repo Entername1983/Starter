@@ -42,14 +42,15 @@ async def verify_db_connection(db):
 
             if not table_exists:
                 logger.info("TABLES DO NOT EXIST")
-                await conn.run_sync(Base.metadata.create_all)
-                result = await conn.execute(
-                    text(
-                        "SELECT table_name FROM information_schema.tables WHERE table_schema = current_schema()"
+                async with db.begin() as conn:
+                    await conn.run_sync(Base.metadata.create_all)
+                    result = await conn.execute(
+                        text(
+                            "SELECT table_name FROM information_schema.tables WHERE table_schema = current_schema()"
+                        )
                     )
-                )
-                tables_after = [row[0] for row in result.fetchall()]
-                logger.info(f"Tables after create_all: {tables_after}")
+                    tables_after = [row[0] for row in result.fetchall()]
+                    logger.info(f"Tables after create_all: {tables_after}")
             else:
                 logger.info("CONFIRM TABLES EXIST YAY")
     except Exception as e:
