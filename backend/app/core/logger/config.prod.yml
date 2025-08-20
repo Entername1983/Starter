@@ -1,0 +1,45 @@
+version: 1
+disable_existing_loggers: False
+
+formatters:
+  json_formatter:
+    (): app.core.logger.custom_formatter.StructuredExceptionJsonFormatter
+    json_indent: 2
+  uvicorn:
+    (): uvicorn.logging.DefaultFormatter
+    fmt: "%(levelprefix)s %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+    use_colors: true
+
+#
+handlers:
+  console:
+    class: logging.StreamHandler
+    formatter: json_formatter
+    level: INFO
+
+  timed_file:
+    class: logging.handlers.TimedRotatingFileHandler   # ← must be ‘TimedRotatingFileHandler’
+    level: ERROR
+    formatter: json_formatter
+    filename: "logs/app.log"
+    when: "midnight"       # valid only on TimedRotatingFileHandler
+    interval: 1
+    backupCount: 7
+    encoding: "utf-8"
+    delay: false
+    utc: false
+
+loggers:
+  app:
+    handlers: [console, timed_file]
+    level: INFO
+    propagate: False
+  app.auth:
+    handlers: [console]
+    level: INFO
+    propagate: False
+
+root:
+  handlers: [console]
+  level: WARNING
