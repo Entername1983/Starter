@@ -308,6 +308,8 @@ class AuthService:
         oauth_state = await AuthHelpers.create_oauth_state(session_id, r_client)
         params["oAuthState"] = oauth_state
         auth_url = await google_auth.get_auth_url(params)
+        logger.info("Auth url", auth_url)
+
         response = RedirectResponse(url=auth_url)
         response.set_cookie(
             key="session_id",
