@@ -17,7 +17,8 @@ same_site: strict
 secure: true
 domain: https://cognaite.com
 google_auth_client_id: your-google-client-id
-google_javascript_origins: http://cognaite.com
+google_javascript_origins:
+  - http://cognaite.com
 # ───── CORS Settings ─────
 cors_origins:
   - http://cognaite.com
