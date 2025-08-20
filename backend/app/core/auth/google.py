@@ -59,7 +59,6 @@ class GoogleAuth:
             included_granted_scopes="true",
             prompt="consent",
         )
-        logger.info("Auth url", auth_url)
         if not isinstance(auth_url, str):
             raise Exception("Missing google auth url")
         return auth_url
@@ -70,6 +69,7 @@ class GoogleAuth:
         return credentials
 
     async def request_google_user_info(self, access_token: str) -> dict[str, str]:
+        print(self.flow.redirect_uri)
         print(access_token)
         async with httpx.AsyncClient() as client:
             raw_bytes = await client.get(
