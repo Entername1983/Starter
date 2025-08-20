@@ -13,9 +13,9 @@ algorithm: HS256
 http_only: true
 cookie_max_age: 86400
 cookie_expiration_check: 86400
-same_site: lax
+same_site: strict
 secure: true
-domain: localhost
+domain: https://cognaite.com
 google_auth_client_id: your-google-client-id
 google_javascript_origins: http://cognaite.com
 # ───── CORS Settings ─────
