@@ -22,10 +22,7 @@ async def parse_jwt_data(request: Request) -> str:
     Raises:
         HTTPException: If the JWT is invalid or not present.
     """
-    print("request", Request.cookies)
-    print("access token cookie name", settings.security.access_token_cookie_name)
     token_data = request.cookies.get(settings.security.access_token_cookie_name)
-    print("token_data", token_data)
     if not token_data:
         raise HTTPException(
             status_code=HTTP_401_UNAUTHORIZED,

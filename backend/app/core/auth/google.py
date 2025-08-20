@@ -69,8 +69,6 @@ class GoogleAuth:
         return credentials
 
     async def request_google_user_info(self, access_token: str) -> dict[str, str]:
-        print(self.flow.redirect_uri)
-        print(access_token)
         async with httpx.AsyncClient() as client:
             raw_bytes = await client.get(
                 self.google_auth_req_api,
@@ -82,7 +80,6 @@ class GoogleAuth:
     def turn_google_oauth_info_into_object(
         google_auth_content: dict[str, str],
     ) -> OAuthUserInfoSchema:
-        print("google auth info", google_auth_content)
         return OAuthUserInfoSchema(
             o_auth_id=google_auth_content["id"],
             email=google_auth_content["email"],

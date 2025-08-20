@@ -308,7 +308,6 @@ class AuthService:
         oauth_state = await AuthHelpers.create_oauth_state(session_id, r_client)
         params["oAuthState"] = oauth_state
         auth_url = await google_auth.get_auth_url(params)
-        print(auth_url)
 
         response = RedirectResponse(url=auth_url)
         response.set_cookie(
@@ -333,7 +332,6 @@ class AuthService:
         r_client: AsyncRedis,
     ) -> RedirectResponse:
         data = new_user.model_dump(by_alias=True)
-        print("data", data)
         original_page = ast.literal_eval(state)["originalPage"]
         ## Creat
         session_id = AuthHelpers.generate_secret_token()

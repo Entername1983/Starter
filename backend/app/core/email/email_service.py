@@ -57,7 +57,6 @@ class EmailService:
         )
 
     def send_welcome_email(self, to_email: str, username: str):
-        print(f"Send welcome email not yet implemented {to_email}, {username}")
         html_content = self.render_html_template(
             "welcome_email.html",
             username=username,

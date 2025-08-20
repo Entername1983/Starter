@@ -104,7 +104,6 @@ async def sign_in_with_google(
         RedirectResponse: Redirects to google auth and sets a cookie with a session_id
         to be matched later in the auth process
     """
-    print("SIGNIN IN WITH GOOGLE API")
     return await AuthService.sign_in_w_google(google_auth, request, r_client, settings)
 
 

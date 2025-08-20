@@ -47,7 +47,6 @@ class TimingMiddleware(BaseHTTPMiddleware):
 
 
 def setup_middlewares(app):
-    print("settings.cors.origins", settings.cors.origins)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors.origins,
