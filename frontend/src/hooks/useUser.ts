@@ -62,7 +62,7 @@ const useUser = (): IUseAuth => {
     console.log('VITE_API_URL:', import.meta.env.VITE_API_URL)
     console.log('Full URL:', fullUrl)
 
-    window.location.href = fullUrl
+    // window.location.href = fullUrl
   }
 
   const onLogout = async () => {
