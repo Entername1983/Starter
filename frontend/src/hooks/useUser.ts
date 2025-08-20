@@ -28,6 +28,7 @@ interface IUseAuth {
 }
 
 const useUser = (): IUseAuth => {
+  console.log('import.meta.env.VITE_API_URL', import.meta.env.VITE_API_URL)
   const user = useAppSelector((state: IRootState) => state.user.user)
   const dispatch = useAppDispatch()
   const location = useLocation()
