@@ -8,7 +8,6 @@ import httpx
 from app.core.dependencies.settings import get_settings
 from app.core.schemas.user import (
     AuthProviderEnum,
-    GoogleAuthWebClientConfig,
     OAuthUserInfoSchema,
     RegisterRedirectUrl,
 )
@@ -42,9 +41,10 @@ class GoogleAuth:
             }
         }
 
-        self.redirect_uri = GoogleAuthWebClientConfig.model_validate(self.config).web.redirect_uris[
-            0
-        ]
+        self.redirect_uri = "https://cognaite.com/api/user/auth/callback"
+        # self.redirect_uri = GoogleAuthWebClientConfig.model_validate(self.config).web.redirect_uris[
+        #     0
+        # ]
 
         self.flow: Flow = google_auth_oauthlib.flow.Flow.from_client_config(  # type:ignore
             self.config,
