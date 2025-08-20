@@ -316,7 +316,7 @@ class AuthService:
             value=session_id,
             httponly=settings.auth.http_only,
             max_age=600,
-            samesite="lax",
+            samesite=settings.auth.same_site,
             secure=settings.app.environment == "production",
             domain=settings.auth.domain,
         )
@@ -354,7 +354,7 @@ class AuthService:
             value=session_id,
             httponly=app_settings.auth.http_only,
             max_age=600,
-            samesite="lax",
+            samesite=app_settings.auth.same_site,
             secure=True,
             domain=app_settings.auth.domain,
             path="/",
