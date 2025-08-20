@@ -63,7 +63,7 @@ async def verify_redis_connection(redis_pool):
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     logger.info("Starting application lifespan")
-    if settings.app.environment == "development":
+    if settings.app.environment == "development" or settings.app.debug is True:
         # pprint.pprint(settings.model_dump())
         # print(WARNING_BANNER)
         logger.info(settings.model_dump())
