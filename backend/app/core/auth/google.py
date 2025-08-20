@@ -26,7 +26,6 @@ class GoogleAuth:
         self,
     ):
         self.scopes = settings.auth.google_auth_scopes
-        self.redirect_uri = None
         self.google_auth_req_api = settings.auth.google_auth_req_api
         self.config = {
             "web": {
@@ -50,7 +49,8 @@ class GoogleAuth:
             self.config,
             scopes=self.scopes,
         )
-        self.flow.redirect_uri = self.redirect_uri  # type:ignore
+        # self.flow.redirect_uri = self.redirect_uri  # type:ignore
+        self.flow.redirect_uri = "https://cognaite.com/api/user/auth/callback"  # type:ignore
 
     async def get_auth_url(self, extra: dict) -> str:
         auth_url, _ = self.flow.authorization_url(
