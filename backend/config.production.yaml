@@ -17,6 +17,8 @@ same_site: strict
 secure: true
 domain: cognaite.com
 google_auth_client_id: your-google-client-id
+google_redirect_uris:
+  - https://cognaite.com/api/user/auth/callback
 google_javascript_origins:
   - http://cognaite.com
 # ───── CORS Settings ─────
