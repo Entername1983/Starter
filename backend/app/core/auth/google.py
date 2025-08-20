@@ -1,4 +1,5 @@
 import json
+import logging
 from typing import cast
 from urllib.parse import urlencode
 
@@ -17,6 +18,8 @@ from google_auth_oauthlib.flow import Flow
 # GOOGLE_REDIRECT_URI = "http://localhost:8000/user/auth/callback"
 
 settings = get_settings()
+
+logger = logging.getLogger("app")
 
 
 class GoogleAuth:
@@ -56,7 +59,7 @@ class GoogleAuth:
             included_granted_scopes="true",
             prompt="consent",
         )
-        print("Auth url", auth_url)
+        logger.info("Auth url", auth_url)
         if not isinstance(auth_url, str):
             raise Exception("Missing google auth url")
         return auth_url
