@@ -67,7 +67,7 @@ class Auth(BSettings):
     )
     same_site: Literal["lax", "strict", "none"] = "lax"
     secure: bool = True
-    domain: str = "localhost"
+    domain: str
     secret_key: str | None = None
     google_client_id: str
     google_project_id: str
