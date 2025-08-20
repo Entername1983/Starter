@@ -3,6 +3,7 @@ import time
 
 from app.core.dependencies.settings import get_settings
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 
@@ -55,5 +56,8 @@ def setup_middlewares(app):
         allow_headers=settings.cors.allow_headers,
     )
     app.add_middleware(AuthCookieMiddleware)
+    app.add_middleware(
+        TrustedHostMiddleware, allowed_hosts=["cognaite.com", "*.cognaite.com", "localhost"]
+    )
     if settings.app.debug:
         app.add_middleware(TimingMiddleware)
