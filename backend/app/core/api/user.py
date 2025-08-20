@@ -40,7 +40,14 @@ async def logout_user(user: CurrentUser, response: Response):
     """Logs out the user by clearing the session cookie.
     Frontend should clear the browser state
     """
-    response.delete_cookie("access_token")
+    response.delete_cookie(
+        "access_token",
+        httponly=settings.auth.http_only,
+        samesite=settings.auth.same_site,
+        secure=settings.app.environment == "production",
+        domain=settings.auth.domain,
+        path="/",
+    )
     return LogoutResponse(status="success", message="User logged out successfully.")
 
 
