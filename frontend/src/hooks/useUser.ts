@@ -57,7 +57,12 @@ const useUser = (): IUseAuth => {
   const handleGoogleSignIn = () => {
     const redirectBack = encodeURIComponent(location.pathname)
 
-    window.location.href = `${import.meta.env.VITE_API_URL}/user/auth/google_sign_in?originalPage=${redirectBack}`
+    const fullUrl = `${import.meta.env.VITE_API_URL}/user/auth/google_sign_in?originalPage=${redirectBack}`
+
+    console.log('VITE_API_URL:', import.meta.env.VITE_API_URL)
+    console.log('Full URL:', fullUrl)
+
+    window.location.href = fullUrl
   }
 
   const onLogout = async () => {
