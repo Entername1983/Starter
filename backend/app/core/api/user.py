@@ -85,7 +85,7 @@ async def confirm_email(
     return await AuthService.confirm_email(request, r_client, settings, db, email_service)
 
 
-@router.get("/auth/google_sign_in/", tags=["user"])
+@router.get("/auth/google_sign_in", tags=["user"])
 async def sign_in_with_google(
     google_auth: GetGoogleAuth,
     request: Request,
