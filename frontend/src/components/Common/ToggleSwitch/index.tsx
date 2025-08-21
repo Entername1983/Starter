@@ -1,5 +1,3 @@
-import type React from 'react'
-
 interface ToggleSwitchProps {
   isToggled: boolean
   size?: 'sm' | 'md' | 'lg'
@@ -7,12 +5,12 @@ interface ToggleSwitchProps {
   className?: string
 }
 
-const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
+const ToggleSwitch = ({
   isToggled,
   size = 'md',
   disabled = false,
   className = '',
-}) => {
+}: ToggleSwitchProps) => {
   const sizeClasses = {
     sm: 'w-8 h-4',
     md: 'w-10 h-5',

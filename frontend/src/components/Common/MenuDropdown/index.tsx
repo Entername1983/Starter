@@ -1,15 +1,14 @@
-import type React from 'react'
 import { useEffect, useRef, useState } from 'react'
 
 import { MenuItemComponent } from './MenuItem'
 import type { MenuDropdownProps } from './types'
 
-const MenuDropdown: React.FC<MenuDropdownProps> = ({
+const MenuDropdown = ({
   trigger,
   items,
   position = 'right',
   className = '',
-}) => {
+}: MenuDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 

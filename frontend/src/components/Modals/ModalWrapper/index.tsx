@@ -1,5 +1,4 @@
 import { useModalContext } from '@contexts/ModalContext'
-import type React from 'react'
 import { IoMdClose } from 'react-icons/io'
 
 import { LoginModalContent } from '../ModalsContent/LoginModalContent'
@@ -10,7 +9,7 @@ import { NotificationModalContent } from '../ModalsContent/NotificationModalCont
 // closedby = "closerequest" Closable using the "Close" button or the Esc key.
 // closedby = "any" Closable using the "Close" button, the Esc key, or by clicking outside the dialog. "Light dismiss" behavior.
 // closedby is still unsupported on safary so we want to make sure to always include a close button
-const ModalWrapper: React.FC = () => {
+const ModalWrapper = () => {
   const { closeModal, modalProps, dialogRef } = useModalContext()
   const closedBy = modalProps.closedby
 

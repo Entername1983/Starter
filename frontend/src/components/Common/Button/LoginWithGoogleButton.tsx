@@ -1,7 +1,6 @@
 import Button from '@components/Common/Button'
 import useUser from '@hooks/useUser'
-import type React from 'react'
-const LoginWithGoogleButton: React.FC = () => {
+const LoginWithGoogleButton = () => {
   const { user, onLogout, isLoggingOutLoading, handleGoogleSignIn, isLoading } =
     useUser()
 

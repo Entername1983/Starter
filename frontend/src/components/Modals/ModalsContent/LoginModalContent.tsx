@@ -1,9 +1,8 @@
 import { LoginWithGoogleButton } from '@components/Common/Button/LoginWithGoogleButton'
-import type React from 'react'
 
 import { LoginForm } from './LoginForm'
 
-const LoginModalContent: React.FC = () => {
+const LoginModalContent = () => {
   return (
     <div className='space-y-3'>
       <LoginForm />

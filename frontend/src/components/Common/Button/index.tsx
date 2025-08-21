@@ -1,4 +1,3 @@
-import type React from 'react'
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
 export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'dropdown' | 'icon' | 'randomize'
@@ -10,7 +9,7 @@ export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode
 }
 
-const Button: React.FC<IButtonProps> = ({
+const Button = ({
   variant = 'primary',
   size = 'md',
   fullWidth = false,
@@ -21,7 +20,7 @@ const Button: React.FC<IButtonProps> = ({
   className = '',
   disabled,
   ...props
-}) => {
+}: IButtonProps) => {
   const baseClasses = 'flex items-center '
 
   const sizeClasses = {

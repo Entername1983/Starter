@@ -46,7 +46,7 @@ interface IInputField {
   type?: InputType
 }
 
-export const InputField: React.FC<IInputField> = ({
+export const InputField = ({
   label,
   placeholder,
   onChange,
@@ -68,7 +68,7 @@ export const InputField: React.FC<IInputField> = ({
   labelStyle,
   style,
   type = 'text',
-}) => {
+}: IInputField) => {
   const updatedLabelStyle = labelStyle ?? ''
   const updatedStyle = style ?? ''
   const updatedInputClassName =

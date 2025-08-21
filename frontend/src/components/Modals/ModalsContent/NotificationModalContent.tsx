@@ -2,15 +2,14 @@ import {
   isNotificationOptions,
   type INotificationOptions,
 } from '@hooks/useNotificationModal'
-import type React from 'react'
 
 interface NotificationModalContentProps {
   notificationOptions?: INotificationOptions | object | undefined
 }
 
-const NotificationModalContent: React.FC<NotificationModalContentProps> = ({
+const NotificationModalContent = ({
   notificationOptions,
-}) => {
+}: NotificationModalContentProps) => {
   if (!isNotificationOptions(notificationOptions))
     return <div>Error displaying content</div>
 

@@ -1,6 +1,6 @@
 import { createFileRoute, useLocation } from '@tanstack/react-router'
 
-const Login: React.FC = () => {
+const Login = () => {
   const location = useLocation()
 
   const handleGoogleSignIn = () => {

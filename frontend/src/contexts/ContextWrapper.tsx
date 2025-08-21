@@ -6,7 +6,7 @@ interface ContextWrapperProps {
   children: React.ReactNode
 }
 
-const ContextWrapper: React.FC<ContextWrapperProps> = ({ children }) => {
+const ContextWrapper = ({ children }: ContextWrapperProps) => {
   return (
     <LayoutProvider>
       <ModalContextProvider>{children}</ModalContextProvider>

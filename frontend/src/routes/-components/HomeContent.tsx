@@ -1,7 +1,6 @@
 import CephCircle from '@assets/CephCircle.png'
-import type React from 'react'
 
-const HomeContent: React.FC = () => {
+const HomeContent = () => {
   return (
     <main className='p-2 bg-white dark:bg-blue-950 flex flex-col grow '>
       <h1 className='text-center mt-10'>My Starter Repo</h1>

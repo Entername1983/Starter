@@ -10,7 +10,7 @@ interface MenuItemProps {
   onItemClick: () => void
 }
 
-const MenuItemComponent: React.FC<MenuItemProps> = ({ item, onItemClick }) => {
+const MenuItemComponent = ({ item, onItemClick }: MenuItemProps) => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (item.type === 'button') {
       item.onClick(event)

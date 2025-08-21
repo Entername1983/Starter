@@ -1,11 +1,9 @@
-import type React from 'react'
-
 interface ISidebarItemProps {
   label: string
   onClick: () => void
 }
 
-const SidebarItem: React.FC<ISidebarItemProps> = ({ label, onClick }) => {
+const SidebarItem = ({ label, onClick }: ISidebarItemProps) => {
   return (
     <div>
       <button onClick={onClick}>{label}</button>

@@ -1,9 +1,8 @@
 import { useLayout } from '@contexts/LayoutContext'
-import type React from 'react'
 
 import { SidebarItem } from './SidebarItem'
 
-const Sidebar: React.FC = () => {
+const Sidebar = () => {
   const { sidebarOpen, stickySidebar, stickyNavbar } = useLayout()
   if (!sidebarOpen) return null
 

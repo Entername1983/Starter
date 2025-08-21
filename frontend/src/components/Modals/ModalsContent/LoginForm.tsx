@@ -15,7 +15,7 @@ interface ILoginFormInput {
   password: string
 }
 
-const LoginForm: React.FC = () => {
+const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const { signIn, signInError } = useUser()
   const [showPassword, setShowPassword] = useState(false)

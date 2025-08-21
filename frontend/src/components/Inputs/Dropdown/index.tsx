@@ -1,5 +1,4 @@
 import { DropdownOption } from '@components/Inputs/Dropdown/components/DropdownOption'
-import type React from 'react'
 import type { ChangeHandler, FieldError, RefCallBack } from 'react-hook-form'
 
 interface IDropdownOption {
@@ -32,7 +31,7 @@ interface IDropdownProps {
   error?: FieldError | undefined
 }
 
-const Dropdown: React.FC<IDropdownProps> = ({
+const Dropdown = ({
   label,
   onChange,
   onBlur,
@@ -51,7 +50,7 @@ const Dropdown: React.FC<IDropdownProps> = ({
   errorStyle,
   includeErrorSpace,
   error,
-}) => {
+}: IDropdownProps) => {
   const updatedStyle =
     style ?? 'flex justify-between items-center max-w-[250px]'
   const updatedLabelStyle = labelStyle ?? ''

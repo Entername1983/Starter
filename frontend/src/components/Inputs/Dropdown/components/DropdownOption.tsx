@@ -1,5 +1,3 @@
-import type React from 'react'
-
 interface IDropdownOptionProps {
   disabled?: boolean
   label: string
@@ -7,11 +5,11 @@ interface IDropdownOptionProps {
   value: string
 }
 
-const DropdownOption: React.FC<IDropdownOptionProps> = ({
+const DropdownOption = ({
   disabled = false,
   label,
   value,
-}) => {
+}: IDropdownOptionProps) => {
   return (
     <option
       disabled={disabled}

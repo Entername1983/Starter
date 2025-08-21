@@ -1,12 +1,11 @@
 import { useSettings } from '@hooks/useSettings'
-import type React from 'react'
 import { MdOutlineSettings } from 'react-icons/md'
 
 import Button from './Button'
 import { MenuDropdown } from './MenuDropdown'
 import type { MenuItem } from './MenuDropdown/types'
 
-const SettingsMenu: React.FC = () => {
+const SettingsMenu = () => {
   const {
     sidebarOpen,
     stickyNavbar,

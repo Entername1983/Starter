@@ -1,4 +1,3 @@
-import type React from 'react'
 import type { ChangeHandler, FieldError, RefCallBack } from 'react-hook-form'
 
 interface ICheckboxProps {
@@ -19,7 +18,7 @@ interface ICheckboxProps {
   error?: FieldError | undefined
 }
 
-const Checkbox: React.FC<ICheckboxProps> = ({
+const Checkbox = ({
   label,
   placeholder,
   onChange,
@@ -35,7 +34,7 @@ const Checkbox: React.FC<ICheckboxProps> = ({
   inputStyle,
   includeErrorSpace,
   error,
-}) => {
+}: ICheckboxProps) => {
   const updatedClassName =
     style ?? 'flex justify-between items-center max-w-[250px]'
   const updatedLabelStyle = labelStyle ?? ''

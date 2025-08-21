@@ -30,9 +30,7 @@ const blankModal: IModalProps = {
   closedby: 'any',
   extra: {},
 }
-const ModalContextProvider: React.FC<IModalContextProviderProps> = ({
-  children,
-}) => {
+const ModalContextProvider = ({ children }: IModalContextProviderProps) => {
   const [modalProps, setModalProps] = useState<IModalProps>(blankModal)
 
   const dialogRef = useRef<HTMLDialogElement>(null)

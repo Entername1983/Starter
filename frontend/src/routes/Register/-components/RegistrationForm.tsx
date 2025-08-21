@@ -10,18 +10,34 @@ import {
 } from '@utils/regex'
 import { MAX_LENGTH, MIN_LENGTH } from '@utils/validation'
 import type React from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, type FieldErrors } from 'react-hook-form'
 
 import type { TRegisterParams } from '..'
 
-interface IFormInput {
+type ExternalAuthProvider = Exclude<AuthProviderEnum, 'internal'>
+type InternalAuthProvider = Extract<AuthProviderEnum, 'internal'>
+
+interface IFormExternalInput {
   givenName: string
   familyName: string
   email: string
   pictureUrl?: string
-  authProvider: AuthProviderEnum
-  oAuthId?: string
+  authProvider: ExternalAuthProvider
+  oAuthId: string
   accessToken?: string
+  originalPage: string
+  settings: string | null
+  newsletter: boolean
+  terms: boolean
+  location: string
+  username: string
+}
+
+interface IFormInternalInput {
+  givenName: string
+  familyName: string
+  email: string
+  authProvider: InternalAuthProvider
   originalPage: string
   settings: string | null
   newsletter: boolean
@@ -37,12 +53,12 @@ interface IRegistrationFormProps {
   // Add props here when needed
 }
 
-const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
+const RegistrationForm = ({ defaults }: IRegistrationFormProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormInput>({
+  } = useForm<IFormExternalInput | IFormInternalInput>({
     mode: 'onBlur',
     defaultValues: {
       givenName: defaults.givenName ?? '',
@@ -64,53 +80,59 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
   // const [registerUser, { data, isLoading, isError, error }] =
   //   useRegisterMutation()
 
-  const onSubmit = handleSubmit(async (data: IFormInput) => {
-    const payload = {
-      given_name: data.givenName,
-      family_name: data.familyName,
-      username: data.username,
-      password: data.password,
-      newsletter: data.newsletter,
-      terms: data.terms,
-      location: data.location,
-      email: defaults.email ?? data.email,
-      auth_provider: defaults.authProvider,
-      o_auth_id: defaults.oAuthId?.toString(),
-      access_token: defaults.accessToken,
-      original_page: defaults.originalPage,
-      settings: defaults.settings,
-      pictureUrl: defaults.pictureUrl,
-    }
+  const onSubmit = handleSubmit(
+    async (data: IFormExternalInput | IFormInternalInput) => {
+      const isInternalAuth = data.authProvider === 'internal'
 
-    console.log('payload', payload)
-
-    const API = import.meta.env.VITE_API_URL || 'http://localhost:8000'
-    try {
-      const res = await fetch(`${API}/user/auth/register`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-        redirect: 'manual',
-      })
-
-      const json_response = await res.json()
-
-      const redirectTo = json_response.redirectUrl
-      if (redirectTo) {
-        void navigate({ to: redirectTo })
+      const payload = {
+        given_name: data.givenName,
+        family_name: data.familyName,
+        username: data.username,
+        password: isInternalAuth ? data.password : undefined,
+        newsletter: data.newsletter,
+        terms: data.terms,
+        location: data.location,
+        email: defaults.email ?? data.email,
+        auth_provider: defaults.authProvider,
+        o_auth_id: defaults.oAuthId?.toString(),
+        access_token: defaults.accessToken,
+        original_page: defaults.originalPage,
+        settings: defaults.settings,
+        pictureUrl: defaults.pictureUrl,
       }
-    } catch {
-      console.error('Encountered error', payload)
-    }
 
-    // handle JSON errors here…
-  })
+      console.log('payload', payload)
+
+      const API = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+      try {
+        const res = await fetch(`${API}/user/auth/register`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          redirect: 'manual',
+        })
+
+        const json_response = await res.json()
+
+        const redirectTo = json_response.redirectUrl
+        if (redirectTo) {
+          void navigate({ to: redirectTo })
+        }
+      } catch {
+        console.error('Encountered error', payload)
+      }
+
+      // handle JSON errors here…
+    }
+  )
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     void onSubmit(e)
   }
+  const internalErrors = errors as FieldErrors<IFormInternalInput>
+
   return (
     <form className='p-2' onSubmit={handleFormSubmit} noValidate>
       <div className='max-w-[200px] flex gap-2'>
@@ -171,7 +193,7 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
                 },
               })}
               label={'Password'}
-              error={errors.password}
+              error={internalErrors.password} // This is okay since we are checking above that this is an internal form and so includes a password field
               includeErrorSpace={true}
               type={'password'}
             />
@@ -190,7 +212,7 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = ({ defaults }) => {
                 },
               })}
               label={'Confirm Password'}
-              error={errors.confirmPassword}
+              error={internalErrors.confirmPassword} // This is okay since we are checking above that this is an internal form and so includes a password field
               includeErrorSpace={true}
               type={'password'}
             />
