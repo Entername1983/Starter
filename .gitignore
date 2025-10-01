@@ -1,35 +1,66 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Generated API client
+
+openapi.json
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+*.env
 ## General
 .env
 .vscode
 SETUP_STATUS.md
 
 ## Backend
-backend/.ruff_cache
-backend/logs/*
-backend/.python-version
-backend/errors.log
-backend/__pycache__
-backend/.claude
-backend/.venv
-backend/.env
-backend/__pycache__/
-backend/backend.egg-info/*
-backend/secrets
-backend/logs/*
+/backend/.ruff_cache
+/backend/logs/*
+/backend/.python-version
+/backend/errors.log
+/backend/__pycache__
+/backend/.claude
+/backend/.venv
+/backend/.env
+/backend/__pycache__/
+/backend/backend.egg-info/*
+/backend/secrets
+/backend/logs/*
 *.pyc
 
 ## Frontend
-frontend/.env
-frontend/node_modules
-frontend/.claude
-frontend/..DS_Store
-frontend/.dist
-frontend/.dist-ssr
-frontend/.*.local
-frontend/.count.txt
-frontend/.env
-frontend/.nitro
-frontend/.tanstack
+/frontend/.env
+/frontend/node_modules
+/frontend/.claude
+/frontend/..DS_Store
+/frontend/.dist
+/frontend/.dist-ssr
+/frontend/.*.local
+/frontend/.count.txt
+/frontend/.env
+/frontend/.nitro
+/frontend/.tanstack
 
 postgres_data
 nginx
+

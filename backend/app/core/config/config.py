@@ -45,19 +45,38 @@ class BSettings(BaseSettings):
         )
 
 
-class App(BSettings):
-    model_config = config
+class GeneralSettings(BSettings):
+    app_domain: str = Field(
+        description="The app domain that will be used to construct other properties, e.g google.com"
+    )
+    api_domain: str = Field(
+        description="The API domain that will be used to construct other properties, this may be the same or different from the APP_DOMAIN"
+    )
+    environment: Literal["development", "production"] = "development"
+
+    @computed_field
+    @property
+    def protocol(self) -> str:
+        return "https://" if self.environment == "production" else "http://"
+
+
+class App(GeneralSettings):
     name: str
     version: str
     description: str
     debug: bool
-    environment: Literal["development", "production"] = "development"
-    api_base_url: str
-    frontend_url: str = "http://localhost:5173"
     secret_key: str
 
+    @computed_field
+    @property
+    def frontend_url(self) -> str:
+        return f"{self.protocol}{self.app_domain}"
 
-class Auth(BSettings):
+    def api_base_url(self) -> str:
+        return f"{self.protocol}{self.api_domain}"
+
+
+class Auth(GeneralSettings):
     access_token_expire_minutes: int = 1440
     algorithm: str = "HS256"
     http_only: bool = True
@@ -67,43 +86,68 @@ class Auth(BSettings):
     )
     same_site: Literal["lax", "strict", "none"] = "lax"
     secure: bool = True
-    domain: str
-    secret_key: str | None = None
     google_client_id: str
     google_project_id: str
     google_auth_uri: str = "https://accounts.google.com/o/oauth2/auth"
     google_token_uri: str = "https://oauth2.googleapis.com/token"
     google_auth_provider_x509_cert_url: str = "https://www.googleapis.com/oauth2/v1/certs"
     google_client_secret: str
-    google_redirect_uris: list[str] = ["http://localhost:8000/user/auth/callback"]
-    google_javascript_origins: list[str] = ["http://localhost:8000", "http://localhost:5173"]
     google_auth_scopes: list[str] = [
         "https://www.googleapis.com/auth/userinfo.profile",
         "https://www.googleapis.com/auth/userinfo.email",
-        "https://www.googleapis.com/auth/drive.metadata.readonly",
-        "https://www.googleapis.com/auth/calendar.readonly",
         "openid",
     ]
     google_auth_req_api: str = "https://www.googleapis.com/oauth2/v2/userinfo"
 
-    # google_auth_client_id: str
-    # google_auth_secret: str
-    # google_auth_callback_redirect_slug: str
-    # google_auth_client_secret: str = Field(validation_alias="google_client_secret")
-    # google_auth_project_id: str
-    # google_auth_provider_x509_cert_url: str
-    # google_auth_redirect_uris: list[str]
-    # google_auth_auth_uri: str
-    # google_auth_token_uri: str
-    # google_auth_javascript_origins: str
+    @computed_field
+    @property
+    def google_redirect_uris(self) -> list[str]:
+        return [
+            f"{self.protocol}{self.api_domain}/user/auth/callback"
+            if self.environment == "development"
+            else f"{self.protocol}{self.api_domain}/api/user/auth/callback"
+        ]
+
+    @computed_field
+    @property
+    def google_javascript_origins(self) -> list[str]:
+        js_origins = []
+        js_origin = f"{self.protocol}{self.app_domain}"
+        js_origins.append(js_origin)
+        return js_origins
+
+    @computed_field
+    @property
+    def allowed_hosts(self) -> list[str]:
+        return [
+            f".{self.app_domain}",
+            f"{self.app_domain}",
+            f"*.{self.app_domain}",
+            f".{self.api_domain}",
+            f"{self.api_domain}",
+            f"*.{self.api_domain}",
+            "localhost",
+        ]
+
+    @computed_field
+    @property
+    def domain(self) -> str:
+        return self.app_domain.split(":")[0]
 
 
-class Cors(BSettings):
+class Cors(GeneralSettings):
     model_config = SettingsConfigDict(env_prefix="CORS_")
-    origins: list[str] = ["http://localhost:5173"]
     allow_credentials: bool = True
     allow_methods: list[str] = ["*"]
     allow_headers: list[str] = ["*"]
+
+    @computed_field
+    @property
+    def origins(self) -> list[str]:
+        cors_origins = []
+        cors_origin = f"{self.protocol}{self.app_domain}"
+        cors_origins.append(cors_origin)
+        return cors_origins
 
 
 class Telemetry(BSettings):
@@ -120,7 +164,7 @@ class Db(BSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     db_host: str = "postgres"
-    db_port: int = 5432
+    db_port: int = 5433
     engine_options: dict[str, int] = {
         "pool_recycle": 299,
         "pool_size": 20,
@@ -140,6 +184,11 @@ class Db(BSettings):
     @property
     def pg_db_uri(self) -> str:
         return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.db_host}:{self.db_port}/{self.POSTGRES_DB}"
+
+    @computed_field
+    @property
+    def pg_db_local_uri(self) -> str:
+        return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@localhost:{self.db_port}/{self.POSTGRES_DB}"
 
 
 class Redis(BSettings):
@@ -178,10 +227,10 @@ class Email(BSettings):
 class Settings(BaseSettings):
     app: App = App()  # type: ignore
     auth: Auth = Auth()  # type: ignore
-    cors: Cors = Cors()
-    telemetry: Telemetry = Telemetry()
+    cors: Cors = Cors()  # type: ignore
+    telemetry: Telemetry = Telemetry()  # type: ignore
     db: Db = Db()  # type: ignore
     redis: Redis = Redis()  # type: ignore
-    s3: S3 = S3()
-    security: Security = Security()
+    s3: S3 = S3()  # type: ignore
+    security: Security = Security()  # type: ignore
     email: Email = Email()  # type: ignore

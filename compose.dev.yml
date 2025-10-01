@@ -1,4 +1,4 @@
-# Docker Compose file for Starter template prodelopment
+# Docker Compose file for Starter template development
 # Container names "st" for starter + "-" + service name e.g "st-backend"
 
 services:
@@ -6,54 +6,61 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile.dev
       # network: host
     container_name: st-backend
     restart: unless-stopped
     ports:
       - "8000:8000"
+
+    volumes:
+      - ./backend:/code
+      - backend_cache:/code/.cache
+      - /code/.venv
     networks:
-      - network-1
-    depends_on:
-      - redis
-      - postgres
-      - minio
+      - st-network
+    # command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
   # React Frontend
   frontend:
     container_name: st-frontend
     build:
       context: ./frontend
-      dockerfile: Dockerfile.prod
-      args:
-        - VITE_API_URL=${VITE_API_URL}
-        - VITE_ENV=${VITE_ENV}
+      dockerfile: Dockerfile.dev
+      network: host
     restart: unless-stopped
     env_file: .env
     ports:
-      - "81:81"
-    depends_on:
-      - backend
+      - "3000:3000"
+      - "5173:5173" # Vite dev server
+    # depends_on:
+    #   - backend
+    volumes:
+      - ./frontend:/code
+      - frontend_node_modules:/code/node_modules
+      - frontend_cache:/code/.cache
     networks:
-      - network-1
+      - st-network
+    command: npm run dev -- --host 0.0.0.0
 
+  # Redis (Optional - for caching and sessions)
   redis:
     container_name: st-redis
     image: redis/redis-stack-server:latest
-    env_file:
-      - ./backend/.env
-    command:
+    ports:
+      - "6378:6378"
+    command: # list form is the safest
       - redis-server
       - --port
       - "6378"
       - --requirepass
-      - "${REDIS_PASSWORD}"
+      - "supersecret"
       - --loadmodule
       - /opt/redis-stack/lib/redisearch.so
       - --loadmodule
       - /opt/redis-stack/lib/rejson.so
     networks:
-      - network-1
+      - st-network
 
   postgres:
     image: postgres:17-alpine
@@ -65,24 +72,9 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - network-1
+      - st-network
     env_file:
       - ./backend/.env
-
-  minio:
-    container_name: st-minio
-    image: minio/minio:latest
-    command: server /data --console-address ":9003"
-    ports:
-      - "9002:9002" # MinIO API Port
-      - "9003:9003" # MinIO Console Port
-    volumes:
-      # - /mnt/volume-nbg1-1/minio_data:/data
-      - minio_data:/data
-    env_file:
-      - ./backend/.env
-    networks:
-      - network-1
 
 volumes:
   backend_cache:
@@ -93,10 +85,8 @@ volumes:
     driver: local
   redis_data:
     driver: local
-  minio_data:
-    driver: local
 
 networks:
-  network-1:
+  st-network:
     driver: bridge
-    name: network-1
+    name: st-network

@@ -1,13 +1,18 @@
 import CephCircle from '@assets/CephCircle.png'
+import { PageWrapper } from '@components/PageWrapper'
 
 const HomeContent = () => {
   return (
-    <main className='p-2 bg-white dark:bg-blue-950 flex flex-col grow '>
-      <h1 className='text-center mt-10'>My Starter Repo</h1>
-      <section className='flex flex-col grow items-center justify-center gap-4'>
-        <img src={CephCircle} className='max-h-[200px]' alt='Welcome' />
+    <PageWrapper>
+      <h1 className='mt-10 text-center'>My Starter Repo</h1>
+      <section className='flex grow flex-col items-center justify-center gap-4'>
+        <img
+          src={CephCircle}
+          className='max-h-[200px]'
+          alt='Welcome'
+        />
       </section>
-      <section className='flex flex-col grow gap-4'>
+      <section className='flex grow flex-col gap-4'>
         <h3>Status: in Progress</h3>
         <p>
           Description: This repository/app serves as my starter repo for new
@@ -43,7 +48,7 @@ const HomeContent = () => {
           </li>
         </ul>
       </section>
-    </main>
+    </PageWrapper>
   )
 }
 

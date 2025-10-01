@@ -1,3 +1,4 @@
+import { PageWrapper } from '@components/PageWrapper'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/LoremIpsum/')({
@@ -6,7 +7,8 @@ export const Route = createFileRoute('/LoremIpsum/')({
 
 function RouteComponent() {
   return (
-    <main className='p-8'>
+    <PageWrapper>
+      {' '}
       <header>
         <h1 className='text-4xl'>LOREM IPSUM</h1>
       </header>
@@ -270,6 +272,6 @@ function RouteComponent() {
           </p>
         </div>
       </section>
-    </main>
+    </PageWrapper>
   )
 }

@@ -1,3 +1,4 @@
+import { PageWrapper } from '@components/PageWrapper'
 import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 
@@ -51,10 +52,10 @@ function Register() {
   const params = registerSearchParams.parse(Route.useSearch())
   console.log('registersearchparams', params)
   return (
-    <main className='p-4'>
+    <PageWrapper>
+      {' '}
       <h1 className='text-4xl'>Register</h1>
-
       <RegistrationForm defaults={params} />
-    </main>
+    </PageWrapper>
   )
 }

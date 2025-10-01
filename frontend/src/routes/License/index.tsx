@@ -1,3 +1,4 @@
+import { PageWrapper } from '@components/PageWrapper'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/License/')({
@@ -6,7 +7,8 @@ export const Route = createFileRoute('/License/')({
 
 function RouteComponent() {
   return (
-    <main className='p-4'>
+    <PageWrapper>
+      {' '}
       <header>
         <h1 className='text-4xl'>MIT License with Attribution</h1>
       </header>
@@ -53,6 +55,6 @@ function RouteComponent() {
           </li>
         </ul>
       </section>
-    </main>
+    </PageWrapper>
   )
 }

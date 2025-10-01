@@ -1,3 +1,4 @@
+import { PageWrapper } from '@components/PageWrapper'
 import { createFileRoute } from '@tanstack/react-router'
 
 import { HomeContent } from './-components/HomeContent'
@@ -7,5 +8,9 @@ export const Route = createFileRoute('/')({
 })
 
 function Index() {
-  return <HomeContent />
+  return (
+    <PageWrapper>
+      <HomeContent />
+    </PageWrapper>
+  )
 }

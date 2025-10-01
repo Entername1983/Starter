@@ -1,3 +1,4 @@
+import { PageWrapper } from '@components/PageWrapper'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/about/')({
@@ -6,7 +7,8 @@ export const Route = createFileRoute('/about/')({
 
 function About() {
   return (
-    <main className='p-4'>
+    <PageWrapper>
+      {' '}
       <h1 className='text-4xl'>About Page</h1>
       <section className='my-8'>
         <p>Welcome to my starter template</p>
@@ -23,6 +25,6 @@ function About() {
           :
         </p>
       </section>
-    </main>
+    </PageWrapper>
   )
 }

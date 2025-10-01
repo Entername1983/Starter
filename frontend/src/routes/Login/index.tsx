@@ -1,3 +1,4 @@
+import { PageWrapper } from '@components/PageWrapper'
 import { createFileRoute, useLocation } from '@tanstack/react-router'
 
 const Login = () => {
@@ -10,12 +11,12 @@ const Login = () => {
   }
 
   return (
-    <main>
+    <PageWrapper>
       <div>Hello Login!</div>
       <button onClick={handleGoogleSignIn} type='button'>
         Sign in with Google
       </button>
-    </main>
+    </PageWrapper>
   )
 }
 

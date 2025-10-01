@@ -25,29 +25,6 @@ const Navbar = () => {
     handleWelcomeNotification,
   } = useSettings()
 
-  //TODO: remove this if unecessary
-  // const [isDarkMode, setIsDarkMode] = useState(() =>
-  //   document.body.classList.contains('dark')
-  // )
-  // useEffect(() => {
-  //   const observer = new MutationObserver(mutations => {
-  //     mutations.forEach(mutation => {
-  //       if (mutation.attributeName === 'class') {
-  //         const isDark = document.body.classList.contains('dark')
-  //         setIsDarkMode(isDark)
-  //       }
-  //     })
-  //   })
-
-  //   observer.observe(document.body, {
-  //     attributes: true,
-  //   })
-
-  //   return () => {
-  //     observer.disconnect()
-  //   }
-  // }, [])
-
   return (
     <nav
       className={`flex justify-between p-2 bg-white dark:bg-blue-950 ${stickyNavbar ? 'sticky top-0 z-10' : ''} relative`}
