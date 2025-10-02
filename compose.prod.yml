@@ -62,8 +62,8 @@ services:
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
-    ports:
-      - "5432:5432"
+    # ports:
+    #   - "5432:5432"
     networks:
       - st-network
     env_file:
@@ -73,9 +73,9 @@ services:
     container_name: st-minio
     image: minio/minio:latest
     command: server /data --console-address ":9003"
-    ports:
-      - "9002:9002" # MinIO API Port
-      - "9003:9003" # MinIO Console Port
+    # ports:
+    #   - "9002:9002" # MinIO API Port
+    #   - "9003:9003" # MinIO Console Port
     volumes:
       # - /mnt/volume-nbg1-1/minio_data:/data
       - minio_data:/data
